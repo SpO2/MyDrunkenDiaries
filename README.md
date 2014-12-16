@@ -1,0 +1,4 @@
+MyDrunkenDiaries
+================
+
+Application Android MyDrunkenDiaries
