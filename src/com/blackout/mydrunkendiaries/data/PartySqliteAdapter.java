@@ -33,7 +33,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 
 	public final static String TABLE_PARTY = "Party";
 	public final static String COLUMN_ID = "_id";
-	public final static String COLUMN_NAME = "Name";
+	public final static String COLUMN_NAME = "name";
 	public final static String COLUMN_CREATEDAT = "createdAt";
 	public final static String COLUMN_ENDEDAT = "endedAt";
 	public final static String[] COLUMN_LIST = {COLUMN_ID,

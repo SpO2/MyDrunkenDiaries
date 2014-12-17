@@ -76,7 +76,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 
 	/**
-	 * Add a new place in the database.
+	 * Add a new Place in the database.
 	 * @param place
 	 * @return the id of the new place.
 	 */
@@ -88,11 +88,12 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		values.put(COLUMN_LONGITUDE, place.getLongitude());
 		values.put(COLUMN_LATITUDE, place.getLatitude());
 		values.put(COLUMN_PARTY, place.getParty().getId());
+		
 		return this.getDb().insert(TABLE_PLACE, null, values);
 	}
 
 	/**
-	 * Update a place in the database.
+	 * Update a Place in the database.
 	 * @param place
 	 * @return
 	 */
@@ -113,7 +114,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 
 	/**
-	 * Delete a place in the database.
+	 * Delete a Place in the database.
 	 * @param place
 	 * @return
 	 */
@@ -127,7 +128,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 
 	/**
-	 * Find a place in the database.
+	 * Find a Place in the database.
 	 * @param id
 	 * @return a Place
 	 */
@@ -152,7 +153,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 	
 	/**
-	 * 
+	 * Find a Place with its Party.
 	 * @param id
 	 * @return a Place with 
 	 */
@@ -187,7 +188,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				places.add(this.cursorToItem(cursor));
 			}
 		}
-		return null;
+		return places;
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 	
 	/**
-	 * Convert a record with a party into a Place object with a Party.
+	 * Convert a record into a Place object with a Party.
 	 * @param cursor
 	 * @return a Place with the Party.
 	 */

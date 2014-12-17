@@ -1,6 +1,14 @@
-/**
- * 
- */
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Trip Adapter.                              *   
+ *                                                      *   
+ * Usage: Class that controls the interactions with the *
+ * table trip of the Database.                          *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
 import java.util.ArrayList;
