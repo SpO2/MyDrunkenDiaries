@@ -11,6 +11,8 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
+import android.database.sqlite.SQLiteDatabase;
+
 /**
  * @author spo2
  *
@@ -29,5 +31,6 @@ public class PartySqliteAdapter
 										" text not null)";
 	
 	private OpenHelperSqlite helper;
+	private SQLiteDatabase db;
 										
 }
