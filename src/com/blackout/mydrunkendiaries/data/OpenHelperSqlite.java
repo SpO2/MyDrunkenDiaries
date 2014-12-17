@@ -1,6 +1,14 @@
-/**
- * 
- */
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Helper SQlite.                             *   
+ *                                                      *   
+ * Usage: Class that controls the interactions with the *
+ * Database.                                            *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
 import android.content.Context;
