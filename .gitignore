@@ -46,6 +46,8 @@ Thumbs.db
 /doc/internal/*
 /doc/stats/*
 /doc/API/*
+/lib/google-play-services_lib*
+/lib/google-play-services_lib/*
 /libs/android-support-v4.jar
 .settings/*
 /lint.xml
