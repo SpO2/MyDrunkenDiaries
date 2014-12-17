@@ -1,6 +1,13 @@
-/**
- * 
- */
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Interface for SQL Adapters.                *   
+ *                                                      *   
+ * Usage: Interface to implement in sql adapters.       *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
 import java.util.ArrayList;

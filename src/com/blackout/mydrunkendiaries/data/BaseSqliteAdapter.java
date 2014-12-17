@@ -1,6 +1,13 @@
-/**
- * 
- */
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Class for SQL Adapters.                    *   
+ *                                                      *   
+ * Usage: Class that contains standard functions to use *   
+ * in the sql adapter.                                  *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
 import android.content.Context;

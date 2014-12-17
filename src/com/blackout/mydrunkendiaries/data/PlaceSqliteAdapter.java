@@ -34,7 +34,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 
 	public final static String TABLE_PLACE = "Place";
 	public final static String COLUMN_ID = "_id";
-	public final static String COLUMN_NAME = "Name";
+	public final static String COLUMN_NAME = "name";
 	public final static String COLUMN_LONGITUDE = "longitude";
 	public final static String COLUMN_LATITUDE = "latitude";
 	public final static String COLUMN_PARTY = "party";
@@ -45,13 +45,6 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 								 COLUMN_LONGITUDE,
 								 COLUMN_LATITUDE,
 								 COLUMN_PARTY};
-	
-	private final String QUERYWITHPARTY = "SELECT p._id, p.Name, p.longitude, p.latitude, " +
-						   "p.party, pa._id paid, pa.name paname, pa.createAt, " +
-						   "pa.endedAt " +
-						   "FROM Place p " +
-						   "LEFT JOIN Party pa ON pa._id = p.party" +
-						   "WHERE p._id = ?";
 	
 	public final static String SCHEMA = "CREATE TABLE " + 
 								PlaceSqliteAdapter.TABLE_PLACE + " ( " +
@@ -65,6 +58,13 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 								"FOREIGN KEY(" + PlaceSqliteAdapter.COLUMN_PARTY +
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY +
 								"(" + PartySqliteAdapter.COLUMN_ID + ")";
+	
+	private final String QUERYWITHPARTY = "SELECT p._id, p.Name, p.longitude, p.latitude, " +
+			   "p.party, pa._id paid, pa.name paname, pa.createAt, " +
+			   "pa.endedAt " +
+			   "FROM Place p " +
+			   "LEFT JOIN Party pa ON pa._id = p.party" +
+			   "WHERE p._id = ?";
 	
 	/**
 	 * Constructor
