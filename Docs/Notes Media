@@ -1,0 +1,6 @@
+Gestion de medias: notes
+
+1:  ajout dans le manifeste que la caméra est requis
+
+2:intent de camera:
+http://developer.android.com/guide/topics/media/camera.html#intents
