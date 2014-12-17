@@ -33,7 +33,8 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	 * @param version
 	 */
 	public OpenHelperSqlite(Context context, String name,
-			CursorFactory factory, int version) {
+			CursorFactory factory, int version) 
+	{
 		super(context, DBNAME, null, version);
 		// TODO Auto-generated constructor stub
 	}
@@ -47,25 +48,35 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	 */
 	public OpenHelperSqlite(Context context, String name,
 			CursorFactory factory, int version,
-			DatabaseErrorHandler errorHandler) {
+			DatabaseErrorHandler errorHandler) 
+	{
 		super(context, DBNAME, null, version, errorHandler);
 		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * @param context
+	 */
+	public OpenHelperSqlite(Context context)
+	{
+		super(context, DBNAME, null, VERSION);
 	}
 
 	/* (non-Javadoc)
 	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
 	 */
 	@Override
-	public void onCreate(SQLiteDatabase arg0) {
-		// TODO Auto-generated method stub
-
+	public void onCreate(SQLiteDatabase db) 
+	{
+		db.execSQL(PartySqliteAdapter.SCHEMA);
 	}
 
 	/* (non-Javadoc)
 	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
 	 */
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) 
+	{
 		// TODO Auto-generated method stub
 
 	}
