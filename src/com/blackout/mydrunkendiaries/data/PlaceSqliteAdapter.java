@@ -11,24 +11,48 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.view.CollapsibleActionView;
 
+import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.entites.Place;
 
 /**
  * @author spo2
  *
  */
-public class PlaceSqliteAdapter 
+public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpater<Place>
 {
+
 	public final static String TABLE_PLACE = "Place";
 	public final static String COLUMN_ID = "_id";
 	public final static String COLUMN_NAME = "Name";
 	public final static String COLUMN_LONGITUDE = "longitude";
 	public final static String COLUMN_LATITUDE = "latitude";
-	public final static String COLUMN_PARTY = "Party";
+	public final static String COLUMN_PARTY = "party";
+	public final static String COLUMN_PARTY_ID = "paid";
+	public final static String COLUMN_PARTY_NAME = "paname";
+	public final static String[] COLUMN_LIST={COLUMN_ID,
+								 COLUMN_NAME,
+								 COLUMN_LONGITUDE,
+								 COLUMN_LATITUDE,
+								 COLUMN_PARTY};
+	
+	private final String QUERYWITHPARTY = "SELECT p._id, p.Name, p.longitude, p.latitude, " +
+						   "p.party, pa._id paid, pa.name paname, pa.createAt, " +
+						   "pa.endedAt " +
+						   "FROM Place p " +
+						   "LEFT JOIN Party pa ON pa._id = p.party" +
+						   "WHERE p._id = ?";
 	
 	public final static String SCHEMA = "CREATE TABLE " + 
 								PlaceSqliteAdapter.TABLE_PLACE + " ( " +
@@ -43,43 +67,81 @@ public class PlaceSqliteAdapter
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY +
 								"(" + PartySqliteAdapter.COLUMN_ID + ")";
 	
-	private OpenHelperSqlite helper;
-	private SQLiteDatabase db;
-	
-	
 	/**
 	 * Constructor
 	 * @param context
 	 */
-	public PlaceSqliteAdapter(Context context)
+	public PlaceSqliteAdapter(Context context) 
 	{
-		this.helper = new OpenHelperSqlite(context);
+		super(context);
 	}
-	
-	public void open()
+
+	/**
+	 * Add a new place in the database.
+	 * @param place
+	 * @return the id of the new place.
+	 */
+	@Override
+	public long create(Place place) 
 	{
-		this.db = this.helper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_NAME, place.getName());
+		values.put(COLUMN_LONGITUDE, place.getLongitude());
+		values.put(COLUMN_LATITUDE, place.getLatitude());
+		values.put(COLUMN_PARTY, place.getParty().getId());
+		return this.getDb().insert(TABLE_PLACE, null, values);
 	}
-	
-	public void close()
+
+	/**
+	 * Update a place in the database.
+	 * @param place
+	 * @return
+	 */
+	@Override
+	public int update(Place place) 
 	{
-		this.helper.close();
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_NAME, place.getName());
+		values.put(COLUMN_LONGITUDE, place.getLongitude());
+		values.put(COLUMN_LATITUDE, place.getLatitude());
+		values.put(COLUMN_PARTY, place.getParty().getId());
+		
+		String whereClause = COLUMN_ID + " = ?";
+		
+		String[] whereArgs = {String.valueOf(place.getId())};
+		
+		return this.getDb().update(TABLE_PLACE, values, whereClause, whereArgs);
 	}
-	
-	public Place getPlace(long id)
+
+	/**
+	 * Delete a place in the database.
+	 * @param place
+	 * @return
+	 */
+	@Override
+	public int delete(Place place) 
 	{
-		String[] columns = {COLUMN_ID,
-				 COLUMN_NAME,
-				 COLUMN_LONGITUDE,
-				 COLUMN_LATITUDE,
-				 COLUMN_PARTY};
+		String whereClause = COLUMN_ID + " = ?";
+		String whereArgs[] = {String.valueOf(place.getId())};
+		
+		return this.getDb().delete(TABLE_PLACE, whereClause, whereArgs);
+	}
+
+	/**
+	 * Find a place in the database.
+	 * @param id
+	 * @return a Place
+	 */
+	@Override
+	public Place get(long id)
+	{
 		
 		String[] selectionArgs = {String.valueOf(id)};
 		
 		String selection = COLUMN_ID + " = ?";
 		
-		Cursor cursor = this.db.query(TABLE_PLACE,
-				columns,
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
 				selection,
 				selectionArgs,
 				null,
@@ -87,7 +149,101 @@ public class PlaceSqliteAdapter
 				null);
 		cursor.moveToFirst();
 		
-		return null;
+		return this.cursorToItem(cursor);
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return a Place with 
+	 */
+	public Place getWithParty(long id)
+	{
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		Cursor cursor = this.getDb().rawQuery(QUERYWITHPARTY, selectionArgs);
+		
+		return this.cursorToItemWithParty(cursor);
+	}
+
+	/**
+	 * Fetch all the places from the database.
+	 * @return Array of Place.
+	 */
+	@Override
+	public ArrayList<Place> getAll() 
+	{
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+		ArrayList<Place> places = new ArrayList<Place>();
+		if (cursor.moveToFirst())
+		{
+			while (!cursor.isAfterLast())
+			{
+				places.add(this.cursorToItem(cursor));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Convert a record into a Place object.
+	 * @param cursor
+	 * @return a Place.
+	 */
+	@Override
+	public Place cursorToItem(Cursor cursor) 
+	{
+		Place place = new Place();
+		place.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+		place.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+		place.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE)));
+		place.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)));
+		
+		return place;
+	}
+	
+	/**
+	 * Convert a record with a party into a Place object with a Party.
+	 * @param cursor
+	 * @return a Place with the Party.
+	 */
+	public Place cursorToItemWithParty(Cursor cursor)
+	{
+		Place place = this.cursorToItem(cursor);
+		
+		Party party = new Party();
+		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_PARTY_ID)));
+		party.setName(cursor.getString(cursor.getColumnIndex(COLUMN_PARTY_NAME)));
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+		DateTime dt = formatter.parseDateTime(cursor.getString(cursor
+				 .getColumnIndex(PartySqliteAdapter.COLUMN_CREATEDAT)));
+		party.setCreatedAt(dt);
+		dt = formatter.parseDateTime(cursor.getString(cursor
+				.getColumnIndex(PartySqliteAdapter.COLUMN_ENDEDAT)));
+				party.setEndedAt(dt);
+		
+		place.setParty(party);
+		
+		return place;
+	}
+	
+	@Override
+	public int describeContents() 
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) 
+	{
+		// TODO Auto-generated method stub
+		
+	}	
 }

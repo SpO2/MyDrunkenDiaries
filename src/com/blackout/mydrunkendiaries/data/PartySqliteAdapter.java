@@ -39,8 +39,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public final static String[] COLUMN_LIST = {COLUMN_ID,
 								 COLUMN_NAME,
 								 COLUMN_CREATEDAT,
-								 COLUMN_ENDEDAT
-								};
+								 COLUMN_ENDEDAT};
 	
 	public final static String SCHEMA = "CREATE TABLE " + 
 										PartySqliteAdapter.TABLE_PARTY +
@@ -63,56 +62,8 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 	
 	/**
-	 * Return a Party from the database.
-	 * @param id
-	 * @return a Party.
-	 */
-	@Override
-	public Party get(long id)
-	{
-		String[] selectionArgs = {String.valueOf(id)};
-		
-		String selection = COLUMN_ID + " = ?";
-		
-		Cursor cursor = this.getDb().query(TABLE_PARTY,
-				COLUMN_LIST,
-				selection,
-				selectionArgs,
-				null,
-				null,
-				null);
-		cursor.moveToFirst();
-		
-		return this.cursorToItem(cursor);
-	}
-	
-	/**
-	 * Take all the parties from the database.
-	 * @return Array of party.
-	 */
-	@Override
-	public ArrayList<Party> getAll()
-	{		
-		Cursor cursor = this.getDb().query(TABLE_PARTY,
-				COLUMN_LIST,
-				null,
-				null,
-				null,
-				null,
-				null);
-	    ArrayList<Party> parties = new ArrayList<Party>();
-	    if (cursor.moveToFirst())
-	    {
-	    	while (!cursor.isAfterLast())
-	    	{
-	    		parties.add(this.cursorToItem(cursor));
-	    	}
-	    }
-	    return parties;
-	}
-	
-	/**
-	 * 
+	 * Add a new party in database.
+	 * @param party
 	 */
 	public long create(Party party)
 	{
@@ -155,6 +106,55 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 	
 	/**
+	 * Find a Party from the database.
+	 * @param id
+	 * @return a Party.
+	 */
+	@Override
+	public Party get(long id)
+	{
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return this.cursorToItem(cursor);
+	}
+	
+	/**
+	 * Fetch all the parties from the database.
+	 * @return Array of party.
+	 */
+	@Override
+	public ArrayList<Party> getAll()
+	{		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+	    ArrayList<Party> parties = new ArrayList<Party>();
+	    if (cursor.moveToFirst())
+	    {
+	    	while (!cursor.isAfterLast())
+	    	{
+	    		parties.add(this.cursorToItem(cursor));
+	    	}
+	    }
+	    return parties;
+	}
+	
+	/**
 	 * Convert a record into a Party object.
 	 * @param cursor
 	 * @return a Party.
@@ -166,22 +166,26 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
 		party.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-		DateTime dt = formatter.parseDateTime(cursor.getString(cursor.getColumnIndex(COLUMN_CREATEDAT)));
+		DateTime dt = formatter.parseDateTime(cursor.getString(cursor
+				 .getColumnIndex(COLUMN_CREATEDAT)));
 		party.setCreatedAt(dt);
-		dt = formatter.parseDateTime(cursor.getString(cursor.getColumnIndex(COLUMN_ENDEDAT)));
+		dt = formatter.parseDateTime(cursor.getString(cursor
+		.getColumnIndex(COLUMN_ENDEDAT)));
 		party.setEndedAt(dt);
 		
 		return party;
 	}
 
 	@Override
-	public int describeContents() {
+	public int describeContents() 
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void writeToParcel(Parcel arg0, int arg1) {
+	public void writeToParcel(Parcel arg0, int arg1) 
+	{
 		// TODO Auto-generated method stub
 		
 	}
