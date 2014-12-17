@@ -20,9 +20,9 @@ import org.joda.time.DateTime;
 public class Trip 
 {
 	private long id;
-	private long place;
-	private DateTime startDate;
-	private DateTime endDate;
+	private Place place;
+	private DateTime createdAt;
+	private DateTime endedAt;
 	private Integer placeScore;
 	private Integer depravity;
 	
@@ -45,7 +45,7 @@ public class Trip
 	/**
 	 * @return the place
 	 */
-	public long getPlace() 
+	public Place getPlace() 
 	{
 		return place;
 	}
@@ -53,43 +53,43 @@ public class Trip
 	/**
 	 * @param place the place to set
 	 */
-	public void setPlace(long place) 
+	public void setPlace(Place place) 
 	{
 		this.place = place;
 	}
 	
 	/**
-	 * @return the startDate
+	 * @return the createdAt
 	 */
-	public DateTime getStartDate() 
+	public DateTime getCreatedAt() 
 	{
-		return startDate;
+		return createdAt;
 	}
-	
+
 	/**
-	 * @param startDate the startDate to set
+	 * @param createdAt the createdAt to set
 	 */
-	public void setStartDate(DateTime startDate) 
+	public void setCreatedAt(DateTime createdAt) 
 	{
-		this.startDate = startDate;
+		this.createdAt = createdAt;
 	}
-	
+
 	/**
-	 * @return the endDate
+	 * @return the endedAt
 	 */
-	public DateTime getEndDate() 
+	public DateTime getEndedAt() 
 	{
-		return endDate;
+		return endedAt;
 	}
-	
+
 	/**
-	 * @param endDate the endDate to set
+	 * @param endedAt the endedAt to set
 	 */
-	public void setEndDate(DateTime endDate) 
+	public void setEndedAt(DateTime endedAt) 
 	{
-		this.endDate = endDate;
+		this.endedAt = endedAt;
 	}
-	
+
 	/**
 	 * @return the placeScore
 	 */
