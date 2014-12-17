@@ -175,7 +175,7 @@
     			<path style="stroke: #FFFFFF; stroke-opacity: 0; stroke-width: 8px; fill: none;" p:name="bg" id="c6ed5979ebf74f4781bf9efb3667850f" transform="translate(0.5,0.5)" d="M 62 29 C 75 29 87 29 100 29"/>
     			<path style="stroke-linejoin: round; fill: none;" p:name="line1" id="1a94a89fb0b149a1a4e58df8714b001d" transform="translate(0.5,0.5)" d="M 62 29 C 75 29 87 29 100 29"/>
     		</g>
-        </g><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.Common:Bitmap" id="8fa104be6ac04296abd77a8d3e842b0b" transform="matrix(1,0,0,1,1151,250)" p:sizing-x-policy="relative" p:sizing-y-policy="relative" p:sizing-w-policy="relative" p:sizing-h-policy="relative"><p:metadata><p:property name="box"><![CDATA[307,258]]></p:property><p:property name="imageData"><![CDATA[468,396,../../../ModÃ¨les/paris-ev-charging-stations-map347.jpg]]></p:property><p:property name="withBlur"><![CDATA[false]]></p:property><p:property name="fillColor"><![CDATA[#FFFFFF00]]></p:property><p:property name="strokeColor"><![CDATA[#000000FF]]></p:property><p:property name="strokeStyle"><![CDATA[0|]]></p:property></p:metadata>
+        </g><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.Common:Bitmap" id="8fa104be6ac04296abd77a8d3e842b0b" transform="matrix(1,0,0,1,1151,250)" p:sizing-x-policy="relative" p:sizing-y-policy="relative" p:sizing-w-policy="relative" p:sizing-h-policy="relative"><p:metadata><p:property name="box"><![CDATA[307,258]]></p:property><p:property name="imageData"><![CDATA[468,396,Images/paris-ev-charging-stations-map347.jpg]]></p:property><p:property name="withBlur"><![CDATA[false]]></p:property><p:property name="fillColor"><![CDATA[#FFFFFF00]]></p:property><p:property name="strokeColor"><![CDATA[#000000FF]]></p:property><p:property name="strokeStyle"><![CDATA[0|]]></p:property></p:metadata>
             <defs>
                 <filter height="1.2558399" y="-0.12792" width="1.06396" x="-0.03198" p:name="imageShading" id="bd5fabc00c10443c957490e43bac718a">
                     <feGaussianBlur stdDeviation="1.3325" in="SourceAlpha"/>
@@ -183,7 +183,7 @@
                 <g p:name="container" id="cf1c7310efa84619acafc3c07570f5f0">
                     <rect style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); stroke-opacity: 1; stroke-width: 0; fill-opacity: 0;" p:name="bgRect" id="90f714f46c0d46b1880896618b1e7082" width="307" height="258" transform="translate(0,0)"/>
                     <g p:name="imageContainer" id="3aede9ace87a4b6cb5941e8eba857826" transform="scale(0.655982905982906,0.6515151515151515)">
-                        <image x="0" y="0" p:name="image" id="f431f09e49184bda8cc5a90a4a110acf" xlink:href="../../../ModÃ¨les/paris-ev-charging-stations-map347.jpg" xmlns:xlink="http://www.w3.org/1999/xlink" width="468" height="396"/>
+                        <image x="0" y="0" p:name="image" id="f431f09e49184bda8cc5a90a4a110acf" xlink:href="Images/paris-ev-charging-stations-map347.jpg" xmlns:xlink="http://www.w3.org/1999/xlink" width="468" height="396"/>
                     </g>
                 </g>
             </defs>
