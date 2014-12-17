@@ -21,7 +21,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
-import android.view.CollapsibleActionView;
 
 import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.entites.Place;
