@@ -13,12 +13,13 @@ package com.blackout.mydrunkendiaries.data;
 
 import java.util.ArrayList;
 
-import com.blackout.mydrunkendiaries.entites.TripMedia;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
+
+import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.entites.TripMedia;
 
 /**
  * @author spo2
@@ -43,11 +44,11 @@ implements DatabaseAdpater<TripMedia>
 								 TripMediaSqliteAdapter.COLUMN_PATH + 
 								 " text not null, " +
 								 TripMediaSqliteAdapter.COLUMN_TRIP + 
-								 " integer not null " +
+								 " integer not null, " +
 								 " FOREIGN KEY(" + 
 								 TripMediaSqliteAdapter.COLUMN_TRIP +
 								 ") REFERENCES " + TripSqliteAdapter.TABLE_TRIP +
-								 "(" + TripSqliteAdapter.COLUMN_ID + ")";
+								 "(" + TripSqliteAdapter.COLUMN_ID + "));";
 	
 	/**
 	 * Constructor
@@ -144,6 +145,36 @@ implements DatabaseAdpater<TripMedia>
 		return this.cursorToItem(cursor);
 	}
 
+	/**
+	 * Fetch all the TripMedia link to a Trip.
+	 * @param trip
+	 * @return Array of TripMedia
+	 */
+	public ArrayList<TripMedia> getByTrip(Trip trip)
+	{
+		String selection = COLUMN_TRIP + " = ?";
+		String[] selectionArgs = {String.valueOf(trip.getId())};
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIPMEDIA,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		
+		ArrayList<TripMedia> tripMedias = new ArrayList<TripMedia>();
+		if (cursor.moveToFirst())
+		{
+			while (!cursor.moveToFirst())
+			{
+				tripMedias.add(this.cursorToItem(cursor));
+			}
+		}
+		
+		return tripMedias;
+	}
+	
 	/**
 	 * Fetch all the tripmedias from the database.
 	 * @return Array of TripMedia.

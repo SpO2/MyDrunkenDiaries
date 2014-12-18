@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 
+import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.entites.Place;
 import com.blackout.mydrunkendiaries.entites.Trip;
 
@@ -35,12 +36,15 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 	public final static String TABLE_TRIP = "Trip";
 	public final static String COLUMN_ID = "_id";
 	public final static String COLUMN_PLACE = "place";
+	public final static String COLUMN_PARTY = "party";
 	public final static String COLUMN_PLACESCORE = "placescore";
 	public final static String COLUMN_DEPRAVITY = "depravity";
 	public final static String COLUMN_CREATEDAT = "createdat";
 	public final static String COLUMN_ENDEDAT = "endedat";
 	public final static String COLUMN_PLACE_ID = "pid";
 	public final static String[] COLUM_LIST = {COLUMN_ID,
+								 COLUMN_PLACE,
+								 COLUMN_PARTY,
 								 COLUMN_PLACESCORE,
 								 COLUMN_DEPRAVITY,
 								 COLUMN_CREATEDAT,
@@ -51,13 +55,17 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 								TripSqliteAdapter.COLUMN_ID + 
 								" integer primary key autoincrement, " +
 								TripSqliteAdapter.COLUMN_PLACE + " integer, " +
+								TripSqliteAdapter.COLUMN_PARTY + " integer, " +
 								TripSqliteAdapter.COLUMN_PLACESCORE + " integer, " +
 								TripSqliteAdapter.COLUMN_DEPRAVITY + " integer, " +
 								TripSqliteAdapter.COLUMN_CREATEDAT + " text not null, " +
-								TripSqliteAdapter.COLUMN_ENDEDAT + "text not null) " +
-								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PLACE + 
-								") REFERENCES " + PlaceSqliteAdapter.TABLE_PLACE + 
-								"(" + PlaceSqliteAdapter.COLUMN_ID + ")";
+								TripSqliteAdapter.COLUMN_ENDEDAT + "text not null, " +
+								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PARTY + 
+								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY + 
+								"(" + PartySqliteAdapter.COLUMN_ID +"), " + 
+								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PLACE +
+								") REFERENCES " + PlaceSqliteAdapter.TABLE_PLACE +
+								"(" + PlaceSqliteAdapter.COLUMN_ID + "));";
 	
 	private final String QUERYWITHPLACE = "SELECT t._id, t.placescore, t.place " +
 						  "t.depravity, t.createdat, t.endedat, p._id pid, " + 
@@ -100,6 +108,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 		values.put(COLUMN_CREATEDAT, trip.getCreatedAt().toString());
 		values.put(COLUMN_ENDEDAT, trip.getEndedAt().toString());
 		values.put(COLUMN_PLACE, trip.getPlace().getId());
+		values.put(COLUMN_PARTY, trip.getParty().getId());
 		
 		return this.getDb().insert(TABLE_TRIP, null, values);
 	}
@@ -117,6 +126,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 		values.put(COLUMN_DEPRAVITY, trip.getDepravity());
 		values.put(COLUMN_ENDEDAT, trip.getEndedAt().toString());
 		values.put(COLUMN_PLACE, trip.getPlace().getId());
+		values.put(COLUMN_PARTY, trip.getParty().getId());
 		
 		String whereClause = COLUMN_ID + " = ?";
 		
@@ -177,6 +187,36 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 		
 		return this.cursorToItemWithPlace(cursor);
 	}
+	
+	/**
+	 * Fetch all the Trip link to a Party
+	 * @param party
+	 * @return Array of Trip.
+	 */
+	public ArrayList<Trip> getByParty(Party party)
+	{
+		String selection = COLUMN_PARTY + " = ?";
+		String selectionArgs[] = {String.valueOf(party.getId())};
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIP,
+				COLUM_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		
+		ArrayList<Trip> trips = new ArrayList<Trip>();
+		if (cursor.moveToFirst())
+		{
+			while (!cursor.moveToFirst())
+			{
+				trips.add(this.cursorToItem(cursor));
+			}
+		}
+		
+		return trips;
+	}
 
 	/**
 	 * Fetch all the trip from the database.
@@ -194,6 +234,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpa
 				null);
 		
 		ArrayList<Trip> trips = new ArrayList<Trip>();
+		
 		if (cursor.moveToFirst())
 		{
 			while (!cursor.isAfterLast())

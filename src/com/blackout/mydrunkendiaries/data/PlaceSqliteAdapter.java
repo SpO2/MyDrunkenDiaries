@@ -54,10 +54,10 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 								PlaceSqliteAdapter.COLUMN_LONGITUDE + " REAL , " +
 								PlaceSqliteAdapter.COLUMN_LATITUDE + " REAL, " +
 								PlaceSqliteAdapter.COLUMN_PARTY + 
-								" integer not null " + 
+								" integer not null, " + 
 								"FOREIGN KEY(" + PlaceSqliteAdapter.COLUMN_PARTY +
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY +
-								"(" + PartySqliteAdapter.COLUMN_ID + ")";
+								"(" + PartySqliteAdapter.COLUMN_ID + "));";
 	
 	private final String QUERYWITHPARTY = "SELECT p._id, p.Name, p.longitude, p.latitude, " +
 			   "p.party, pa._id paid, pa.name paname, pa.createAt, " +
@@ -164,6 +164,36 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		Cursor cursor = this.getDb().rawQuery(QUERYWITHPARTY, selectionArgs);
 		
 		return this.cursorToItemWithParty(cursor);
+	}
+	
+	/**
+	 * Fetch all the Place link to a Party
+	 * @param party
+	 * @return Array of Place
+	 */
+	public ArrayList<Place> getByParty(Party party)
+	{
+		String selection = COLUMN_PARTY + " = ?";
+		String selectionArgs[] = {String.valueOf(party.getId())};
+		
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		
+		ArrayList<Place> places = new ArrayList<Place>();
+		if (cursor.moveToFirst())
+		{
+			while (!cursor.isAfterLast())
+			{
+				places.add(this.cursorToItem(cursor));
+			}
+		}
+		
+		return places;
 	}
 
 	/**

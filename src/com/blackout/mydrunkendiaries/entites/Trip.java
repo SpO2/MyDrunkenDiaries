@@ -21,6 +21,7 @@ public class Trip
 {
 	private long id;
 	private Place place;
+	private Party party;
 	private DateTime createdAt;
 	private DateTime endedAt;
 	private Integer placeScore;
@@ -49,7 +50,7 @@ public class Trip
 	{
 		return place;
 	}
-	
+
 	/**
 	 * @param place the place to set
 	 */
@@ -57,7 +58,23 @@ public class Trip
 	{
 		this.place = place;
 	}
-	
+
+	/**
+	 * @return the party
+	 */
+	public Party getParty() 
+	{
+		return party;
+	}
+
+	/**
+	 * @param party the party to set
+	 */
+	public void setParty(Party party) 
+	{
+		this.party = party;
+	}
+
 	/**
 	 * @return the createdAt
 	 */

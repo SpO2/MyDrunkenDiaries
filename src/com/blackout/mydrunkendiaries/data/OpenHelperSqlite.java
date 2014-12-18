@@ -69,6 +69,9 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db) 
 	{
 		db.execSQL(PartySqliteAdapter.SCHEMA);
+		db.execSQL(TripMediaSqliteAdapter.SCHEMA);
+		db.execSQL(PlaceSqliteAdapter.SCHEMA);
+		db.execSQL(TripSqliteAdapter.SCHEMA);
 	}
 
 	/* (non-Javadoc)
