@@ -143,7 +143,9 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null,
 				null,
 				null);
+		
 	    ArrayList<Party> parties = new ArrayList<Party>();
+	    
 	    if (cursor.moveToFirst())
 	    {
 	    	while (!cursor.isAfterLast())
@@ -151,6 +153,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	    		parties.add(this.cursorToItem(cursor));
 	    	}
 	    }
+	    
 	    return parties;
 	}
 	

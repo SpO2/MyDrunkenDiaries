@@ -185,6 +185,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null);
 		
 		ArrayList<Place> places = new ArrayList<Place>();
+		
 		if (cursor.moveToFirst())
 		{
 			while (!cursor.isAfterLast())
@@ -210,7 +211,9 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null,
 				null,
 				null);
+		
 		ArrayList<Place> places = new ArrayList<Place>();
+		
 		if (cursor.moveToFirst())
 		{
 			while (!cursor.isAfterLast())
@@ -218,6 +221,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				places.add(this.cursorToItem(cursor));
 			}
 		}
+		
 		return places;
 	}
 
