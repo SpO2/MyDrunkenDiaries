@@ -30,7 +30,8 @@ import com.blackout.mydrunkendiaries.entites.Trip;
  * @author spo2
  *
  */
-public class TripSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpater<Trip>
+public class TripSqliteAdapter extends BaseSqliteAdapter 
+implements DatabaseAdpater<Trip>
 {
 
 	public final static String TABLE_TRIP = "Trip";
