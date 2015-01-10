@@ -20,9 +20,10 @@ import org.joda.time.DateTime;
 public class Trip 
 {
 	private long id;
-	private long place;
-	private DateTime startDate;
-	private DateTime endDate;
+	private Place place;
+	private Party party;
+	private DateTime createdAt;
+	private DateTime endedAt;
 	private Integer placeScore;
 	private Integer depravity;
 	
@@ -45,51 +46,67 @@ public class Trip
 	/**
 	 * @return the place
 	 */
-	public long getPlace() 
+	public Place getPlace() 
 	{
 		return place;
 	}
-	
+
 	/**
 	 * @param place the place to set
 	 */
-	public void setPlace(long place) 
+	public void setPlace(Place place) 
 	{
 		this.place = place;
 	}
-	
+
 	/**
-	 * @return the startDate
+	 * @return the party
 	 */
-	public DateTime getStartDate() 
+	public Party getParty() 
 	{
-		return startDate;
+		return party;
 	}
-	
+
 	/**
-	 * @param startDate the startDate to set
+	 * @param party the party to set
 	 */
-	public void setStartDate(DateTime startDate) 
+	public void setParty(Party party) 
 	{
-		this.startDate = startDate;
+		this.party = party;
 	}
-	
+
 	/**
-	 * @return the endDate
+	 * @return the createdAt
 	 */
-	public DateTime getEndDate() 
+	public DateTime getCreatedAt() 
 	{
-		return endDate;
+		return createdAt;
 	}
-	
+
 	/**
-	 * @param endDate the endDate to set
+	 * @param createdAt the createdAt to set
 	 */
-	public void setEndDate(DateTime endDate) 
+	public void setCreatedAt(DateTime createdAt) 
 	{
-		this.endDate = endDate;
+		this.createdAt = createdAt;
 	}
-	
+
+	/**
+	 * @return the endedAt
+	 */
+	public DateTime getEndedAt() 
+	{
+		return endedAt;
+	}
+
+	/**
+	 * @param endedAt the endedAt to set
+	 */
+	public void setEndedAt(DateTime endedAt) 
+	{
+		this.endedAt = endedAt;
+	}
+
 	/**
 	 * @return the placeScore
 	 */

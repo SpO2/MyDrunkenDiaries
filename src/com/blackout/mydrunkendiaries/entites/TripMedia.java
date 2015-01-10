@@ -14,10 +14,10 @@ package com.blackout.mydrunkendiaries.entites;
  * @author spo2
  *
  */
-public class Media 
+public class TripMedia 
 {
 	private long id;
-	private long trip;
+	private Trip trip;
 	private String path;
 	
 	/**
@@ -39,7 +39,7 @@ public class Media
 	/**
 	 * @return the trip
 	 */
-	public long getTrip() 
+	public Trip getTrip() 
 	{
 		return trip;
 	}
@@ -47,7 +47,7 @@ public class Media
 	/**
 	 * @param trip the trip to set
 	 */
-	public void setTrip(long trip) 
+	public void setTrip(Trip trip) 
 	{
 		this.trip = trip;
 	}
