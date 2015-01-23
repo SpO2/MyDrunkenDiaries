@@ -25,6 +25,7 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 {
 	public final static String DBNAME = "Database.sqlite";
 	public final static int VERSION = 1;
+	public SQLiteDatabase db;
 	
 	/**
 	 * @param context
@@ -60,6 +61,7 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	public OpenHelperSqlite(Context context)
 	{
 		super(context, DBNAME, null, VERSION);
+		db = getWritableDatabase();
 	}
 
 	/* (non-Javadoc)

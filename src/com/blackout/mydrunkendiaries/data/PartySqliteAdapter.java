@@ -11,7 +11,11 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -48,9 +52,9 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 										PartySqliteAdapter.COLUMN_NAME + 
 										" text not null, " + 
 										PartySqliteAdapter.COLUMN_CREATEDAT + 
-										"text, " +
+										" text, " +
 										PartySqliteAdapter.COLUMN_ENDEDAT + 
-										"text)";
+										" text);";
 			
 	/**
 	 * Constructor
@@ -59,6 +63,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public PartySqliteAdapter(Context context) 
 	{
 		super(context);
+		partyFixtures();
 	}
 	
 	/**
@@ -151,6 +156,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	    	while (!cursor.isAfterLast())
 	    	{
 	    		parties.add(this.cursorToItem(cursor));
+	    		cursor.moveToNext();
 	    	}
 	    }
 	    
@@ -168,14 +174,13 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		Party party = new Party();
 		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
 		party.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-		DateTime dt = formatter.parseDateTime(cursor.getString(cursor
+		DateTime dt = new DateTime(); 
+		DateTime.parse(cursor.getString(cursor
 				 .getColumnIndex(COLUMN_CREATEDAT)));
 		party.setCreatedAt(dt);
-		dt = formatter.parseDateTime(cursor.getString(cursor
-		.getColumnIndex(COLUMN_ENDEDAT)));
+		DateTime.parse(cursor.getString(cursor
+				 .getColumnIndex(COLUMN_ENDEDAT)));
 		party.setEndedAt(dt);
-		
 		return party;
 	}
 
@@ -190,6 +195,21 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public void writeToParcel(Parcel arg0, int arg1) 
 	{
 		// TODO Auto-generated method stub
-		
+	}
+	
+	public void partyFixtures()
+	{
+		Party party = new Party();
+		open();
+		for	(int i=0; i<10; i++)
+		{
+			party.setId(i+1);
+			party.setName("party" + String.valueOf(i));
+			DateTime dt = new DateTime();
+			party.setCreatedAt(dt);
+			party.setEndedAt(dt);
+			this.create(party);
+		}
+		close();
 	}
 }

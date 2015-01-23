@@ -39,6 +39,8 @@ implements DatabaseAdpater<TripMedia>
 								 COLUMN_TRIP};
 	
 	public final static String SCHEMA = "CREATE TABLE " +
+	                             TripMediaSqliteAdapter.TABLE_TRIPMEDIA + 
+	                             " ( " +
 								 TripMediaSqliteAdapter.COLUMN_ID +
 								 " integer primary key autoincrement, " +
 								 TripMediaSqliteAdapter.COLUMN_PATH + 
@@ -168,6 +170,7 @@ implements DatabaseAdpater<TripMedia>
 			while (!cursor.moveToFirst())
 			{
 				tripMedias.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		

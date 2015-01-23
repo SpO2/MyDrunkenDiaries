@@ -60,7 +60,7 @@ implements DatabaseAdpater<Trip>
 								TripSqliteAdapter.COLUMN_PLACESCORE + " integer, " +
 								TripSqliteAdapter.COLUMN_DEPRAVITY + " integer, " +
 								TripSqliteAdapter.COLUMN_CREATEDAT + " text not null, " +
-								TripSqliteAdapter.COLUMN_ENDEDAT + "text not null, " +
+								TripSqliteAdapter.COLUMN_ENDEDAT + " text not null, " +
 								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PARTY + 
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY + 
 								"(" + PartySqliteAdapter.COLUMN_ID +"), " + 
@@ -213,6 +213,7 @@ implements DatabaseAdpater<Trip>
 			while (!cursor.moveToFirst())
 			{
 				trips.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		

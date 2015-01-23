@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
+    <TextView 
+        android:id="@+id/createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_below="@+id/name"
+        android:layout_toLeftOf="@+id/dash"
+        android:layout_toStartOf="@+id/dash"
+        android:padding="5dip"/>    
+    <TextView
+        android:id="@+id/endedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/list_arrow"
+        android:layout_toStartOf="@+id/list_arrow"
+        android:layout_below="@+id/name"
+        android:gravity="end"
+        android:textSize="15sp"
+        android:padding="5dip"/>
+
+    <TextView
+        android:id="@+id/dash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_toLeftOf="@+id/endedAt"
+        android:layout_toStartOf="@+id/endedAt"
+        android:padding="5dip"
+        android:text="@string/slash"
+        android:textSize="15sp" />
+    
+    <ImageView 
+        android:id="@+id/list_arrow"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_centerVertical="true"
+        android:src="@drawable/list_arrow"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

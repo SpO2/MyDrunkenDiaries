@@ -50,7 +50,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 								PlaceSqliteAdapter.TABLE_PLACE + " ( " +
 								PlaceSqliteAdapter.COLUMN_ID +
 								" integer primary key autoincrement, " +
-								PlaceSqliteAdapter.COLUMN_NAME + "text not null, " +
+								PlaceSqliteAdapter.COLUMN_NAME + " text not null, " +
 								PlaceSqliteAdapter.COLUMN_LONGITUDE + " REAL , " +
 								PlaceSqliteAdapter.COLUMN_LATITUDE + " REAL, " +
 								PlaceSqliteAdapter.COLUMN_PARTY + 
@@ -191,6 +191,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 			while (!cursor.isAfterLast())
 			{
 				places.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		

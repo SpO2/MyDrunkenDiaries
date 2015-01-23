@@ -4,5 +4,11 @@
     <string name="app_name">MyDrunkenDiaries</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="party_begin">Début d\'activité : </string>
+    <string name="party_end">Fin d\'activité : </string>
+    <string name="party_list_header">Soirées : </string>
+    <string name="title_activity_totoactivity">Totoactivity</string>
+    <string name="dash">-</string>
+    <string name="slash">/</string>
 
 </resources>
