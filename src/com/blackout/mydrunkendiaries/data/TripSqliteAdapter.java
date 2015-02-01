@@ -242,6 +242,7 @@ implements DatabaseAdpater<Trip>
 			while (!cursor.isAfterLast())
 			{
 				trips.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		

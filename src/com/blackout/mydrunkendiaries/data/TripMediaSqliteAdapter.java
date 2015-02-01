@@ -32,10 +32,12 @@ implements DatabaseAdpater<TripMedia>
 	public final static String TABLE_TRIPMEDIA = "tripmedia";
 	public final static String COLUMN_ID = "_id";
 	public final static String COLUMN_PATH = "path";
+	public final static String COLUMN_NAME = "name";
 	public final static String COLUMN_TRIP = "trip";
 	
 	public final static String[] COLUMN_LIST = {COLUMN_ID,
 								 COLUMN_PATH,
+								 COLUMN_NAME,
 								 COLUMN_TRIP};
 	
 	public final static String SCHEMA = "CREATE TABLE " +
@@ -45,6 +47,8 @@ implements DatabaseAdpater<TripMedia>
 								 " integer primary key autoincrement, " +
 								 TripMediaSqliteAdapter.COLUMN_PATH + 
 								 " text not null, " +
+								 TripMediaSqliteAdapter.COLUMN_NAME +
+								 " text, " +
 								 TripMediaSqliteAdapter.COLUMN_TRIP + 
 								 " integer not null, " +
 								 " FOREIGN KEY(" + 
@@ -84,6 +88,7 @@ implements DatabaseAdpater<TripMedia>
 	{
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PATH, tripMedia.getPath());
+		values.put(COLUMN_NAME, tripMedia.getName());
 		values.put(COLUMN_TRIP, tripMedia.getTrip().getId());
 		
 		return this.getDb().insert(TABLE_TRIPMEDIA, null, values);
@@ -99,6 +104,7 @@ implements DatabaseAdpater<TripMedia>
 	{
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PATH, tripMedia.getPath());
+		values.put(COLUMN_NAME, tripMedia.getName());
 		values.put(COLUMN_TRIP, tripMedia.getTrip().getId());
 		
 		String whereClause = COLUMN_ID + " = ?";
@@ -198,6 +204,7 @@ implements DatabaseAdpater<TripMedia>
 			while (!cursor.isAfterLast())
 			{
 				tripMedias.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		
@@ -214,6 +221,7 @@ implements DatabaseAdpater<TripMedia>
 	{
 		TripMedia tripMedia = new TripMedia();
 		tripMedia.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+		tripMedia.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
 		tripMedia.setPath(cursor.getString(cursor.getColumnIndex(COLUMN_PATH)));
 		
 		return tripMedia;

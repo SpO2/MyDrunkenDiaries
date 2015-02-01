@@ -220,6 +220,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 			while (!cursor.isAfterLast())
 			{
 				places.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
 			}
 		}
 		
