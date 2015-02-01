@@ -10,5 +10,13 @@
     <string name="title_activity_totoactivity">Totoactivity</string>
     <string name="dash">-</string>
     <string name="slash">/</string>
+    <string name="contentdesc_arrow">Voir le détail</string>
+    <string name="contentdesc_camera">Voir les vidéos</string>
+    <string name="contentdesc_gallery">Voir les images</string>
+    <string name="places_list_header">Lieux</string>
+    <string name="title_activity_detail_party">DetailPartyActivity</string>
+    <string name="title_activity_party_detail">PartyDetailActivity</string>
+	<string name="tab_party_detail_places">Lieux</string>
+	<string name="tab_party_detail_maps">Carte</string>
 
 </resources>

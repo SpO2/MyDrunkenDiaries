@@ -18,6 +18,7 @@ public class TripMedia
 {
 	private long id;
 	private Trip trip;
+	private String name;
 	private String path;
 	
 	/**
@@ -52,6 +53,24 @@ public class TripMedia
 		this.trip = trip;
 	}
 	
+	/**
+	 * 
+	 * @return the name of the media
+	 */
+	public String getName() 
+	{
+		return name;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) 
+	{
+		this.name = name;
+	}
+
 	/**
 	 * @return the path
 	 */
