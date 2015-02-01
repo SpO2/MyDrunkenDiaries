@@ -11,6 +11,11 @@
             backward-compatibility can go here.
         -->
     </style>
+    <style name="beerRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/beer_ratingbar_full</item>
+        <item name="android:minHeight">64dip</item>
+        <item name="android:maxHeight">64dip</item>
+    </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">

@@ -7,6 +7,7 @@
     <string name="party_begin">Début d\'activité : </string>
     <string name="party_end">Fin d\'activité : </string>
     <string name="party_list_header">Soirées : </string>
+    <string name="btn_party_end">Fin d\'activité</string>
     <string name="title_activity_totoactivity">Totoactivity</string>
     <string name="dash">-</string>
     <string name="slash">/</string>
