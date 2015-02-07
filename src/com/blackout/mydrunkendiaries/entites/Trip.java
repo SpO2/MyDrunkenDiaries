@@ -11,7 +11,6 @@
 
 package com.blackout.mydrunkendiaries.entites;
 
-import org.joda.time.DateTime;
 
 /**
  * @author spo2
@@ -22,8 +21,8 @@ public class Trip
 	private long id;
 	private Place place;
 	private Party party;
-	private DateTime createdAt;
-	private DateTime endedAt;
+	private String createdAt;
+	private String endedAt;
 	private Integer placeScore;
 	private Integer depravity;
 	
@@ -78,7 +77,7 @@ public class Trip
 	/**
 	 * @return the createdAt
 	 */
-	public DateTime getCreatedAt() 
+	public String getCreatedAt() 
 	{
 		return createdAt;
 	}
@@ -86,7 +85,7 @@ public class Trip
 	/**
 	 * @param createdAt the createdAt to set
 	 */
-	public void setCreatedAt(DateTime createdAt) 
+	public void setCreatedAt(String createdAt) 
 	{
 		this.createdAt = createdAt;
 	}
@@ -94,7 +93,7 @@ public class Trip
 	/**
 	 * @return the endedAt
 	 */
-	public DateTime getEndedAt() 
+	public String getEndedAt() 
 	{
 		return endedAt;
 	}
@@ -102,7 +101,7 @@ public class Trip
 	/**
 	 * @param endedAt the endedAt to set
 	 */
-	public void setEndedAt(DateTime endedAt) 
+	public void setEndedAt(String endedAt) 
 	{
 		this.endedAt = endedAt;
 	}

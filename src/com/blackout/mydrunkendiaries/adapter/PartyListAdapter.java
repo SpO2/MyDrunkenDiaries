@@ -10,20 +10,21 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.adapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import com.blackout.mydrunkendiaries.R;
+import java.util.Locale;
 
 import android.app.Activity;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.blackout.mydrunkendiaries.R;
 import com.blackout.mydrunkendiaries.entites.Party;
 
 /**
@@ -81,7 +82,7 @@ public class PartyListAdapter extends BaseAdapter {
 		View v = convertView;
 		if (v == null)
 		{
-		  v = inflater.inflate(R.layout.party_list_row,null);	
+			v = inflater.inflate(R.layout.party_list_row,null);	
 		}
 		
 		Party party = partyItems.get(position);
@@ -92,8 +93,26 @@ public class PartyListAdapter extends BaseAdapter {
 			TextView endedAt = (TextView) v.findViewById(R.id.endedAt);	
 			
 			name.setText(party.getName());
-			createdAt.setText(party.getCreatedAt().toString("dd-MM-yyyy"));
-			endedAt.setText(party.getEndedAt().toString("dd-MM-yyyy"));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+			try 
+			{
+				Date dt = sdf.parse(party.getCreatedAt());
+				createdAt.setText(sdf.format(dt));
+			} 
+			catch (ParseException e) 
+			{
+				e.printStackTrace();
+			}
+			try 
+			{
+				Date dt = sdf.parse(party.getEndedAt());
+				endedAt.setText(sdf.format(dt));
+			} 
+			catch (ParseException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 		return v;
 	}

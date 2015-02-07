@@ -14,6 +14,8 @@
     <string name="contentdesc_arrow">Voir le détail</string>
     <string name="contentdesc_camera">Voir les vidéos</string>
     <string name="contentdesc_gallery">Voir les images</string>
+    <string name="contentdesc_map">Voir sur la carte</string>
+    <string name="contentdesc_clock">Heure</string>
     <string name="places_list_header">Lieux</string>
     <string name="title_activity_detail_party">DetailPartyActivity</string>
     <string name="title_activity_party_detail">PartyDetailActivity</string>

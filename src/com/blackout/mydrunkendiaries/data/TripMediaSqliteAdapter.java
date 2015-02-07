@@ -173,7 +173,7 @@ implements DatabaseAdpater<TripMedia>
 		ArrayList<TripMedia> tripMedias = new ArrayList<TripMedia>();
 		if (cursor.moveToFirst())
 		{
-			while (!cursor.moveToFirst())
+			while (!cursor.isAfterLast())
 			{
 				tripMedias.add(this.cursorToItem(cursor));
 				cursor.moveToNext();

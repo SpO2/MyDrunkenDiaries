@@ -11,7 +11,6 @@
 
 package com.blackout.mydrunkendiaries.entites;
 
-import org.joda.time.DateTime;
 
 /**
  * @author spo2
@@ -21,8 +20,8 @@ public class Party
 {
 	private long id;
 	private String name;
-	private DateTime createdAt;
-	private DateTime endedAt;
+	private String createdAt;
+	private String endedAt;
 	
 	/**
 	 * @return the id
@@ -59,7 +58,7 @@ public class Party
 	/**
 	 * @return the createdAt
 	 */
-	public DateTime getCreatedAt() 
+	public String getCreatedAt() 
 	{
 		return createdAt;
 	}
@@ -67,7 +66,7 @@ public class Party
 	/**
 	 * @param createdAt the createdAt to set
 	 */
-	public void setCreatedAt(DateTime createdAt) 
+	public void setCreatedAt(String createdAt) 
 	{
 		this.createdAt = createdAt;
 	}
@@ -75,7 +74,7 @@ public class Party
 	/**
 	 * @return the endedAt
 	 */
-	public DateTime getEndedAt() 
+	public String getEndedAt() 
 	{
 		return endedAt;
 	}
@@ -83,7 +82,7 @@ public class Party
 	/**
 	 * @param endedAt the endedAt to set
 	 */
-	public void setEndedAt(DateTime endedAt) 
+	public void setEndedAt(String endedAt) 
 	{
 		this.endedAt = endedAt;
 	}

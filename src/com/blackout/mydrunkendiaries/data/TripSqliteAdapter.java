@@ -11,11 +11,10 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -59,8 +58,8 @@ implements DatabaseAdpater<Trip>
 								TripSqliteAdapter.COLUMN_PARTY + " integer, " +
 								TripSqliteAdapter.COLUMN_PLACESCORE + " integer, " +
 								TripSqliteAdapter.COLUMN_DEPRAVITY + " integer, " +
-								TripSqliteAdapter.COLUMN_CREATEDAT + " text not null, " +
-								TripSqliteAdapter.COLUMN_ENDEDAT + " text not null, " +
+								TripSqliteAdapter.COLUMN_CREATEDAT + " NUMERIC not null, " +
+								TripSqliteAdapter.COLUMN_ENDEDAT + " NUMERIC not null, " +
 								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PARTY + 
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY + 
 								"(" + PartySqliteAdapter.COLUMN_ID +"), " + 
@@ -70,14 +69,22 @@ implements DatabaseAdpater<Trip>
 	
 	private final String QUERYWITHPLACE = "SELECT t._id, t.placescore, t.place " +
 						  "t.depravity, t.createdat, t.endedat, p._id pid, " + 
-						  "p.name, p.longitude, p.latitude, p.party " +
+						  "p.name, p.longitude, p.latitude " +
 						  "FROM Trip t " +
 						  "LEFT JOIN Place p ON p._id = t.place " +
 						  "WHERE t._id = ?";
 	
+	public final String QUERYWITHPLACEBYPARTY = "SELECT t._id, t.placescore, " +
+	                      "t.depravity, t.createdat, t.endedat, p._id pid, " +
+			              "p.name, p.longitude, p.latitude " + 
+	                      "FROM TRIP t " +
+			              "LEFT JOIN Place p ON p._id = t.place " + 
+	                      "WHERE t.party = ?";
+	
 	public TripSqliteAdapter(Context context) 
 	{
 		super(context);
+		tripFixtures();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -210,9 +217,28 @@ implements DatabaseAdpater<Trip>
 		ArrayList<Trip> trips = new ArrayList<Trip>();
 		if (cursor.moveToFirst())
 		{
-			while (!cursor.moveToFirst())
+			while (!cursor.isAfterLast())
 			{
 				trips.add(this.cursorToItem(cursor));
+				cursor.moveToNext();
+			}
+		}
+		
+		return trips;
+	}
+	
+	public ArrayList<Trip> getByPartyWithPlace(long party)
+	{
+
+		String selectionArgs[] = {String.valueOf(party)};
+		Cursor cursor = this.getDb().rawQuery(QUERYWITHPLACEBYPARTY, selectionArgs);
+		
+		ArrayList<Trip> trips = new ArrayList<Trip>();
+		if (cursor.moveToFirst())
+		{
+			while(!cursor.isAfterLast())
+			{
+				trips.add(this.cursorToItemWithPlace(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -261,13 +287,10 @@ implements DatabaseAdpater<Trip>
 		trip.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
 		trip.setPlaceScore(cursor.getInt(cursor.getColumnIndex(COLUMN_PLACESCORE)));
 		trip.setDepravity(cursor.getInt(cursor.getColumnIndex(COLUMN_DEPRAVITY)));
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-		DateTime dt = formatter.parseDateTime(cursor.getString(cursor
+		trip.setCreatedAt(cursor.getString(cursor
 				.getColumnIndex(COLUMN_CREATEDAT)));
-		trip.setCreatedAt(dt);
-		dt = formatter.parseDateTime(cursor.getString(cursor
+		trip.setEndedAt(cursor.getString(cursor
 				.getColumnIndex(COLUMN_ENDEDAT)));
-		trip.setEndedAt(dt);
 		return trip;
 	}
 	
@@ -292,6 +315,40 @@ implements DatabaseAdpater<Trip>
 		trip.setPlace(place);
 		return trip;
 	}
+
+	public void tripFixtures()
+	{
+		Integer k = 0;
+		Trip trip = new Trip();
+		Place place = new Place();
+		Party party = new Party();
+	    open();
+		for	(int i=0; i<10; i++)
+		{
+			trip.setId(i+1);
+			place.setId(i+1);
+			party.setId(i+1);
+			k = i;
+			if (k>5)
+			{
+				k = i - 5;
+			}
+			trip.setDepravity(k);
+			trip.setPlaceScore(k);
+			trip.setPlace(place);
+			trip.setParty(party);;
+			trip.setCreatedAt(getDateTime());
+			trip.setEndedAt(getDateTime());
+			this.create(trip);
+		}
+	}
 	
+	public String getDateTime()
+	{
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+	}
 
 }

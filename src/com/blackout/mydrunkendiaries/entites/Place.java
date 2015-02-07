@@ -18,7 +18,6 @@ package com.blackout.mydrunkendiaries.entites;
 public class Place 
 {
 	private long id;
-	private Party party;
 	private String name;
 	private double longitude;
 	private double latitude;
@@ -40,22 +39,6 @@ public class Place
 	}
 	
 	/**
-	 * @return the party
-	 */
-	public Party getParty() 
-	{
-		return party;
-	}
-	
-	/**
-	 * @param party the party to set
-	 */
-	public void setParty(Party party) 
-	{
-		this.party = party;
-	}
-	
-	/**
 	 * @return the name
 	 */
 	public String getName() 
@@ -70,7 +53,7 @@ public class Place
 	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return the longitude
 	 */

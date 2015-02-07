@@ -10,6 +10,8 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -20,11 +22,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
+import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
+import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
+import com.blackout.mydrunkendiaries.entites.Trip;
 
 public class PartyDetailActivity extends Activity {
 	
 	private PlacesFragment placesfragment;
 	private MapsFragment mapsfragment;
+	private ListView placeListView;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -54,6 +63,22 @@ public class PartyDetailActivity extends Activity {
         actionBar.selectTab(actionBar.getTabAt(0));
 	}
 	
+	/**
+	 * @return the placeListView
+	 */
+	public ListView getPlaceListView() 
+	{
+		return placeListView;
+	}
+
+	/**
+	 * @param placeListView the placeListView to set
+	 */
+	public void setPlaceListView(ListView placeListView) 
+	{
+		this.placeListView = placeListView;
+	}
+
 	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
 	{
 	    private Fragment mFragment;
@@ -115,6 +140,10 @@ public class PartyDetailActivity extends Activity {
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
+		private PartyDetailActivity partyDetailActivity;
+		private PlacesListAdapter placesListAdapater;
+		private TripSqliteAdapter tripSqliteAdapter;
+		private ArrayList<Trip> trips;
 		private static final String ARG_SECTION_NUMBER = "section_number";
 
 		/**
@@ -141,6 +170,36 @@ public class PartyDetailActivity extends Activity {
 					container, false);
 			return rootView;
 		}
+		
+		@Override
+        public void onActivityCreated(Bundle savedInstanceState) 
+        {
+            super.onActivityCreated(savedInstanceState);
+            this.partyDetailActivity = (PartyDetailActivity) this.getActivity();
+            if ((this.partyDetailActivity != null) && 
+                (this.partyDetailActivity instanceof PartyDetailActivity))
+            {
+            	PlaceSqliteAdapter placetestAdapter = new PlaceSqliteAdapter(
+            			partyDetailActivity);
+            	
+            	this.tripSqliteAdapter = new TripSqliteAdapter(this.partyDetailActivity);
+            	this.tripSqliteAdapter.open();
+            	this.trips = this.tripSqliteAdapter
+            			.getByPartyWithPlace(this.partyDetailActivity
+            			 .getIntent().getLongExtra("CurrentParty", 0));
+                this.partyDetailActivity.setPlaceListView((ListView) this.partyDetailActivity
+                		.findViewById(R.id.places_list));
+            	if (!trips.isEmpty() && (this.partyDetailActivity.getPlaceListView() != null))
+            	{
+            		placesListAdapater = new PlacesListAdapter(partyDetailActivity,
+            				                  this.trips);
+            		this.partyDetailActivity.getPlaceListView().setAdapter(placesListAdapater);
+            		this.placesListAdapater.notifyDataSetChanged();
+            	}
+            			
+            }
+            
+        }
 	}
 	
 	/**

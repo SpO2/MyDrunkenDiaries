@@ -104,7 +104,8 @@
 	    android:id="@+id/places_list"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/end_activity" >
+	    android:layout_below="@+id/end_activity"
+	    android:background="@color/list_header_bgd" >
 
 	</ListView>
 

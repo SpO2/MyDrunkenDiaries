@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -52,9 +48,9 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 										PartySqliteAdapter.COLUMN_NAME + 
 										" text not null, " + 
 										PartySqliteAdapter.COLUMN_CREATEDAT + 
-										" text, " +
+										" NUMERIC, " +
 										PartySqliteAdapter.COLUMN_ENDEDAT + 
-										" text);";
+										" NUMERIC);";
 			
 	/**
 	 * Constructor
@@ -174,13 +170,10 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		Party party = new Party();
 		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
 		party.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-		DateTime dt = new DateTime(); 
-		DateTime.parse(cursor.getString(cursor
-				 .getColumnIndex(COLUMN_CREATEDAT)));
-		party.setCreatedAt(dt);
-		DateTime.parse(cursor.getString(cursor
-				 .getColumnIndex(COLUMN_ENDEDAT)));
-		party.setEndedAt(dt);
+		party.setCreatedAt(cursor.getString(cursor
+				.getColumnIndex(COLUMN_CREATEDAT)));
+		party.setEndedAt(cursor.getString(cursor
+				.getColumnIndex(COLUMN_ENDEDAT)));
 		return party;
 	}
 
@@ -200,16 +193,23 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public void partyFixtures()
 	{
 		Party party = new Party();
-		open();
+		open();;
 		for	(int i=0; i<10; i++)
 		{
 			party.setId(i+1);
-			party.setName("party" + String.valueOf(i));
-			DateTime dt = new DateTime();
-			party.setCreatedAt(dt);
-			party.setEndedAt(dt);
+			party.setName("party" + String.valueOf(i));	
+			party.setCreatedAt(getDateTime());
+			party.setEndedAt(getDateTime());
 			this.create(party);
 		}
 		close();
+	}
+	
+	public String getDateTime()
+	{
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
 	}
 }
