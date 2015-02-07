@@ -32,22 +32,34 @@
 
         <ImageView
             android:id="@+id/camera"
-            android:layout_width="32dip"
-            android:layout_height="32dip"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="5dip"
             android:layout_marginRight="5dip"
             android:contentDescription="@string/contentdesc_camera"
-            android:scaleType="fitXY"
             android:src="@drawable/camera" />
 
         <ImageView
             android:id="@+id/gallery"
-            android:layout_width="32dip"
-            android:layout_height="32dip"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/camera"
             android:layout_toRightOf="@+id/camera"
             android:contentDescription="@string/contentdesc_gallery"
             android:src="@drawable/gallery" />
+        <RatingBar
+		    android:id="@+id/beerbar"
+		    style="@style/beerRatingBar"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="3dp"
+		    android:layout_centerVertical="true"
+		    android:numStars="5"
+		    android:stepSize="1.0"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -88,16 +100,12 @@
 	    android:layout_toRightOf="@+id/layouttime"
 	    android:text="@string/btn_party_end" />
 
-	<RatingBar
-	    android:id="@+id/beerbar"
-	    style="@style/beerRatingBar"
-	    android:layout_width="wrap_content"
+	<ListView
+	    android:id="@+id/places_list"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_margin="3dp"
-	    android:layout_alignTop="@+id/last_activity"
-	    android:numStars="5"
-	    android:stepSize="1.0"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentEnd="true"/>
+	    android:layout_below="@+id/end_activity" >
+
+	</ListView>
 
 </RelativeLayout>

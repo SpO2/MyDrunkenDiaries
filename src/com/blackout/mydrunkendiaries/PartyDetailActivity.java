@@ -1,3 +1,13 @@
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Activity                                   *   
+ *                                                      *   
+ * Usage: Show the detail informations for the parties. *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries;
 
 import android.app.ActionBar;

@@ -1,6 +1,13 @@
-/**
- * 
- */
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  Adapter for the Parties List.              *   
+ *                                                      *   
+ * Usage:                                               *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries.adapter;
 
 import java.util.List;
