@@ -11,10 +11,7 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,6 +19,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 
 import com.blackout.mydrunkendiaries.entites.Party;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
  * @author spo2
@@ -197,18 +195,10 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		{
 			party.setId(i+1);
 			party.setName("party" + String.valueOf(i));	
-			party.setCreatedAt(getDateTime());
-			party.setEndedAt(getDateTime());
+			party.setCreatedAt(DateTimeTools.getDateTime());
+			party.setEndedAt(DateTimeTools.getDateTime());
 			this.create(party);
 		}
 		close();
-	}
-	
-	public String getDateTime()
-	{
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
-        Date date = new Date();
-        return dateFormat.format(date);
 	}
 }

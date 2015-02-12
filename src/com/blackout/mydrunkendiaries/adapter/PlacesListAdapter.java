@@ -10,13 +10,9 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.adapter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,6 +23,7 @@ import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.R;
 import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
  * @author spo2
@@ -75,6 +72,7 @@ public class PlacesListAdapter extends BaseAdapter
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
@@ -92,35 +90,17 @@ public class PlacesListAdapter extends BaseAdapter
 			TextView name = (TextView) v.findViewById(R.id.title);
 			TextView time = (TextView) v.findViewById(R.id.hours);
 			name.setText(trip.getPlace().getName());
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-	                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
-			
-			Date dt;
-			try 
+			String createdAt = DateTimeTools.getTimeFromString(trip
+					.getCreatedAt());
+			if (trip.getEndedAt() != "")
 			{
-				dt = dateFormat.parse(trip.getCreatedAt());
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(dt);
-				int hours = calendar.get(Calendar.HOUR_OF_DAY);
-				int minutes = calendar.get(Calendar.MINUTE);
-				String createdAt = String.format("%02d:%02d", hours, minutes);
-				if (trip.getEndedAt() != "")
-				{
-					dt = dateFormat.parse(trip.getEndedAt());
-					calendar.setTime(dt);
-					hours = calendar.get(Calendar.HOUR_OF_DAY);
-					minutes = calendar.get(Calendar.MINUTE);
-					String endedAt = String.format("%02d:%02d", hours, minutes);
-					time.setText(createdAt + " - " + endedAt);
-				}
-				else
-				{
-					time.setText(createdAt);
-				}
-			} 
-			catch (ParseException e) 
+				String endedAt = DateTimeTools.getTimeFromString(
+						trip.getEndedAt());
+				time.setText(createdAt + " - " + endedAt);
+			}
+			else
 			{
-				e.printStackTrace();
+				time.setText(createdAt);
 			}
  		}
 		return v;

@@ -11,10 +11,7 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +21,7 @@ import android.os.Parcel;
 import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.entites.Place;
 import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
  * @author spo2
@@ -413,25 +411,16 @@ implements DatabaseAdpater<Trip>
 			place.setId(i+1);
 			party.setId(i+1);
 			k = i;
+			trip.setDepravity(3);
 			if (party.getId() != 1)
 			{
-				trip.setEndedAt(getDateTime());
+				trip.setEndedAt(DateTimeTools.getDateTime());
 			}
-			trip.setDepravity(k);
 			trip.setPlaceScore(k);
 			trip.setPlace(place);
 			trip.setParty(party);;
-			trip.setCreatedAt(getDateTime());
+			trip.setCreatedAt(DateTimeTools.getDateTime());
 			this.create(trip);
 		}
 	}
-	
-	public String getDateTime()
-	{
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
-        Date date = new Date();
-        return dateFormat.format(date);
-	}
-
 }

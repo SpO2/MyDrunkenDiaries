@@ -30,6 +30,7 @@ import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
 import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 public class PartyDetailActivity extends Activity {
 	
@@ -279,8 +280,8 @@ public class PartyDetailActivity extends Activity {
             	{
             		lastActivity.setText(this.partyDetailActivity
             				.getTripInProgress().getPlace().getName());
-            	    partyBegin.setText(this.partyDetailActivity
-            	    		.getTripInProgress().getCreatedAt());
+            	    partyBegin.setText(DateTimeTools.getTimeFromString(this
+            	    		.partyDetailActivity.getTripInProgress().getCreatedAt()));
             	    beerBar.setRating(this.partyDetailActivity
             	    		.getTripInProgress().getDepravity());    
             	}

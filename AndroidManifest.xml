@@ -27,14 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Totoactivity"
-            android:label="@string/title_activity_totoactivity" >
-        </activity>
-        <activity
-            android:name=".DetailPartyActivity"
-            android:label="@string/title_activity_detail_party" >
-        </activity>
-        <activity
             android:name=".PartyDetailActivity"
             android:label="@string/title_activity_party_detail" >
         </activity>
