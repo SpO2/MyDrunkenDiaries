@@ -56,7 +56,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public PartySqliteAdapter(Context context) 
 	{
 		super(context);
-		partyFixtures();
+		//partyFixtures();
 	}
 	
 	/**

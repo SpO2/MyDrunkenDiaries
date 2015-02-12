@@ -52,7 +52,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	public PlaceSqliteAdapter(Context context) 
 	{
 		super(context);
-		placeFixtures();
+		//placeFixtures();
 	}
 
 	/**

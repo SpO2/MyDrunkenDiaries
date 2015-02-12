@@ -98,8 +98,7 @@ implements DatabaseAdpater<Trip>
 	public TripSqliteAdapter(Context context) 
 	{
 		super(context);
-		tripFixtures();
-		// TODO Auto-generated constructor stub
+		//tripFixtures();
 	}
 
 	@Override
