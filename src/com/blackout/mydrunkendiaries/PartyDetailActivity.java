@@ -33,7 +33,11 @@ public class PartyDetailActivity extends Activity {
 	
 	private PlacesFragment placesfragment;
 	private MapsFragment mapsfragment;
-	private ListView placeListView;
+	private PlacesListAdapter placesListAdapater;
+	private TripSqliteAdapter tripSqliteAdapter;
+	private ArrayList<Trip> trips;
+	private Long currentPartyId;
+	
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -61,22 +65,79 @@ public class PartyDetailActivity extends Activity {
        		 .setTabListener(new TabListener<MapsFragment>(this, "maps",
        				              MapsFragment.class)));
         actionBar.selectTab(actionBar.getTabAt(0));
+        this.setCurrentPartyId(this.getIntent().getLongExtra("CurrentParty", 0));
 	}
 	
 	/**
-	 * @return the placeListView
+	 * 
+	 * @return the adapter for the places listview
 	 */
-	public ListView getPlaceListView() 
+	public PlacesListAdapter getPlacesListAdapter()
 	{
-		return placeListView;
+		return this.placesListAdapater;
 	}
-
+	
 	/**
-	 * @param placeListView the placeListView to set
+	 * Set the adapter for the places listview
+	 * @param placesListAdapter
 	 */
-	public void setPlaceListView(ListView placeListView) 
+	public void setPlacesListAdapter(PlacesListAdapter placesListAdapter)
 	{
-		this.placeListView = placeListView;
+		this.placesListAdapater = placesListAdapter;
+	}
+	
+	/**
+	 * 
+	 * @return the sqlite adapter for the trip
+	 */
+	public TripSqliteAdapter getTripSqliteAdapter()
+	{
+		return this.tripSqliteAdapter;
+	}
+	
+	/**
+	 * Set the sqlite adapter for the trip
+	 * @param tripSqliteAdapter
+	 */
+	public void setTripSqliteAdapter(TripSqliteAdapter tripSqliteAdapter)
+	{
+		this.tripSqliteAdapter = tripSqliteAdapter;
+	}
+	
+	/**
+	 * 
+	 * @return the current trip item list
+	 */
+	public ArrayList<Trip> getTrips()
+	{
+		return this.trips;
+	}
+	
+	/**
+	 * Set the current trip item list
+	 * @param trips
+	 */
+	public void setTrips(ArrayList<Trip> trips)
+	{
+		this.trips = trips;
+	}
+	
+	/**
+	 * 
+	 * @return the current party Id
+	 */
+	public Long getCurrentPartyId()
+	{
+		return this.currentPartyId;
+	}
+	
+	/**
+	 * Set the current party Id
+	 * @param currentPartyId
+	 */
+	public void setCurrentPartyId(Long currentPartyId)
+	{
+		this.currentPartyId = currentPartyId;
 	}
 
 	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
@@ -141,9 +202,7 @@ public class PartyDetailActivity extends Activity {
 		 * fragment.
 		 */
 		private PartyDetailActivity partyDetailActivity;
-		private PlacesListAdapter placesListAdapater;
-		private TripSqliteAdapter tripSqliteAdapter;
-		private ArrayList<Trip> trips;
+		private ListView lv;
 		private static final String ARG_SECTION_NUMBER = "section_number";
 
 		/**
@@ -168,6 +227,7 @@ public class PartyDetailActivity extends Activity {
 		{
 			View rootView = inflater.inflate(R.layout.fragment_party_detail,
 					container, false);
+			lv = (ListView) rootView.findViewById(R.id.placeslistview);
 			return rootView;
 		}
 		
@@ -182,19 +242,22 @@ public class PartyDetailActivity extends Activity {
             	PlaceSqliteAdapter placetestAdapter = new PlaceSqliteAdapter(
             			partyDetailActivity);
             	
-            	this.tripSqliteAdapter = new TripSqliteAdapter(this.partyDetailActivity);
-            	this.tripSqliteAdapter.open();
-            	this.trips = this.tripSqliteAdapter
-            			.getByPartyWithPlace(this.partyDetailActivity
-            			 .getIntent().getLongExtra("CurrentParty", 0));
-                this.partyDetailActivity.setPlaceListView((ListView) this.partyDetailActivity
-                		.findViewById(R.id.places_list));
-            	if (!trips.isEmpty() && (this.partyDetailActivity.getPlaceListView() != null))
+            	this.partyDetailActivity.setTripSqliteAdapter(
+            			new TripSqliteAdapter(this.partyDetailActivity));
+            	this.partyDetailActivity.getTripSqliteAdapter().open();
+                this.partyDetailActivity.setTrips(this.partyDetailActivity
+        		.getTripSqliteAdapter().getByPartyWithPlace(
+        				this.partyDetailActivity.getCurrentPartyId()));
+                if (!this.partyDetailActivity.getTrips().isEmpty() && 
+                		(this.lv != null))
             	{
-            		placesListAdapater = new PlacesListAdapter(partyDetailActivity,
-            				                  this.trips);
-            		this.partyDetailActivity.getPlaceListView().setAdapter(placesListAdapater);
-            		this.placesListAdapater.notifyDataSetChanged();
+                	this.partyDetailActivity.setPlacesListAdapter(
+                			new PlacesListAdapter(this.partyDetailActivity,
+                					this.partyDetailActivity.getTrips()));
+                	this.lv.setAdapter(
+                			this.partyDetailActivity.getPlacesListAdapter());
+                	this.partyDetailActivity.getPlacesListAdapter()
+                			.notifyDataSetChanged();
             	}
             			
             }

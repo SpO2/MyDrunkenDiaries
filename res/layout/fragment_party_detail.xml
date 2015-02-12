@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".PartyDetailActivity" >
+    tools:context="com.blackout.mydrunkendiaries.PartyDetailActivity$PlacesFragment" >
 
     <TextView
         android:id="@+id/section_label"
@@ -101,12 +101,13 @@
 	    android:text="@string/btn_party_end" />
 
 	<ListView
-	    android:id="@+id/places_list"
+	    android:id="@+id/placeslistview"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/end_activity"
-	    android:background="@color/list_header_bgd" >
-
+        android:layout_height="match_parent"
+	    android:layout_below="@+id/layouttime"
+	    android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+	    android:layout_centerHorizontal="true" >
 	</ListView>
 
 </RelativeLayout>

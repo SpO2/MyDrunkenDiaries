@@ -10,11 +10,7 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.adapter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -83,16 +79,15 @@ public class PlacesListAdapter extends BaseAdapter
 		View v = convertView;
 		if (v == null)
 		{
-			v = inflater.inflate(R.layout.list_row,null);	
+			v = inflater.inflate(R.layout.places_list_row,null);	
 		}
 		Trip trip = tripItems.get(position);
 		if (trip != null)
 		{
 			TextView name = (TextView) v.findViewById(R.id.title);
 			TextView hours = (TextView) v.findViewById(R.id.hours);
-			
 			name.setText(trip.getPlace().getName());
-			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			/*SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
 			
 			Date dt;
 			try 
@@ -109,7 +104,7 @@ public class PlacesListAdapter extends BaseAdapter
 			catch (ParseException e) 
 			{
 				e.printStackTrace();
-			}
+			}*/
  		}
 		return v;
 	}
