@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
 import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
@@ -37,6 +39,7 @@ public class PartyDetailActivity extends Activity {
 	private TripSqliteAdapter tripSqliteAdapter;
 	private ArrayList<Trip> trips;
 	private Long currentPartyId;
+	private Trip tripInProgress;
 	
 
 	@Override
@@ -139,6 +142,24 @@ public class PartyDetailActivity extends Activity {
 	{
 		this.currentPartyId = currentPartyId;
 	}
+	
+	/**
+	 * 
+	 * @return the trip where the endedat field is empty
+	 */
+	public Trip getTripInProgress()
+	{
+		return this.tripInProgress;
+	}
+	
+	/**
+	 * Set the trip where the endedat field is empty
+	 * @param tripInProgress
+	 */
+	public void setTripInProgress(Trip tripInProgress)
+	{
+		this.tripInProgress = tripInProgress;
+	}
 
 	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
 	{
@@ -203,6 +224,9 @@ public class PartyDetailActivity extends Activity {
 		 */
 		private PartyDetailActivity partyDetailActivity;
 		private ListView lv;
+		private TextView lastActivity, partyBegin;
+		private RatingBar beerBar;
+		
 		private static final String ARG_SECTION_NUMBER = "section_number";
 
 		/**
@@ -228,6 +252,9 @@ public class PartyDetailActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_party_detail,
 					container, false);
 			lv = (ListView) rootView.findViewById(R.id.placeslistview);
+			lastActivity = (TextView) rootView.findViewById(R.id.last_activity);
+			partyBegin = (TextView) rootView.findViewById(R.id.party_begin);
+			beerBar = (RatingBar) rootView.findViewById(R.id.beerbar);
 			return rootView;
 		}
 		
@@ -241,12 +268,26 @@ public class PartyDetailActivity extends Activity {
             {
             	PlaceSqliteAdapter placetestAdapter = new PlaceSqliteAdapter(
             			partyDetailActivity);
-            	
+            	            	
             	this.partyDetailActivity.setTripSqliteAdapter(
             			new TripSqliteAdapter(this.partyDetailActivity));
             	this.partyDetailActivity.getTripSqliteAdapter().open();
+            	this.partyDetailActivity.setTripInProgress(this.partyDetailActivity
+            			.getTripSqliteAdapter().getByPartyWithPlaceEndedDateNull(
+            					this.partyDetailActivity.getCurrentPartyId()));
+            	if (this.partyDetailActivity.getTripInProgress() != null)
+            	{
+            		lastActivity.setText(this.partyDetailActivity
+            				.getTripInProgress().getPlace().getName());
+            	    partyBegin.setText(this.partyDetailActivity
+            	    		.getTripInProgress().getCreatedAt());
+            	    beerBar.setRating(this.partyDetailActivity
+            	    		.getTripInProgress().getDepravity());    
+            	}
+            	this.partyDetailActivity.getTripSqliteAdapter().close();
+            	this.partyDetailActivity.getTripSqliteAdapter().open();
                 this.partyDetailActivity.setTrips(this.partyDetailActivity
-        		.getTripSqliteAdapter().getByPartyWithPlace(
+        		.getTripSqliteAdapter().getByPartyWithPlaceEndedDataNotNull(
         				this.partyDetailActivity.getCurrentPartyId()));
                 if (!this.partyDetailActivity.getTrips().isEmpty() && 
                 		(this.lv != null))

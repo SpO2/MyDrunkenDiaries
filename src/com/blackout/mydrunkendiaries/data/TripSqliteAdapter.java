@@ -59,7 +59,7 @@ implements DatabaseAdpater<Trip>
 								TripSqliteAdapter.COLUMN_PLACESCORE + " integer, " +
 								TripSqliteAdapter.COLUMN_DEPRAVITY + " integer, " +
 								TripSqliteAdapter.COLUMN_CREATEDAT + " NUMERIC not null, " +
-								TripSqliteAdapter.COLUMN_ENDEDAT + " NUMERIC not null, " +
+								TripSqliteAdapter.COLUMN_ENDEDAT + " NUMERIC, " +
 								"FOREIGN KEY(" + TripSqliteAdapter.COLUMN_PARTY + 
 								") REFERENCES " + PartySqliteAdapter.TABLE_PARTY + 
 								"(" + PartySqliteAdapter.COLUMN_ID +"), " + 
@@ -67,20 +67,36 @@ implements DatabaseAdpater<Trip>
 								") REFERENCES " + PlaceSqliteAdapter.TABLE_PLACE +
 								"(" + PlaceSqliteAdapter.COLUMN_ID + "));";
 	
-	private final String QUERYWITHPLACE = "SELECT t._id, t.placescore, t.place " +
+	private final static String QUERYWITHPLACE = "SELECT t._id, t.placescore, t.place " +
 						  "t.depravity, t.createdat, t.endedat, p._id pid, " + 
 						  "p.name, p.longitude, p.latitude " +
 						  "FROM Trip t " +
 						  "LEFT JOIN Place p ON p._id = t.place " +
 						  "WHERE t._id = ?";
 	
-	public final String QUERYWITHPLACEBYPARTY = "SELECT t._id, t.placescore, " +
+	public final static String QUERYWITHPLACEBYPARTY = "SELECT t._id, t.placescore, " +
 	                      "t.depravity, t.createdat, t.endedat, p._id pid, " +
 			              "p.name, p.longitude, p.latitude " + 
 	                      "FROM TRIP t " +
 			              "LEFT JOIN Place p ON p._id = t.place " + 
 	                      "WHERE t.party = ?";
+	public final static String QUERYWITHPLACEBYPARTYENDEDDATENOTNULL = "SELECT t._id, t.placescore, " +
+            			  "t.depravity, t.createdat, t.endedat, p._id pid, " +
+            			  "p.name, p.longitude, p.latitude " + 
+            			  "FROM TRIP t " +
+            			  "LEFT JOIN Place p ON p._id = t.place " + 
+            			  "WHERE t.party = ? AND t.endedat IS NOT NULL";
+	public final static String QUERYWITHPLACEBYPARTYENDEDDATENULL = "SELECT t._id, t.placescore, " +
+			  			  "t.depravity, t.createdat, t.endedat, p._id pid, " +
+			  			  "p.name, p.longitude, p.latitude " + 
+			  			  "FROM TRIP t " +
+			  			  "LEFT JOIN Place p ON p._id = t.place " + 
+			  			  "WHERE t.party = ? AND t.endedat IS NULL";
 	
+	/**
+	 * Constructor
+	 * @param context
+	 */
 	public TripSqliteAdapter(Context context) 
 	{
 		super(context);
@@ -113,8 +129,8 @@ implements DatabaseAdpater<Trip>
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PLACESCORE, trip.getPlaceScore());
 		values.put(COLUMN_DEPRAVITY, trip.getDepravity());
-		values.put(COLUMN_CREATEDAT, trip.getCreatedAt().toString());
-		values.put(COLUMN_ENDEDAT, trip.getEndedAt().toString());
+		values.put(COLUMN_CREATEDAT, trip.getCreatedAt());
+		values.put(COLUMN_ENDEDAT, trip.getEndedAt());
 		values.put(COLUMN_PLACE, trip.getPlace().getId());
 		values.put(COLUMN_PARTY, trip.getParty().getId());
 		
@@ -176,9 +192,15 @@ implements DatabaseAdpater<Trip>
 				null,
 				null,
 				null);
-		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		if(cursor.moveToFirst())
+		{
+			return this.cursorToItem(cursor);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -191,9 +213,14 @@ implements DatabaseAdpater<Trip>
 		String[] selectionArgs = {String.valueOf(id)};
 		
 		Cursor cursor =  this.getDb().rawQuery(QUERYWITHPLACE, selectionArgs);
-		cursor.moveToFirst();
-		
-		return this.cursorToItemWithPlace(cursor);
+		if(cursor.moveToFirst())
+		{
+			return this.cursorToItemWithPlace(cursor);
+		}		
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -227,6 +254,11 @@ implements DatabaseAdpater<Trip>
 		return trips;
 	}
 	
+	/**
+	 * 
+	 * @param party
+	 * @return the list of the trips that belong to a party
+	 */
 	public ArrayList<Trip> getByPartyWithPlace(long party)
 	{
 
@@ -244,6 +276,54 @@ implements DatabaseAdpater<Trip>
 		}
 		
 		return trips;
+	}
+	
+	
+	/**
+	 * 
+	 * @param party
+	 * @return the list of the trips that belong to a party where the endedat
+	 * field is not null
+	 */
+	public ArrayList<Trip> getByPartyWithPlaceEndedDataNotNull(long party)
+	{
+
+		String selectionArgs[] = {String.valueOf(party)};
+		Cursor cursor = this.getDb().rawQuery(QUERYWITHPLACEBYPARTYENDEDDATENOTNULL,
+				selectionArgs);
+		
+		ArrayList<Trip> trips = new ArrayList<Trip>();
+		if (cursor.moveToFirst())
+		{
+			while(!cursor.isAfterLast())
+			{
+				trips.add(this.cursorToItemWithPlace(cursor));
+				cursor.moveToNext();
+			}
+		}	
+		
+		return trips;
+	}
+	
+	/**
+	 * 
+	 * @param party
+	 * @return the trip that belong to a party where the endedat field is null
+	 */
+	public Trip getByPartyWithPlaceEndedDateNull(long party)
+	{
+
+		String selectionArgs[] = {String.valueOf(party)};
+		Cursor cursor = this.getDb().rawQuery(QUERYWITHPLACEBYPARTYENDEDDATENULL,
+				selectionArgs);
+		if (cursor.moveToFirst())
+		{
+			return this.cursorToItemWithPlace(cursor);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -284,13 +364,14 @@ implements DatabaseAdpater<Trip>
 	public Trip cursorToItem(Cursor cursor) 
 	{
 		Trip trip = new Trip();
-		trip.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
-		trip.setPlaceScore(cursor.getInt(cursor.getColumnIndex(COLUMN_PLACESCORE)));
-		trip.setDepravity(cursor.getInt(cursor.getColumnIndex(COLUMN_DEPRAVITY)));
-		trip.setCreatedAt(cursor.getString(cursor
-				.getColumnIndex(COLUMN_CREATEDAT)));
-		trip.setEndedAt(cursor.getString(cursor
-				.getColumnIndex(COLUMN_ENDEDAT)));
+		
+			trip.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+			trip.setPlaceScore(cursor.getInt(cursor.getColumnIndex(COLUMN_PLACESCORE)));
+			trip.setDepravity(cursor.getInt(cursor.getColumnIndex(COLUMN_DEPRAVITY)));
+			trip.setCreatedAt(cursor.getString(cursor
+					.getColumnIndex(COLUMN_CREATEDAT)));
+			trip.setEndedAt(cursor.getString(cursor
+					.getColumnIndex(COLUMN_ENDEDAT)));
 		return trip;
 	}
 	
@@ -303,16 +384,19 @@ implements DatabaseAdpater<Trip>
 	{
 		Trip trip = this.cursorToItem(cursor);
 		
-		Place place = new Place();
-		place.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_PLACE_ID)));
-		place.setName(cursor.getString(cursor.getColumnIndex(
-				PlaceSqliteAdapter.COLUMN_NAME)));
-		place.setLongitude(cursor.getDouble(
-				cursor.getColumnIndex(PlaceSqliteAdapter.COLUMN_LONGITUDE)));
-		place.setLatitude(cursor.getDouble(
-				cursor.getColumnIndex(PlaceSqliteAdapter.COLUMN_LATITUDE)));
-		
-		trip.setPlace(place);
+		if (trip != null)
+		{
+			Place place = new Place();
+			place.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_PLACE_ID)));
+			place.setName(cursor.getString(cursor.getColumnIndex(
+					PlaceSqliteAdapter.COLUMN_NAME)));
+			place.setLongitude(cursor.getDouble(
+					cursor.getColumnIndex(PlaceSqliteAdapter.COLUMN_LONGITUDE)));
+			place.setLatitude(cursor.getDouble(
+					cursor.getColumnIndex(PlaceSqliteAdapter.COLUMN_LATITUDE)));
+			
+			trip.setPlace(place);
+		}
 		return trip;
 	}
 
@@ -323,22 +407,21 @@ implements DatabaseAdpater<Trip>
 		Place place = new Place();
 		Party party = new Party();
 	    open();
-		for	(int i=0; i<10; i++)
+		for	(int i=0; i<5; i++)
 		{
 			trip.setId(i+1);
 			place.setId(i+1);
 			party.setId(i+1);
 			k = i;
-			if (k>5)
+			if (party.getId() != 1)
 			{
-				k = i - 5;
+				trip.setEndedAt(getDateTime());
 			}
 			trip.setDepravity(k);
 			trip.setPlaceScore(k);
 			trip.setPlace(place);
 			trip.setParty(party);;
 			trip.setCreatedAt(getDateTime());
-			trip.setEndedAt(getDateTime());
 			this.create(trip);
 		}
 	}

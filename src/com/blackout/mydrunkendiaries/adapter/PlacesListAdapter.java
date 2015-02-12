@@ -10,7 +10,12 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.adapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -85,26 +90,38 @@ public class PlacesListAdapter extends BaseAdapter
 		if (trip != null)
 		{
 			TextView name = (TextView) v.findViewById(R.id.title);
-			TextView hours = (TextView) v.findViewById(R.id.hours);
+			TextView time = (TextView) v.findViewById(R.id.hours);
 			name.setText(trip.getPlace().getName());
-			/*SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+	                "dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 			
 			Date dt;
 			try 
 			{
-				dt = sdf.parse(trip.getCreatedAt());
-				String createdAt = sdf.format(dt);
-				dt = sdf.parse(trip.getEndedAt());
-				String endedAt = sdf.format(dt);
-				if ((createdAt != "") && (endedAt != ""))
+				dt = dateFormat.parse(trip.getCreatedAt());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(dt);
+				int hours = calendar.get(Calendar.HOUR_OF_DAY);
+				int minutes = calendar.get(Calendar.MINUTE);
+				String createdAt = String.format("%02d:%02d", hours, minutes);
+				if (trip.getEndedAt() != "")
 				{
-					hours.setText(createdAt + " - " + endedAt);
+					dt = dateFormat.parse(trip.getEndedAt());
+					calendar.setTime(dt);
+					hours = calendar.get(Calendar.HOUR_OF_DAY);
+					minutes = calendar.get(Calendar.MINUTE);
+					String endedAt = String.format("%02d:%02d", hours, minutes);
+					time.setText(createdAt + " - " + endedAt);
+				}
+				else
+				{
+					time.setText(createdAt);
 				}
 			} 
 			catch (ParseException e) 
 			{
 				e.printStackTrace();
-			}*/
+			}
  		}
 		return v;
 	}

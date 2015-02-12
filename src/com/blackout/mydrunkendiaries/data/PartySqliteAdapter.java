@@ -11,7 +11,6 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries.data;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
