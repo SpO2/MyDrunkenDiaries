@@ -11,7 +11,7 @@
     <string name="title_activity_totoactivity">Totoactivity</string>
     <string name="dash">-</string>
     <string name="slash">/</string>
-    <string name="contentdesc_arrow">Voir le détail</string>
+    <string name="delete">Supprimer</string>
     <string name="contentdesc_camera">Voir les vidéos</string>
     <string name="contentdesc_gallery">Voir les images</string>
     <string name="contentdesc_map">Voir sur la carte</string>

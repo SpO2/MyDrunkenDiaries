@@ -3,6 +3,7 @@ package com.blackout.mydrunkendiaries;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -21,10 +22,13 @@ import com.blackout.mydrunkendiaries.adapter.PartyListAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment;
+import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment.NewPartyDialogListener;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity 
+						  implements NewPartyDialogListener{
 
 	private ListView listView;
 	private List<Party> parties;
@@ -74,6 +78,72 @@ public class MainActivity extends Activity {
 	        }
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) 
+    {
+       Party party = new Party();
+       NewPartyDialogFragment newPartyDialogFragment = 
+    		   (NewPartyDialogFragment) dialog;
+ 	   party.setName(newPartyDialogFragment.getActivityName().getText().toString());
+ 	   party.setCreatedAt(DateTimeTools.getDateTime());
+ 	   PartySqliteAdapter partySqliteAdapter = 
+ 			   new PartySqliteAdapter(MainActivity.this);
+ 	   partySqliteAdapter.open();
+ 	   partySqliteAdapter.create(party);
+ 	   partySqliteAdapter.close();
+ 	   refreshEnv();
+    }
+    
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) 
+    {
+    	
+    }
+    
+    /**
+     * Called when activity resume is complete.
+     */
+    @Override
+    public void onPostResume()
+    {
+    	super.onPostResume();
+    	refreshEnv();
+    }
+    
+    public void refreshEnv()
+    {
+    	this.setPartySqliteAdapter(new PartySqliteAdapter(this));
+        this.getPartySqliteAdapter().open();
+        this.setParties(this.getPartySqliteAdapter().getAll());
+        this.setPartyListView((ListView) this.findViewById(R.id.listView));
+        if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
+        	{
+	        	this.setPartyListAdapter(new PartyListAdapter(this, 
+	        			 this.getParties()));
+	        	this.getPartyListView()
+	        	         .setAdapter(this.getPartyListAdapter());
+	        	this.getPartyListAdapter().notifyDataSetChanged();
+	        	this.getPartyListView().setOnItemClickListener(
+	        			new OnItemClickListener() 
+	        			{
+    	        		   @Override
+    	        		   public void onItemClick(AdapterView<?> parent, 
+    	        				       View view,int position, long id) 
+    	        		   {
+    	        		        Party party = (Party) MainActivity.this
+    	        		        		.getPartyListAdapter().getItem(position);
+    	        		        if (party != null)
+    	        		        {
+    	        		        	Intent intent = new Intent(MainActivity.this, 
+    	        		        			PartyDetailActivity.class);
+    	        		        	intent.putExtra("CurrentParty", party.getId());
+    	        		        	startActivity(intent);
+    	        		        }
+    	        		   }
+	        		});
+        	}
     }
     
     /**
@@ -153,8 +223,6 @@ public class MainActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment 
     {	
-    	private MainActivity activity;
-
         public PlaceholderFragment() 
         {
         }
@@ -171,43 +239,6 @@ public class MainActivity extends Activity {
         public void onActivityCreated(Bundle savedInstanceState) 
         {
             super.onActivityCreated(savedInstanceState);
-            activity = (MainActivity) this.getActivity();
-            if ((activity != null) && (activity instanceof MainActivity))
-            {
-	            activity.setPartySqliteAdapter(new PartySqliteAdapter(activity));
-	            activity.getPartySqliteAdapter().open();
-	            activity.setParties(activity.getPartySqliteAdapter().getAll());
-	            activity.setPartyListView((ListView) activity
-	            		 .findViewById(R.id.listView));
-	            
-	            if ((!activity.getParties().isEmpty()) && 
-	            	(activity.getPartyListView() != null))
-            	{
-    	        	activity.setPartyListAdapter(new PartyListAdapter(activity, 
-    	        			 activity.getParties()));
-    	        	activity.getPartyListView()
-    	        	         .setAdapter(activity.getPartyListAdapter());
-    	        	activity.getPartyListAdapter().notifyDataSetChanged();
-    	        	activity.getPartyListView().setOnItemClickListener(
-    	        			new OnItemClickListener() 
-    	        			{
-	    	        		   @Override
-	    	        		   public void onItemClick(AdapterView<?> parent, 
-	    	        				       View view,int position, long id) 
-	    	        		   {
-	    	        		        Party party = (Party) activity.getPartyListAdapter()
-	    	        		        		.getItem(position);
-	    	        		        if (party != null)
-	    	        		        {
-	    	        		        	Intent intent = new Intent(getActivity(), 
-	    	        		        			PartyDetailActivity.class);
-	    	        		        	intent.putExtra("CurrentParty", party.getId());
-	    	        		        	startActivity(intent);
-	    	        		        }
-	    	        		   }
-    	        		});
-            	}
-            }
         }
     }
 }

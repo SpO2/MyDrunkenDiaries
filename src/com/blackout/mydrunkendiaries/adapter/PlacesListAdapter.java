@@ -29,6 +29,7 @@ import com.blackout.mydrunkendiaries.tools.DateTimeTools;
  * @author spo2
  *
  */
+@SuppressLint("InflateParams")
 public class PlacesListAdapter extends BaseAdapter 
 {
 
@@ -72,7 +73,6 @@ public class PlacesListAdapter extends BaseAdapter
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
-	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{

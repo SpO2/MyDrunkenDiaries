@@ -12,6 +12,7 @@
 package com.blackout.mydrunkendiaries.externalfragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -22,9 +23,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.blackout.mydrunkendiaries.R;
-import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
-import com.blackout.mydrunkendiaries.entites.Party;
-import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
  * @author spo2
@@ -32,7 +30,30 @@ import com.blackout.mydrunkendiaries.tools.DateTimeTools;
  */
 public class NewPartyDialogFragment extends DialogFragment 
 {
+	
+	public interface NewPartyDialogListener
+	{
+		public void onDialogPositiveClick(DialogFragment dialog);
+		public void onDialogNegativeClick(DialogFragment dialog);
+	}
+	
 	private EditText activityName;
+	private NewPartyDialogListener mListener;
+	
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		try
+		{
+			mListener = (NewPartyDialogListener) activity;
+		}
+		catch (ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + 
+					" must implement NewPartyDialogListener");
+		}
+	}
 	
 	@SuppressLint("InflateParams")
 	@Override
@@ -47,24 +68,26 @@ public class NewPartyDialogFragment extends DialogFragment
                {
                    public void onClick(DialogInterface dialog, int id) 
                    {
-                	   Party party = new Party();
-                	   party.setName(activityName.getText().toString());
-                	   party.setCreatedAt(DateTimeTools.getDateTime());
-                	   PartySqliteAdapter partySqliteAdapter = 
-                			   new PartySqliteAdapter(getActivity());
-                	   partySqliteAdapter.open();
-                	   partySqliteAdapter.create(party);
-                	   partySqliteAdapter.close();
+                	   mListener.onDialogPositiveClick(NewPartyDialogFragment.this);
                    }
                })
                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
                {
                    public void onClick(DialogInterface dialog, int id) 
                    {
+                	   mListener.onDialogNegativeClick(NewPartyDialogFragment.this);
                    }
                });
         // Create the AlertDialog object and return it
         return builder.create();
     }
-
+	
+	/**
+	 * 
+	 * @return the EditText that contains the new activity name
+	 */
+	public EditText getActivityName()
+	{
+		return this.activityName;
+	}
 }

@@ -27,12 +27,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
-import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Trip;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
-public class PartyDetailActivity extends Activity {
+public class PartyDetailActivity extends Activity 
+{
 	
 	private PlacesFragment placesfragment;
 	private MapsFragment mapsfragment;
@@ -264,47 +264,48 @@ public class PartyDetailActivity extends Activity {
         {
             super.onActivityCreated(savedInstanceState);
             this.partyDetailActivity = (PartyDetailActivity) this.getActivity();
-            if ((this.partyDetailActivity != null) && 
-                (this.partyDetailActivity instanceof PartyDetailActivity))
-            {
-            	PlaceSqliteAdapter placetestAdapter = new PlaceSqliteAdapter(
-            			partyDetailActivity);
-            	            	
-            	this.partyDetailActivity.setTripSqliteAdapter(
-            			new TripSqliteAdapter(this.partyDetailActivity));
-            	this.partyDetailActivity.getTripSqliteAdapter().open();
-            	this.partyDetailActivity.setTripInProgress(this.partyDetailActivity
-            			.getTripSqliteAdapter().getByPartyWithPlaceEndedDateNull(
-            					this.partyDetailActivity.getCurrentPartyId()));
-            	if (this.partyDetailActivity.getTripInProgress() != null)
-            	{
-            		lastActivity.setText(this.partyDetailActivity
-            				.getTripInProgress().getPlace().getName());
-            	    partyBegin.setText(DateTimeTools.getTimeFromString(this
-            	    		.partyDetailActivity.getTripInProgress().getCreatedAt()));
-            	    beerBar.setRating(this.partyDetailActivity
-            	    		.getTripInProgress().getDepravity());    
-            	}
-            	this.partyDetailActivity.getTripSqliteAdapter().close();
-            	this.partyDetailActivity.getTripSqliteAdapter().open();
-                this.partyDetailActivity.setTrips(this.partyDetailActivity
-        		.getTripSqliteAdapter().getByPartyWithPlaceEndedDataNotNull(
-        				this.partyDetailActivity.getCurrentPartyId()));
-                if (!this.partyDetailActivity.getTrips().isEmpty() && 
-                		(this.lv != null))
-            	{
-                	this.partyDetailActivity.setPlacesListAdapter(
-                			new PlacesListAdapter(this.partyDetailActivity,
-                					this.partyDetailActivity.getTrips()));
-                	this.lv.setAdapter(
-                			this.partyDetailActivity.getPlacesListAdapter());
-                	this.partyDetailActivity.getPlacesListAdapter()
-                			.notifyDataSetChanged();
-            	}
-            			
-            }
+            this.refreshEnv();
             
         }
+		public void refreshEnv()
+		{
+			if ((this.partyDetailActivity != null) && 
+	                (this.partyDetailActivity instanceof PartyDetailActivity))
+	        {	            	            	
+	           	this.partyDetailActivity.setTripSqliteAdapter(
+	           			new TripSqliteAdapter(this.partyDetailActivity));
+	           	this.partyDetailActivity.getTripSqliteAdapter().open();
+	           	this.partyDetailActivity.setTripInProgress(this.partyDetailActivity
+	           			.getTripSqliteAdapter().getByPartyWithPlaceEndedDateNull(
+	           					this.partyDetailActivity.getCurrentPartyId()));
+	           	if (this.partyDetailActivity.getTripInProgress() != null)
+	           	{
+	           		lastActivity.setText(this.partyDetailActivity
+	           				.getTripInProgress().getPlace().getName());
+	           	    partyBegin.setText(DateTimeTools.getTimeFromString(this
+	           	    		.partyDetailActivity.getTripInProgress().getCreatedAt()));
+	           	    beerBar.setRating(this.partyDetailActivity
+	           	    		.getTripInProgress().getDepravity());    
+	           	}
+	           	this.partyDetailActivity.getTripSqliteAdapter().close();
+	           	this.partyDetailActivity.getTripSqliteAdapter().open();
+	            this.partyDetailActivity.setTrips(this.partyDetailActivity
+	            		.getTripSqliteAdapter().getByPartyWithPlaceEndedDataNotNull(
+	        				this.partyDetailActivity.getCurrentPartyId()));
+	            if (!this.partyDetailActivity.getTrips().isEmpty() && 
+	               (this.lv != null))
+	            {
+	               	this.partyDetailActivity.setPlacesListAdapter(
+	               			new PlacesListAdapter(this.partyDetailActivity,
+	               					this.partyDetailActivity.getTrips()));
+	               	this.lv.setAdapter(
+	               			this.partyDetailActivity.getPlacesListAdapter());
+	               	this.partyDetailActivity.getPlacesListAdapter()
+	               			.notifyDataSetChanged();
+	            }
+	            			
+	        }
+		}
 	}
 	
 	/**
