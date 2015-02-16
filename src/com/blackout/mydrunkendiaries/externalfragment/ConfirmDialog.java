@@ -5,8 +5,7 @@
  *                                                      *   
  * Purpose:  DialogFragment                             *   
  *                                                      *   
- * Usage: Show a Dialog Fragment to add name to the     * 
- * new place.                                           *   
+ * Usage: Show a Dialog Fragment to confirm action.     *   
  *                                                      *   
  ********************************************************/
 package com.blackout.mydrunkendiaries.externalfragment;
@@ -20,7 +19,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.R;
 
@@ -29,11 +29,33 @@ import com.blackout.mydrunkendiaries.R;
  *
  */
 @SuppressLint("InflateParams")
-public class NewPlaceDialogFragment extends DialogFragment 
+public class ConfirmDialog extends DialogFragment 
 {
-
 	private DialogButtonClick mListener;
-	private EditText placeName;
+	private String message;
+	private Boolean withRating = false;
+	private RatingBar beerBar;
+	
+	/**
+	 * Constructor
+	 * @param message
+	 */
+	public ConfirmDialog(String message) 
+	{
+		this.message = message;
+		this.withRating = false;
+	}
+	
+	/**
+	 * Constructor
+	 * @param message
+	 * @param withRating
+	 */
+	public ConfirmDialog(String message, Boolean withRating)
+	{
+		this.message = message;
+		this.withRating = withRating;
+	}
 	
 	@Override
 	public void onAttach(Activity activity)
@@ -55,32 +77,29 @@ public class NewPlaceDialogFragment extends DialogFragment
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.dialog_new_place, null);
-		placeName = (EditText) view.findViewById(R.id.place_name);
+		View view = inflater.inflate(R.layout.dialog_confirm, null);
+		TextView tv = (TextView) view.findViewById(R.id.message);
+		beerBar = (RatingBar) view.findViewById(R.id.beerbar);
+		if (!this.withRating)
+		{
+			beerBar.setVisibility(8);
+		}
+		tv.setText(this.message);
 		builder.setView(view)
 			.setPositiveButton(R.string.add_new, new DialogInterface.OnClickListener() 
 			{
 				public void onClick(DialogInterface dialog, int id)
 				{
-					mListener.onDialogPositiveClick(NewPlaceDialogFragment.this);
+					mListener.onDialogPositiveClick(ConfirmDialog.this);
 				}
 			})
 			.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
 			{
 				public void onClick(DialogInterface dialog, int id)
 				{
-					mListener.onDialogNegativeClick(NewPlaceDialogFragment.this);
+					mListener.onDialogNegativeClick(ConfirmDialog.this);
 				}	
 			});
 		return builder.create();
-	}
-	
-	/**
-	 * 
-	 * @return the new place name.
-	 */
-	public EditText getPlaceName()
-	{
-		return this.placeName;
 	}
 }

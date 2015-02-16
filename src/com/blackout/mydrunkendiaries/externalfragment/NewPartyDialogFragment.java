@@ -31,14 +31,8 @@ import com.blackout.mydrunkendiaries.R;
 public class NewPartyDialogFragment extends DialogFragment 
 {
 	
-	public interface NewPartyDialogListener
-	{
-		public void onDialogPositiveClick(DialogFragment dialog);
-		public void onDialogNegativeClick(DialogFragment dialog);
-	}
-	
 	private EditText activityName;
-	private NewPartyDialogListener mListener;
+	private DialogButtonClick mListener;
 	
 	@Override
 	public void onAttach(Activity activity)
@@ -46,7 +40,7 @@ public class NewPartyDialogFragment extends DialogFragment
 		super.onAttach(activity);
 		try
 		{
-			mListener = (NewPartyDialogListener) activity;
+			mListener = (DialogButtonClick) activity;
 		}
 		catch (ClassCastException e)
 		{

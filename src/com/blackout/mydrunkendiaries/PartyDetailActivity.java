@@ -32,12 +32,13 @@ import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.entites.Place;
 import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.externalfragment.ConfirmDialog;
+import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
 import com.blackout.mydrunkendiaries.externalfragment.NewPlaceDialogFragment;
-import com.blackout.mydrunkendiaries.externalfragment.NewPlaceDialogFragment.NewPlaceDialogListener;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 public class PartyDetailActivity extends Activity 
-								 implements NewPlaceDialogListener, ActionBar.TabListener{
+								 implements DialogButtonClick, ActionBar.TabListener{
 	
 	private PlacesListAdapter placesListAdapater;
 	private TripSqliteAdapter tripSqliteAdapter;
@@ -66,7 +67,7 @@ public class PartyDetailActivity extends Activity
         actionBar.addTab(actionBar.newTab().setText(R.string.tab_party_detail_places)
         		 .setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText(R.string.tab_party_detail_maps)
-       		 .setTabListener(this));
+       		 	 .setTabListener(this));
         actionBar.selectTab(actionBar.getTabAt(0));
         this.currentPartyId = this.getIntent().getLongExtra("CurrentParty", 0);
         this.setCurrentParty(this.currentPartyId);
@@ -91,9 +92,14 @@ public class PartyDetailActivity extends Activity
         {
 	        case R.id.new_trip:
 	        {
-	        	NewPlaceDialogFragment newPlaceDialogFragment = new NewPlaceDialogFragment();
-	        	newPlaceDialogFragment.show(getFragmentManager(),
-	        			"NewPlaceDialogFragment");
+	        	if (this.tripInProgress != null)
+	        	{
+	        		showConfirmDialog(getString(R.string.dialog_confirm_new_trip), true);
+	        	}
+	        	else
+	        	{
+	        		showNewPlaceDialog();
+	        	}
 	        }
         }
         return super.onOptionsItemSelected(item);
@@ -102,33 +108,37 @@ public class PartyDetailActivity extends Activity
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog)
 	{
-		if (this.getCurrentParty() != null)
+		if (dialog instanceof NewPlaceDialogFragment)
 		{
-			Place place = new Place();
-			NewPlaceDialogFragment newPlaceDialogFragment = 
-					(NewPlaceDialogFragment) dialog;
-			place.setName(newPlaceDialogFragment.getPlaceName().getText().toString());
-			PlaceSqliteAdapter placeSqliteAdapter = 
-					new PlaceSqliteAdapter(PartyDetailActivity.this);
-			placeSqliteAdapter.open();
-			Long newPlace = placeSqliteAdapter.create(place);
-			place = placeSqliteAdapter.get(newPlace);
-			placeSqliteAdapter.close();
-			
-			Trip trip = new Trip();		
-			trip.setPlace(place);
-			trip.setParty(this.getCurrentParty());
-			trip.setCreatedAt(DateTimeTools.getDateTime());
-			TripSqliteAdapter tripSqliteAdapter = 
-					new TripSqliteAdapter(PartyDetailActivity.this);
-			tripSqliteAdapter.open();
-			Long newTrip = tripSqliteAdapter.create(trip);
-			trip = tripSqliteAdapter.get(newTrip);
-			tripSqliteAdapter.close();
-			PartyDetailActivity.this.tripInProgress = trip;
-			this.recreate();
-			dialog.dismiss();
+			if (this.getCurrentParty() != null)
+			{
+				NewPlaceDialogFragment newPlaceDialogFragment = 
+						(NewPlaceDialogFragment) dialog;
+				Place place = addPlace(newPlaceDialogFragment.getPlaceName().getText().toString());
+				
+				Trip trip = addTrip(place, this.getCurrentParty());
+				PartyDetailActivity.this.tripInProgress = trip;
+				this.recreate();
+				dialog.dismiss();
+			}
 		}
+		if (dialog instanceof ConfirmDialog)
+		{
+			this.tripInProgress.setEndedAt(DateTimeTools.getDateTime());
+			TripSqliteAdapter tripSqliteAdapter = new TripSqliteAdapter(this);
+			tripSqliteAdapter.open();
+			tripSqliteAdapter.update(this.tripInProgress);
+			this.tripSqliteAdapter.close();
+			this.tripInProgress = null;
+			refreshEnv();
+			showNewPlaceDialog();
+		}
+	}
+	
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog)
+	{
+		
 	}
 	
 	/**
@@ -145,7 +155,11 @@ public class PartyDetailActivity extends Activity
        		lastActivity.setText(this.tripInProgress.getPlace().getName());
        	    partyBegin.setText(DateTimeTools.getTimeFromString(this.tripInProgress
        	    		.getCreatedAt()));
-       	    beerBar.setRating(this.tripInProgress.getDepravity());    
+       	    beerBar.setRating(this.tripInProgress.getDepravity());  
+       	    if (this.currentParty != null)
+       	    {
+       	    	this.tripInProgress.setParty(this.currentParty);
+       	    }
        	}
        	this.tripSqliteAdapter.close();
        	this.tripSqliteAdapter.open();
@@ -159,12 +173,62 @@ public class PartyDetailActivity extends Activity
         }   			
 	}
 	
-	@Override
-    public void onPostResume()
-    {
-    	super.onPostResume();
-    	//refreshEnv();
-    }
+	private void showNewPlaceDialog()
+	{
+		NewPlaceDialogFragment newPlaceDialogFragment = 
+				new NewPlaceDialogFragment();
+		newPlaceDialogFragment.show(getFragmentManager(),
+				"NewPlaceDialogFragment");
+	}
+	
+	/**
+	 * Add a new Place in the database
+	 * @param placeName
+	 * @return the new place added
+	 */
+	private Place addPlace(String placeName)
+	{
+		Place place = new Place();
+		place.setName(placeName);
+		PlaceSqliteAdapter placeSqliteAdapter = 
+				new PlaceSqliteAdapter(PartyDetailActivity.this);
+		placeSqliteAdapter.open();
+		Long newPlace = placeSqliteAdapter.create(place);
+		place.setId(newPlace);
+		placeSqliteAdapter.close();
+		return place;
+	}
+	
+	/**
+	 * Add a new Trip in the database
+	 * @param place
+	 * @param party
+	 * @return the new trip added
+	 */
+	private Trip addTrip(Place place, Party party)
+	{
+		Trip trip = new Trip();		
+		trip.setPlace(place);
+		trip.setParty(party);
+		trip.setCreatedAt(DateTimeTools.getDateTime());
+		TripSqliteAdapter tripSqliteAdapter = 
+				new TripSqliteAdapter(PartyDetailActivity.this);
+		tripSqliteAdapter.open();
+		Long newTrip = tripSqliteAdapter.create(trip);
+		trip.setId(newTrip);
+		tripSqliteAdapter.close();
+		return trip;
+	}
+	
+	/**
+	 * Show the confirmation dialog.
+	 * @param message
+	 */
+	public void showConfirmDialog(String message, Boolean withRating)
+	{
+		ConfirmDialog confirmDialog = new ConfirmDialog(message, withRating);
+		confirmDialog.show(getFragmentManager(), "ConfirmDialog");
+	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) 
@@ -205,12 +269,6 @@ public class PartyDetailActivity extends Activity
 	public Party getCurrentParty()
 	{
 		return this.currentParty;
-	}
-	
-	@Override
-	public void onDialogNegativeClick(DialogFragment dialog)
-	{
-		
 	}
 
 ///*	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 

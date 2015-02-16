@@ -16,14 +16,14 @@ import android.widget.ListView;
 import com.blackout.mydrunkendiaries.adapter.PartyListAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
+import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
 import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment;
-import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment.NewPartyDialogListener;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 
 
-public class MainActivity extends Activity 
-						  implements NewPartyDialogListener{
+public class MainActivity extends Activity implements DialogButtonClick
+{
 
 	private ListView listView;
 	private List<Party> parties;

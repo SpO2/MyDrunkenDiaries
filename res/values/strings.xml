@@ -23,5 +23,7 @@
 	<string name="add_new">Ajouter</string>
 	<string name="cancel">Annuler</string>
 	<string name="delete">Supprimer</string>
+	<string name="dialog_confirm_new_trip">L\'ajout d\'un lieu terminera celui en cours</string>
+	<string name="valid">Valider</string>
 
 </resources>
