@@ -5,7 +5,7 @@
  *                                                      *   
  * Purpose:  DialogFragment                             *   
  *                                                      *   
- * Usage: Show a Dialog Fragment to add title to the    * 
+ * Usage: Show a Dialog Fragment to add name to the     * 
  * new party.                                           *   
  *                                                      *   
  ********************************************************/

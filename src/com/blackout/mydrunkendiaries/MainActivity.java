@@ -4,16 +4,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -34,25 +29,13 @@ public class MainActivity extends Activity
 	private List<Party> parties;
 	private PartyListAdapter adapter;
 	private PartySqliteAdapter partySqlAdapter;
-	private PlaceholderFragment fragment;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) 
-        {
-        	FragmentManager fragmentManager = getFragmentManager();
-        	FragmentTransaction fragmentTransaction = fragmentManager
-        			                                   .beginTransaction();
-        	fragment = new PlaceholderFragment();
-        	fragmentTransaction.add(R.id.container, fragment);
-        	fragmentTransaction.commit();
-        }
-        
+        setContentView(R.layout.activity_main);        
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) 
@@ -119,31 +102,31 @@ public class MainActivity extends Activity
         this.setParties(this.getPartySqliteAdapter().getAll());
         this.setPartyListView((ListView) this.findViewById(R.id.listView));
         if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
-        	{
-	        	this.setPartyListAdapter(new PartyListAdapter(this, 
-	        			 this.getParties()));
-	        	this.getPartyListView()
-	        	         .setAdapter(this.getPartyListAdapter());
-	        	this.getPartyListAdapter().notifyDataSetChanged();
-	        	this.getPartyListView().setOnItemClickListener(
-	        			new OnItemClickListener() 
-	        			{
-    	        		   @Override
-    	        		   public void onItemClick(AdapterView<?> parent, 
-    	        				       View view,int position, long id) 
-    	        		   {
-    	        		        Party party = (Party) MainActivity.this
-    	        		        		.getPartyListAdapter().getItem(position);
-    	        		        if (party != null)
-    	        		        {
-    	        		        	Intent intent = new Intent(MainActivity.this, 
-    	        		        			PartyDetailActivity.class);
-    	        		        	intent.putExtra("CurrentParty", party.getId());
-    	        		        	startActivity(intent);
-    	        		        }
-    	        		   }
-	        		});
-        	}
+    	{
+        	this.setPartyListAdapter(new PartyListAdapter(this, 
+        			 this.getParties()));
+        	this.getPartyListView()
+        	         .setAdapter(this.getPartyListAdapter());
+        	this.getPartyListAdapter().notifyDataSetChanged();
+        	this.getPartyListView().setOnItemClickListener(
+        			new OnItemClickListener() 
+        			{
+	        		   @Override
+	        		   public void onItemClick(AdapterView<?> parent, 
+	        				       View view,int position, long id) 
+	        		   {
+	        		        Party party = (Party) MainActivity.this
+	        		        		.getPartyListAdapter().getItem(position);
+	        		        if (party != null)
+	        		        {
+	        		        	Intent intent = new Intent(MainActivity.this, 
+	        		        			PartyDetailActivity.class);
+	        		        	intent.putExtra("CurrentParty", party.getId());
+	        		        	startActivity(intent);
+	        		        }
+	        		   }
+        		});
+    	}
     }
     
     /**
@@ -216,29 +199,5 @@ public class MainActivity extends Activity
     public void setPartyListView(ListView partyListView)
     {
     	this.listView = partyListView;
-    }
-    
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment 
-    {	
-        public PlaceholderFragment() 
-        {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) 
-        {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-        
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) 
-        {
-            super.onActivityCreated(savedInstanceState);
-        }
     }
 }
