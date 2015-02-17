@@ -15,6 +15,7 @@
     <string name="contentdesc_gallery">Voir les images</string>
     <string name="contentdesc_map">Voir sur la carte</string>
     <string name="contentdesc_clock">Heure</string>
+    <string name="contentdesc_weather">Météo</string>
     <string name="places_list_header">Lieux</string>
     <string name="title_activity_party_detail">PartyDetailActivity</string>
     <string name="title_activity_map">MapActivity</string>

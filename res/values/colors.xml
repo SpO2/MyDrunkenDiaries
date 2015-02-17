@@ -12,4 +12,5 @@
     <color name="list_item_text">#ffffff</color>
     <color name="list_subitem_text">#d4d2d0</color> 
     <color name="pressed_focused_bg_button">#f4681c</color>
+    <color name="weather_background">#4e4848</color>
 </resources>
