@@ -3,6 +3,8 @@
  */
 package com.blackout.mydrunkendiaries;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -45,7 +47,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 	private final static String PREF_FILE= "MyDrunkenPrefs";
 	private final static String KEY_CITY = "CITY";
 	private String city;
-	private City resultSearch;
+	private List<Weather> resultSearch;
 	private TextView cityName, desc, pressure, temp, humidity;
 	private ImageView icon;
 	private EditText citysearch;
@@ -187,6 +189,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 					if (getActivity() instanceof WelcomeActivity)
 					{
 						WelcomeActivity wa = (WelcomeActivity) getActivity();
+						wa.setResultSearch(city.getWeathers());
 						wa.getCityResult().setAdapter(cityListAdapter);
 						cityListAdapter.notifyDataSetChanged();
 						expand(listLayout);
@@ -294,7 +297,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 	public void onItemClick(AdapterView<?> parent, View view,
 			int position, long id) 
 	{
-		City city = 
+		Weather weather = getResultSearch().get(position);
 	}
 	
 	public ListView getCityResult()
@@ -302,11 +305,11 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 		return this.cityResult;
 	}
 	
-	public City getResultSearch()
+	public List<Weather> getResultSearch()
 	{
 		return this.resultSearch;
 	}
-	public void setResultSearch(City resultSearch)
+	public void setResultSearch(List<Weather> resultSearch)
 	{
 		this.resultSearch = resultSearch;
 	}
