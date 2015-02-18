@@ -29,5 +29,6 @@
 	<string name="dialog_confirm_new_trip">L\'ajout d\'un lieu terminera celui en cours</string>
 	<string name="valid">Valider</string>
 	<string name="settings">Paramétrage</string>
+	<string name="party_list_btn">Voir les soirées</string>
 
 </resources>

@@ -104,5 +104,24 @@
             android:textColor="@color/list_item_text"/>
               	
     </RelativeLayout>
+    <LinearLayout 
+        android:layout_below="@+id/weather_layout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <Button 
+
+	        android:id="@+id/go_to_parties"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="30sp"
+	        android:textColor="@color/list_item_text"
+	        android:background="@color/global_background"
+	        android:text="@string/party_list_btn"
+	        ><requestFocus />
+	        
+	        </Button>
+	    
+    </LinearLayout>
 
 </RelativeLayout>

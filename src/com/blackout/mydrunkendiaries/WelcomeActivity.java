@@ -6,6 +6,7 @@ package com.blackout.mydrunkendiaries;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,7 +52,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 	private List<Weather> resultSearch;
 	private TextView cityName, desc, pressure, temp, humidity;
 	private ImageView icon;
-	private EditText citysearch;
+	private EditText citySearch;
 	private ListView cityResult;
 	private LinearLayout listLayout;
 	private ImageButton searchCity;
@@ -60,9 +62,6 @@ public class WelcomeActivity extends Activity implements OnClickListener,
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
-        city = sharedPreferences.getString(KEY_CITY, "Paris");
         
         cityName = (TextView) findViewById(R.id.city_name);
         desc = (TextView) findViewById(R.id.desc);
@@ -74,15 +73,26 @@ public class WelcomeActivity extends Activity implements OnClickListener,
         searchCity.setOnClickListener(this);
         cityResult = (ListView) findViewById(R.id.city_list);
         cityResult.setOnItemClickListener(this);
-        citysearch = (EditText) findViewById(R.id.city_search);
+        citySearch = (EditText) findViewById(R.id.city_search);
         listLayout = (LinearLayout) findViewById(R.id.list_layout);
-        WeatherTask weatherTask = new WeatherTask(this);
+        Button btn = (Button) findViewById(R.id.go_to_parties);
+        btn.setOnClickListener(this);
+        refreshWeather();
+    }
+	
+	public void refreshWeather()
+	{
+		collapse(listLayout);
+		citySearch.setText("");
+		SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
+        city = sharedPreferences.getString(KEY_CITY, "Paris");
+		WeatherTask weatherTask = new WeatherTask(this);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
         		.Builder(this).build();
         ImageLoader.getInstance().init(config);
         collapse(listLayout);
         weatherTask.execute(new String[]{city});
-    }
+	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) 
@@ -277,16 +287,21 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 			case R.id.action_search:
 			{
 				collapse(listLayout);
-				if ((citysearch.getText() != null))
+				if ((citySearch.getText() != null))
 				{
-					String searchQuery = citysearch.getText().toString();
+					String searchQuery = citySearch.getText().toString();
 					if ((searchQuery != "") && (searchQuery.length() > 2))
 					{
 						CityTask  cityTask = new CityTask(WelcomeActivity.this);
-						cityTask.execute(new String[]{citysearch.getText().toString()});
+						cityTask.execute(new String[]{citySearch.getText().toString()});
 					}
 				}
 				
+			}
+			case R.id.go_to_parties:
+			{
+				Intent intent = new Intent(WelcomeActivity.this, PartyActivity.class);
+				startActivity(intent);
 			}
 			default:
 				break;
@@ -298,6 +313,12 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 			int position, long id) 
 	{
 		Weather weather = getResultSearch().get(position);
+		SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.remove(KEY_CITY);
+		editor.putString(KEY_CITY, weather.getName());
+		editor.commit();
+		refreshWeather();
 	}
 	
 	public ListView getCityResult()
