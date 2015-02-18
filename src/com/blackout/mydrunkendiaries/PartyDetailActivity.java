@@ -15,333 +15,312 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
+import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
+import com.blackout.mydrunkendiaries.entites.Party;
+import com.blackout.mydrunkendiaries.entites.Place;
 import com.blackout.mydrunkendiaries.entites.Trip;
+import com.blackout.mydrunkendiaries.externalfragment.ConfirmDialog;
+import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
+import com.blackout.mydrunkendiaries.externalfragment.NewPlaceDialogFragment;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
-public class PartyDetailActivity extends Activity {
+public class PartyDetailActivity extends Activity 
+								 implements DialogButtonClick, ActionBar.TabListener{
 	
-	private PlacesFragment placesfragment;
-	private MapsFragment mapsfragment;
 	private PlacesListAdapter placesListAdapater;
 	private TripSqliteAdapter tripSqliteAdapter;
 	private ArrayList<Trip> trips;
 	private Long currentPartyId;
-	private Trip tripInProgress;
+	private Party currentParty;
+	private Trip tripInProgress;	
 	
+	private ListView lv;
+	private TextView lastActivity;
+	private TextView partyBegin;
+	private RatingBar beerBar;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
 	{
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_party_detail);
-        if (savedInstanceState == null) 
-        {
-        	FragmentManager fragmentManager = getFragmentManager();
-        	FragmentTransaction fragmentTransaction = fragmentManager
-        			                                   .beginTransaction();
-        	placesfragment = new PlacesFragment();
-        	mapsfragment = new MapsFragment();
-        	fragmentTransaction.add(R.id.pager, placesfragment);
-        	fragmentTransaction.add(R.id.pager, mapsfragment);
-        	fragmentTransaction.commit();
-        } 
+        setContentView(R.layout.party_detail);
+        lv = (ListView) this.findViewById(R.id.placeslistview);
+		lastActivity = (TextView) this.findViewById(R.id.last_activity);
+		partyBegin = (TextView) this.findViewById(R.id.party_begin);
+		beerBar = (RatingBar) this.findViewById(R.id.beerbar);
         final ActionBar actionBar = this.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.addTab(actionBar.newTab().setText(R.string.tab_party_detail_places)
-        		 .setTabListener(new TabListener<PlacesFragment>(this, "places",
-        				              PlacesFragment.class)));
+        		 .setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText(R.string.tab_party_detail_maps)
-       		 .setTabListener(new TabListener<MapsFragment>(this, "maps",
-       				              MapsFragment.class)));
+       		 	 .setTabListener(this));
         actionBar.selectTab(actionBar.getTabAt(0));
-        this.setCurrentPartyId(this.getIntent().getLongExtra("CurrentParty", 0));
+        this.currentPartyId = this.getIntent().getLongExtra("CurrentParty", 0);
+        this.setCurrentParty(this.currentPartyId);
+        refreshEnv();
 	}
 	
-	/**
-	 * 
-	 * @return the adapter for the places listview
-	 */
-	public PlacesListAdapter getPlacesListAdapter()
-	{
-		return this.placesListAdapater;
-	}
-	
-	/**
-	 * Set the adapter for the places listview
-	 * @param placesListAdapter
-	 */
-	public void setPlacesListAdapter(PlacesListAdapter placesListAdapter)
-	{
-		this.placesListAdapater = placesListAdapter;
-	}
-	
-	/**
-	 * 
-	 * @return the sqlite adapter for the trip
-	 */
-	public TripSqliteAdapter getTripSqliteAdapter()
-	{
-		return this.tripSqliteAdapter;
-	}
-	
-	/**
-	 * Set the sqlite adapter for the trip
-	 * @param tripSqliteAdapter
-	 */
-	public void setTripSqliteAdapter(TripSqliteAdapter tripSqliteAdapter)
-	{
-		this.tripSqliteAdapter = tripSqliteAdapter;
-	}
-	
-	/**
-	 * 
-	 * @return the current trip item list
-	 */
-	public ArrayList<Trip> getTrips()
-	{
-		return this.trips;
-	}
-	
-	/**
-	 * Set the current trip item list
-	 * @param trips
-	 */
-	public void setTrips(ArrayList<Trip> trips)
-	{
-		this.trips = trips;
-	}
-	
-	/**
-	 * 
-	 * @return the current party Id
-	 */
-	public Long getCurrentPartyId()
-	{
-		return this.currentPartyId;
-	}
-	
-	/**
-	 * Set the current party Id
-	 * @param currentPartyId
-	 */
-	public void setCurrentPartyId(Long currentPartyId)
-	{
-		this.currentPartyId = currentPartyId;
-	}
-	
-	/**
-	 * 
-	 * @return the trip where the endedat field is empty
-	 */
-	public Trip getTripInProgress()
-	{
-		return this.tripInProgress;
-	}
-	
-	/**
-	 * Set the trip where the endedat field is empty
-	 * @param tripInProgress
-	 */
-	public void setTripInProgress(Trip tripInProgress)
-	{
-		this.tripInProgress = tripInProgress;
-	}
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
+        getMenuInflater().inflate(R.menu.party_detail, menu);
+        return true;
+    }
 
-	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
-	{
-	    private Fragment mFragment;
-	    private final Activity mActivity;
-	    private final String mTag;
-	    private final Class<T> mClass;
-
-	    /** Constructor used each time a new tab is created.
-	      * @param activity  The host Activity, used to instantiate the fragment
-	      * @param tag  The identifier tag for the fragment
-	      * @param clz  The fragment's Class, used to instantiate the fragment
-	      */
-	    public TabListener(Activity activity, String tag, Class<T> clz) 
-	    {
-	        mActivity = activity;
-	        mTag = tag;
-	        mClass = clz;
-	    }
-
-	    /* The following are each of the ActionBar.TabListener callbacks */
-
-	    public void onTabSelected(Tab tab, FragmentTransaction ft) 
-	    {
-	        // Check if the fragment is already initialized
-	        if (mFragment == null) 
-	        {
-	            // If not, instantiate and add it to the activity
-	            mFragment = Fragment.instantiate(mActivity, mClass.getName());
-	            ft.add(android.R.id.content, mFragment, mTag);
-	        } 
-	        else 
-	        {
-	            // If it exists, simply attach it in order to show it
-	            ft.attach(mFragment);
-	        }
-	    }
-
-	    public void onTabUnselected(Tab tab, FragmentTransaction ft) 
-	    {
-	        if (mFragment != null) 
-	        {
-	            // Detach the fragment, because another one is being attached
-	            ft.detach(mFragment);
-	        }
-	    }
-
-	    public void onTabReselected(Tab tab, FragmentTransaction ft) 
-	    {
-	        // User selected the already selected tab. Usually do nothing.
-	    }
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlacesFragment extends Fragment 
-	{
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		private PartyDetailActivity partyDetailActivity;
-		private ListView lv;
-		private TextView lastActivity, partyBegin;
-		private RatingBar beerBar;
-		
-		private static final String ARG_SECTION_NUMBER = "section_number";
-
-		/**
-		 * Returns a new instance of this fragment for the given section number.
-		 */
-		public static PlacesFragment newInstance(int sectionNumber) 
-		{
-			PlacesFragment fragment = new PlacesFragment();
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		public PlacesFragment() 
-		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) 
-		{
-			View rootView = inflater.inflate(R.layout.fragment_party_detail,
-					container, false);
-			lv = (ListView) rootView.findViewById(R.id.placeslistview);
-			lastActivity = (TextView) rootView.findViewById(R.id.last_activity);
-			partyBegin = (TextView) rootView.findViewById(R.id.party_begin);
-			beerBar = (RatingBar) rootView.findViewById(R.id.beerbar);
-			return rootView;
-		}
-		
-		@Override
-        public void onActivityCreated(Bundle savedInstanceState) 
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) 
+    {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id)
         {
-            super.onActivityCreated(savedInstanceState);
-            this.partyDetailActivity = (PartyDetailActivity) this.getActivity();
-            if ((this.partyDetailActivity != null) && 
-                (this.partyDetailActivity instanceof PartyDetailActivity))
-            {
-            	PlaceSqliteAdapter placetestAdapter = new PlaceSqliteAdapter(
-            			partyDetailActivity);
-            	            	
-            	this.partyDetailActivity.setTripSqliteAdapter(
-            			new TripSqliteAdapter(this.partyDetailActivity));
-            	this.partyDetailActivity.getTripSqliteAdapter().open();
-            	this.partyDetailActivity.setTripInProgress(this.partyDetailActivity
-            			.getTripSqliteAdapter().getByPartyWithPlaceEndedDateNull(
-            					this.partyDetailActivity.getCurrentPartyId()));
-            	if (this.partyDetailActivity.getTripInProgress() != null)
-            	{
-            		lastActivity.setText(this.partyDetailActivity
-            				.getTripInProgress().getPlace().getName());
-            	    partyBegin.setText(DateTimeTools.getTimeFromString(this
-            	    		.partyDetailActivity.getTripInProgress().getCreatedAt()));
-            	    beerBar.setRating(this.partyDetailActivity
-            	    		.getTripInProgress().getDepravity());    
-            	}
-            	this.partyDetailActivity.getTripSqliteAdapter().close();
-            	this.partyDetailActivity.getTripSqliteAdapter().open();
-                this.partyDetailActivity.setTrips(this.partyDetailActivity
-        		.getTripSqliteAdapter().getByPartyWithPlaceEndedDataNotNull(
-        				this.partyDetailActivity.getCurrentPartyId()));
-                if (!this.partyDetailActivity.getTrips().isEmpty() && 
-                		(this.lv != null))
-            	{
-                	this.partyDetailActivity.setPlacesListAdapter(
-                			new PlacesListAdapter(this.partyDetailActivity,
-                					this.partyDetailActivity.getTrips()));
-                	this.lv.setAdapter(
-                			this.partyDetailActivity.getPlacesListAdapter());
-                	this.partyDetailActivity.getPlacesListAdapter()
-                			.notifyDataSetChanged();
-            	}
-            			
-            }
-            
+	        case R.id.new_trip:
+	        {
+	        	if (this.tripInProgress != null)
+	        	{
+	        		showConfirmDialog(getString(R.string.dialog_confirm_new_trip), true);
+	        	}
+	        	else
+	        	{
+	        		showNewPlaceDialog();
+	        	}
+	        }
         }
+        return super.onOptionsItemSelected(item);
+    }
+	
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog)
+	{
+		if (dialog instanceof NewPlaceDialogFragment)
+		{
+			if (this.getCurrentParty() != null)
+			{
+				NewPlaceDialogFragment newPlaceDialogFragment = 
+						(NewPlaceDialogFragment) dialog;
+				Place place = addPlace(newPlaceDialogFragment.getPlaceName().getText().toString());
+				
+				Trip trip = addTrip(place, this.getCurrentParty());
+				PartyDetailActivity.this.tripInProgress = trip;
+				this.recreate();
+				dialog.dismiss();
+			}
+		}
+		if (dialog instanceof ConfirmDialog)
+		{
+			this.tripInProgress.setEndedAt(DateTimeTools.getDateTime());
+			TripSqliteAdapter tripSqliteAdapter = new TripSqliteAdapter(this);
+			tripSqliteAdapter.open();
+			tripSqliteAdapter.update(this.tripInProgress);
+			this.tripSqliteAdapter.close();
+			this.tripInProgress = null;
+			refreshEnv();
+			showNewPlaceDialog();
+		}
+	}
+	
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog)
+	{
+		
 	}
 	
 	/**
-	 * A placeholder fragment containing a simple view.
+	 * Reset global environement
 	 */
-	public static class MapsFragment extends Fragment 
+	public void refreshEnv()
 	{
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		private static final String ARG_SECTION_NUMBER = "section_number";
+       	this.tripSqliteAdapter  = new TripSqliteAdapter(this);
+       	this.tripSqliteAdapter.open();
+       	this.tripInProgress = this.tripSqliteAdapter
+       			.getByPartyWithPlaceEndedDateNull(this.currentPartyId);
+       	if (this.tripInProgress != null)
+       	{
+       		lastActivity.setText(this.tripInProgress.getPlace().getName());
+       	    partyBegin.setText(DateTimeTools.getTimeFromString(this.tripInProgress
+       	    		.getCreatedAt()));
+       	    beerBar.setRating(this.tripInProgress.getDepravity());  
+       	    if (this.currentParty != null)
+       	    {
+       	    	this.tripInProgress.setParty(this.currentParty);
+       	    }
+       	}
+       	this.tripSqliteAdapter.close();
+       	this.tripSqliteAdapter.open();
+       	this.trips = this.tripSqliteAdapter
+        		.getByPartyWithPlaceEndedDataNotNull(this.currentPartyId);
+        if (!this.trips.isEmpty() && (this.lv != null))
+        {
+        	this.placesListAdapater = new PlacesListAdapter(this, this.trips);
+           	this.lv.setAdapter(this.placesListAdapater);
+           	this.placesListAdapater.notifyDataSetChanged();
+        }   			
+	}
+	
+	private void showNewPlaceDialog()
+	{
+		NewPlaceDialogFragment newPlaceDialogFragment = 
+				new NewPlaceDialogFragment();
+		newPlaceDialogFragment.show(getFragmentManager(),
+				"NewPlaceDialogFragment");
+	}
+	
+	/**
+	 * Add a new Place in the database
+	 * @param placeName
+	 * @return the new place added
+	 */
+	private Place addPlace(String placeName)
+	{
+		Place place = new Place();
+		place.setName(placeName);
+		PlaceSqliteAdapter placeSqliteAdapter = 
+				new PlaceSqliteAdapter(PartyDetailActivity.this);
+		placeSqliteAdapter.open();
+		Long newPlace = placeSqliteAdapter.create(place);
+		place.setId(newPlace);
+		placeSqliteAdapter.close();
+		return place;
+	}
+	
+	/**
+	 * Add a new Trip in the database
+	 * @param place
+	 * @param party
+	 * @return the new trip added
+	 */
+	private Trip addTrip(Place place, Party party)
+	{
+		Trip trip = new Trip();		
+		trip.setPlace(place);
+		trip.setParty(party);
+		trip.setCreatedAt(DateTimeTools.getDateTime());
+		TripSqliteAdapter tripSqliteAdapter = 
+				new TripSqliteAdapter(PartyDetailActivity.this);
+		tripSqliteAdapter.open();
+		Long newTrip = tripSqliteAdapter.create(trip);
+		trip.setId(newTrip);
+		tripSqliteAdapter.close();
+		return trip;
+	}
+	
+	/**
+	 * Show the confirmation dialog.
+	 * @param message
+	 */
+	public void showConfirmDialog(String message, Boolean withRating)
+	{
+		ConfirmDialog confirmDialog = new ConfirmDialog(message, withRating);
+		confirmDialog.show(getFragmentManager(), "ConfirmDialog");
+	}
 
-		/**
-		 * Returns a new instance of this fragment for the given section number.
-		 */
-		public static MapsFragment newInstance(int sectionNumber) 
-		{
-			MapsFragment fragment = new MapsFragment();
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-			fragment.setArguments(args);
-			return fragment;
-		}
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
-		public MapsFragment() 
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) 
+	{
+		// TODO Auto-generated method stub
+		if (tab.getPosition() == 1)
 		{
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) 
-		{
-			View rootView = inflater.inflate(R.layout.fragment_map,
-					container, false);
-			return rootView;
+			Intent intent = new Intent(PartyDetailActivity.this, MapActivity.class);
+			intent.putExtra("CurrentParty", this.currentPartyId);
+			startActivity(intent);
+			this.finish();
 		}
 	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void setCurrentParty(Long currentPartyId)
+	{
+		PartySqliteAdapter partySqliteAdapter = 
+				new PartySqliteAdapter(this);
+		partySqliteAdapter.open();
+		this.currentParty = partySqliteAdapter.get(currentPartyId);
+		partySqliteAdapter.close();
+	}
+	
+	public Party getCurrentParty()
+	{
+		return this.currentParty;
+	}
+
+///*	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
+//	{
+//	    private Fragment mFragment;
+//	    private final Activity mActivity;
+//	    private final String mTag;
+//	    private final Class<T> mClass;
+//
+//	    /** Constructor used each time a new tab is created.
+//	      * @param activity  The host Activity, used to instantiate the fragment
+//	      * @param tag  The identifier tag for the fragment
+//	      * @param clz  The fragment's Class, used to instantiate the fragment
+//	      */
+//	    public TabListener(Activity activity, String tag, Class<T> clz) 
+//	    {
+//	        mActivity = activity;
+//	        mTag = tag;
+//	        mClass = clz;
+//	    }
+//
+//	    /* The following are each of the ActionBar.TabListener callbacks */
+//
+//	    public void onTabSelected(Tab tab, FragmentTransaction ft) 
+//	    {
+//	        // Check if the fragment is already initialized
+//	        if (mFragment == null) 
+//	        {
+//	            // If not, instantiate and add it to the activity
+//	            mFragment = Fragment.instantiate(mActivity, mClass.getName());
+//	            ft.add(android.R.id.content, mFragment, mTag);
+//	        } 
+//	        else 
+//	        {
+//	            // If it exists, simply attach it in order to show it
+//	            ft.attach(mFragment);
+//	        }
+//	    }
+//
+//	    public void onTabUnselected(Tab tab, FragmentTransaction ft) 
+//	    {
+//	        if (mFragment != null) 
+//	        {
+//	            // Detach the fragment, because another one is being attached
+//	            ft.detach(mFragment);
+//	        }
+//	    }
+//
+//	    public void onTabReselected(Tab tab, FragmentTransaction ft) 
+//	    {
+//	        // User selected the already selected tab. Usually do nothing.
+//	    }
+//	}
 
 }

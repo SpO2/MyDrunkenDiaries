@@ -3,16 +3,12 @@ package com.blackout.mydrunkendiaries;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -20,39 +16,30 @@ import android.widget.ListView;
 import com.blackout.mydrunkendiaries.adapter.PartyListAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
+import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
+import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment;
+import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements DialogButtonClick
+{
 
 	private ListView listView;
 	private List<Party> parties;
 	private PartyListAdapter adapter;
 	private PartySqliteAdapter partySqlAdapter;
-	private PlaceholderFragment fragment;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) 
-        {
-        	FragmentManager fragmentManager = getFragmentManager();
-        	FragmentTransaction fragmentTransaction = fragmentManager
-        			                                   .beginTransaction();
-        	fragment = new PlaceholderFragment();
-        	fragmentTransaction.add(R.id.container, fragment);
-        	fragmentTransaction.commit();
-        }
-        
+        setContentView(R.layout.activity_main);        
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -64,10 +51,82 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+	        case R.id.new_party:
+	        {
+	        	NewPartyDialogFragment newPartyDialogFragment = new NewPartyDialogFragment();
+	        	newPartyDialogFragment.show(getFragmentManager(),
+	        			"NewPartyDialogFragment");
+	        }
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) 
+    {
+       Party party = new Party();
+       NewPartyDialogFragment newPartyDialogFragment = 
+    		   (NewPartyDialogFragment) dialog;
+ 	   party.setName(newPartyDialogFragment.getActivityName().getText().toString());
+ 	   party.setCreatedAt(DateTimeTools.getDateTime());
+ 	   PartySqliteAdapter partySqliteAdapter = 
+ 			   new PartySqliteAdapter(MainActivity.this);
+ 	   partySqliteAdapter.open();
+ 	   partySqliteAdapter.create(party);
+ 	   partySqliteAdapter.close();
+ 	   refreshEnv();
+    }
+    
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) 
+    {
+    	
+    }
+    
+    /**
+     * Called when activity resume is complete.
+     */
+    @Override
+    public void onPostResume()
+    {
+    	super.onPostResume();
+    	refreshEnv();
+    }
+    
+    public void refreshEnv()
+    {
+    	this.setPartySqliteAdapter(new PartySqliteAdapter(this));
+        this.getPartySqliteAdapter().open();
+        this.setParties(this.getPartySqliteAdapter().getAll());
+        this.setPartyListView((ListView) this.findViewById(R.id.listView));
+        if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
+    	{
+        	this.setPartyListAdapter(new PartyListAdapter(this, 
+        			 this.getParties()));
+        	this.getPartyListView()
+        	         .setAdapter(this.getPartyListAdapter());
+        	this.getPartyListAdapter().notifyDataSetChanged();
+        	this.getPartyListView().setOnItemClickListener(
+        			new OnItemClickListener() 
+        			{
+	        		   @Override
+	        		   public void onItemClick(AdapterView<?> parent, 
+	        				       View view,int position, long id) 
+	        		   {
+	        		        Party party = (Party) MainActivity.this
+	        		        		.getPartyListAdapter().getItem(position);
+	        		        if (party != null)
+	        		        {
+	        		        	Intent intent = new Intent(MainActivity.this, 
+	        		        			PartyDetailActivity.class);
+	        		        	intent.putExtra("CurrentParty", party.getId());
+	        		        	startActivity(intent);
+	        		        }
+	        		   }
+        		});
+    	}
     }
     
     /**
@@ -140,68 +199,5 @@ public class MainActivity extends Activity {
     public void setPartyListView(ListView partyListView)
     {
     	this.listView = partyListView;
-    }
-    
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-    	
-    	private MainActivity activity;
-
-        public PlaceholderFragment() 
-        {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) 
-        {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-        
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) 
-        {
-            super.onActivityCreated(savedInstanceState);
-            activity = (MainActivity) this.getActivity();
-            if ((activity != null) && (activity instanceof MainActivity))
-            {
-	            activity.setPartySqliteAdapter(new PartySqliteAdapter(activity));
-	            activity.getPartySqliteAdapter().open();
-	            activity.setParties(activity.getPartySqliteAdapter().getAll());
-	            activity.setPartyListView((ListView) activity
-	            		 .findViewById(R.id.listView));
-	            
-	            if ((!activity.getParties().isEmpty()) && 
-	            	(activity.getPartyListView() != null))
-            	{
-    	        	activity.setPartyListAdapter(new PartyListAdapter(activity, 
-    	        			 activity.getParties()));
-    	        	activity.getPartyListView()
-    	        	         .setAdapter(activity.getPartyListAdapter());
-    	        	activity.getPartyListAdapter().notifyDataSetChanged();
-    	        	activity.getPartyListView().setOnItemClickListener(
-    	        			new OnItemClickListener() 
-    	        			{
-	    	        		   @Override
-	    	        		   public void onItemClick(AdapterView<?> parent, 
-	    	        				       View view,int position, long id) 
-	    	        		   {
-	    	        		        Party party = (Party) activity.getPartyListAdapter()
-	    	        		        		.getItem(position);
-	    	        		        if (party != null)
-	    	        		        {
-	    	        		        	Intent intent = new Intent(getActivity(), 
-	    	        		        			PartyDetailActivity.class);
-	    	        		        	intent.putExtra("CurrentParty", party.getId());
-	    	        		        	startActivity(intent);
-	    	        		        }
-	    	        		   }
-    	        		});
-            	}
-            }
-        }
     }
 }

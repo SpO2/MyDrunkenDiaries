@@ -98,8 +98,7 @@ implements DatabaseAdpater<Trip>
 	public TripSqliteAdapter(Context context) 
 	{
 		super(context);
-		tripFixtures();
-		// TODO Auto-generated constructor stub
+		//tripFixtures();
 	}
 
 	@Override
@@ -146,7 +145,7 @@ implements DatabaseAdpater<Trip>
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PLACESCORE, trip.getPlaceScore());
 		values.put(COLUMN_DEPRAVITY, trip.getDepravity());
-		values.put(COLUMN_ENDEDAT, trip.getEndedAt().toString());
+		values.put(COLUMN_ENDEDAT, trip.getEndedAt());
 		values.put(COLUMN_PLACE, trip.getPlace().getId());
 		values.put(COLUMN_PARTY, trip.getParty().getId());
 		
