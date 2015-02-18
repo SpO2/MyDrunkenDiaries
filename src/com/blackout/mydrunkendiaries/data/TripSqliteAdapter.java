@@ -28,7 +28,7 @@ import com.blackout.mydrunkendiaries.tools.DateTimeTools;
  *
  */
 public class TripSqliteAdapter extends BaseSqliteAdapter 
-implements DatabaseAdpater<Trip>
+							   implements DatabaseAdpater<Trip>
 {
 
 	public final static String TABLE_TRIP = "Trip";

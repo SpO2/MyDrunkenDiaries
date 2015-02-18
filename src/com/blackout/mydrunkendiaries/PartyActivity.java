@@ -1,3 +1,13 @@
+/********************************************************           
+ * Program MyDrunkenDiaries                             *   
+ *                                                      *   
+ * Author:  Romain                                      *   
+ *                                                      *   
+ * Purpose:  PartyActivity                              *   
+ *                                                      *   
+ * Usage: List all the parties in the application.      *   
+ *                                                      *   
+ ********************************************************/
 package com.blackout.mydrunkendiaries;
 
 import java.util.List;
@@ -20,9 +30,12 @@ import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
 import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
-
-
-public class MainActivity extends Activity implements DialogButtonClick
+/**
+ * 
+ * @author spo2
+ *
+ */
+public class PartyActivity extends Activity implements DialogButtonClick
 {
 
 	private ListView listView;
@@ -34,7 +47,7 @@ public class MainActivity extends Activity implements DialogButtonClick
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);        
+        setContentView(R.layout.activity_party);        
     }
 
     @Override
@@ -72,7 +85,7 @@ public class MainActivity extends Activity implements DialogButtonClick
  	   party.setName(newPartyDialogFragment.getActivityName().getText().toString());
  	   party.setCreatedAt(DateTimeTools.getDateTime());
  	   PartySqliteAdapter partySqliteAdapter = 
- 			   new PartySqliteAdapter(MainActivity.this);
+ 			   new PartySqliteAdapter(PartyActivity.this);
  	   partySqliteAdapter.open();
  	   partySqliteAdapter.create(party);
  	   partySqliteAdapter.close();
@@ -115,11 +128,11 @@ public class MainActivity extends Activity implements DialogButtonClick
 	        		   public void onItemClick(AdapterView<?> parent, 
 	        				       View view,int position, long id) 
 	        		   {
-	        		        Party party = (Party) MainActivity.this
+	        		        Party party = (Party) PartyActivity.this
 	        		        		.getPartyListAdapter().getItem(position);
 	        		        if (party != null)
 	        		        {
-	        		        	Intent intent = new Intent(MainActivity.this, 
+	        		        	Intent intent = new Intent(PartyActivity.this, 
 	        		        			PartyDetailActivity.class);
 	        		        	intent.putExtra("CurrentParty", party.getId());
 	        		        	startActivity(intent);

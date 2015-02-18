@@ -15,6 +15,9 @@
     <string name="contentdesc_gallery">Voir les images</string>
     <string name="contentdesc_map">Voir sur la carte</string>
     <string name="contentdesc_clock">Heure</string>
+    <string name="contentdesc_weather">Météo</string>
+    <string name="contentdesc_search">Rechercher</string>
+    <string name="hint_search_city">Ville</string>
     <string name="places_list_header">Lieux</string>
     <string name="title_activity_party_detail">PartyDetailActivity</string>
     <string name="title_activity_map">MapActivity</string>
@@ -25,5 +28,6 @@
 	<string name="delete">Supprimer</string>
 	<string name="dialog_confirm_new_trip">L\'ajout d\'un lieu terminera celui en cours</string>
 	<string name="valid">Valider</string>
+	<string name="settings">Paramétrage</string>
 
 </resources>
