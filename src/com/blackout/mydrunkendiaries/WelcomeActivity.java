@@ -4,6 +4,7 @@
 package com.blackout.mydrunkendiaries;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,12 +36,16 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  * @author spo2
  *
  */
-public class WelcomeActivity extends Activity implements OnClickListener
+public class WelcomeActivity extends Activity implements OnClickListener,
+							OnItemClickListener
 {
 	private final static String DEG_UNITS = "°C";
 	private final static String PRESS_UNITS = " hPa";
 	private final static String HUMID_UNITS = "%";
+	private final static String PREF_FILE= "MyDrunkenPrefs";
+	private final static String KEY_CITY = "CITY";
 	private String city;
+	private City resultSearch;
 	private TextView cityName, desc, pressure, temp, humidity;
 	private ImageView icon;
 	private EditText citysearch;
@@ -51,6 +58,10 @@ public class WelcomeActivity extends Activity implements OnClickListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
+        city = sharedPreferences.getString(KEY_CITY, "Paris");
+        
         cityName = (TextView) findViewById(R.id.city_name);
         desc = (TextView) findViewById(R.id.desc);
         pressure = (TextView) findViewById(R.id.pressure);
@@ -60,6 +71,7 @@ public class WelcomeActivity extends Activity implements OnClickListener
         searchCity = (ImageButton) findViewById(R.id.action_search);
         searchCity.setOnClickListener(this);
         cityResult = (ListView) findViewById(R.id.city_list);
+        cityResult.setOnItemClickListener(this);
         citysearch = (EditText) findViewById(R.id.city_search);
         listLayout = (LinearLayout) findViewById(R.id.list_layout);
         WeatherTask weatherTask = new WeatherTask(this);
@@ -131,7 +143,7 @@ public class WelcomeActivity extends Activity implements OnClickListener
 	}
 	
 	/**
-	 * 
+	 * AsyncTask - Get a list of city by name
 	 * @author spo2
 	 *
 	 */
@@ -185,6 +197,10 @@ public class WelcomeActivity extends Activity implements OnClickListener
 		
 	}
 
+	/**
+	 * Expand a view
+	 * @param v the view to expand
+	 */
 	public static void expand(final View v) 
 	{
 	    v.measure(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -215,6 +231,10 @@ public class WelcomeActivity extends Activity implements OnClickListener
 	    v.startAnimation(a);
 	}
 
+	/**
+	 * Collapse a view
+	 * @param v the view to collapse
+	 */
 	public static void collapse(final View v) 
 	{
 	    final int initialHeight = v.getMeasuredHeight();
@@ -269,10 +289,25 @@ public class WelcomeActivity extends Activity implements OnClickListener
 				break;
 			}		
 	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view,
+			int position, long id) 
+	{
+		City city = 
+	}
 	
 	public ListView getCityResult()
 	{
 		return this.cityResult;
 	}
 	
+	public City getResultSearch()
+	{
+		return this.resultSearch;
+	}
+	public void setResultSearch(City resultSearch)
+	{
+		this.resultSearch = resultSearch;
+	}
 }
