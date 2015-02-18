@@ -37,14 +37,12 @@ public class MapActivity extends Activity implements ActionBar.TabListener
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) 
 	{
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) 
 	{
-		// TODO Auto-generated method stub
 		if (tab.getPosition() == 0 && this.getActionBar().getNavigationItemCount() > 1)
 		{
 			Intent intent = new Intent(MapActivity.this, PartyDetailActivity.class);

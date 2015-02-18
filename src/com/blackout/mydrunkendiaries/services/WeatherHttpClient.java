@@ -12,9 +12,11 @@ package com.blackout.mydrunkendiaries.services;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -25,23 +27,72 @@ import java.net.URL;
 public class WeatherHttpClient 
 {
 	private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+	private static String SEARCH_URL = "http://api.openweathermap.org/data/2.5/find?q=";
 	private static String LANG_FR = "&lang=fr";
 	private static String METRIC_UNIT = "&units=metric";
+	private static String TOKEN_LIKE = "&type=like";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
  
     /**
      * Get current weather data
      * @param location
      * @return the json result
+     * @throws IOException 
+     * @throws MalformedURLException 
      */
     public String getWeatherData(String location) 
     {
         HttpURLConnection con = null ;
-        InputStream is = null;
- 
         try 
         {
-            con = (HttpURLConnection) ( new URL(BASE_URL + location + METRIC_UNIT + LANG_FR)).openConnection();
+			con = (HttpURLConnection) ( new URL(BASE_URL + location + 
+					METRIC_UNIT + LANG_FR)).openConnection();
+		} 
+        catch (MalformedURLException e) 
+        {
+			e.printStackTrace();
+		} 
+        catch (IOException e) 
+        {
+			e.printStackTrace();
+		}
+        return getResult(con);
+    }
+    
+    /**
+     * Get the list of the city that contains location
+     * @param location
+     * @return the result of the city request
+     */
+    public String getCityList(String location)
+    {
+    	HttpURLConnection con = null ;
+        try 
+        {
+			con = (HttpURLConnection) ( new URL(SEARCH_URL + location + TOKEN_LIKE + 
+					METRIC_UNIT + LANG_FR)).openConnection();
+		} 
+        catch (MalformedURLException e) 
+        {
+			e.printStackTrace();
+		} 
+        catch (IOException e) 
+        {
+			e.printStackTrace();
+		}
+        return getResult(con);
+    }
+    
+    /**
+     * 
+     * @param con
+     * @return the JSON result of the webservice request
+     */
+    public String getResult(HttpURLConnection con)
+    {
+    	InputStream is = null;
+    	try 
+        {
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(true);
@@ -81,9 +132,9 @@ public class WeatherHttpClient
             	
             }
         }
-        return null;          
+        return null;
     }
-     
+    
     public byte[] getImage(String code) 
     {
         HttpURLConnection con = null ;
