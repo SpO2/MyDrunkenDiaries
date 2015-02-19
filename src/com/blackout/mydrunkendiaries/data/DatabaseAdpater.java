@@ -19,7 +19,7 @@ import android.os.Parcelable;
  * @author spo2
  *
  */
-public interface DatabaseAdpater<T> extends Parcelable 
+public interface DatabaseAdpater<T>
 {
 	public long create(T entity);
 	public int update(T entity);
