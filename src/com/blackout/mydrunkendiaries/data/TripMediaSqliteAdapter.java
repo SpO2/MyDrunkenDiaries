@@ -149,7 +149,7 @@ implements DatabaseAdpater<TripMedia>
 				null);
 		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		return cursorToItem(cursor);
 	}
 
 	/**
@@ -175,7 +175,7 @@ implements DatabaseAdpater<TripMedia>
 		{
 			while (!cursor.isAfterLast())
 			{
-				tripMedias.add(this.cursorToItem(cursor));
+				tripMedias.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -203,7 +203,7 @@ implements DatabaseAdpater<TripMedia>
 		{
 			while (!cursor.isAfterLast())
 			{
-				tripMedias.add(this.cursorToItem(cursor));
+				tripMedias.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -216,8 +216,7 @@ implements DatabaseAdpater<TripMedia>
 	 * @param cursor
 	 * @return TripMedia
 	 */
-	@Override
-	public TripMedia cursorToItem(Cursor cursor) 
+	public static TripMedia cursorToItem(Cursor cursor) 
 	{
 		TripMedia tripMedia = new TripMedia();
 		tripMedia.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));

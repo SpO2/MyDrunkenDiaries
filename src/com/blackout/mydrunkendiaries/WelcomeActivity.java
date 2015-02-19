@@ -65,6 +65,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
         
         cityName = (TextView) findViewById(R.id.city_name);
         desc = (TextView) findViewById(R.id.desc);
+        desc.requestFocus();
         pressure = (TextView) findViewById(R.id.pressure);
         temp = (TextView) findViewById(R.id.temp);
         humidity = (TextView) findViewById(R.id.humidity);
@@ -139,16 +140,19 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 				
 				@Override
 				public void run() {
-					cityName.setText(weather.getName());
-					desc.setText(weather.getWeatherDatas().get(0).getDescription());
-					pressure.setText(weather.getMainData().getPressure().toString()
-							+ PRESS_UNITS);
-					temp.setText(weather.getMainData().getTemp().toString() + DEG_UNITS);
-					humidity.setText(weather.getMainData().getHumidity().toString()
-							+ HUMID_UNITS);
-					String imgURI = WeatherHttpClient.getImageURI(weather
-							.getWeatherDatas().get(0).getIcon());	
-					ImageLoader.getInstance().displayImage(imgURI + ".png", icon);
+					if (weather != null)
+					{
+						cityName.setText(weather.getName());
+						desc.setText(weather.getWeatherDatas().get(0).getDescription());
+						pressure.setText(weather.getMainData().getPressure().toString()
+								+ PRESS_UNITS);
+						temp.setText(weather.getMainData().getTemp().toString() + DEG_UNITS);
+						humidity.setText(weather.getMainData().getHumidity().toString()
+								+ HUMID_UNITS);
+						String imgURI = WeatherHttpClient.getImageURI(weather
+								.getWeatherDatas().get(0).getIcon());	
+						ImageLoader.getInstance().displayImage(imgURI + ".png", icon);
+					}
 				}
 			});
 		}
@@ -296,12 +300,13 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 						cityTask.execute(new String[]{citySearch.getText().toString()});
 					}
 				}
-				
+				break;
 			}
 			case R.id.go_to_parties:
 			{
 				Intent intent = new Intent(WelcomeActivity.this, PartyActivity.class);
 				startActivity(intent);
+				break;
 			}
 			default:
 				break;

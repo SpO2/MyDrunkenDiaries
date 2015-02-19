@@ -15,6 +15,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.blackout.mydrunkendiaries.adapter.PartyCursorAdapter;
 import com.blackout.mydrunkendiaries.adapter.PartyListAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
@@ -42,6 +44,8 @@ public class PartyActivity extends Activity implements DialogButtonClick
 	private List<Party> parties;
 	private PartyListAdapter adapter;
 	private PartySqliteAdapter partySqlAdapter;
+	private PartyCursorAdapter partyCursorAdapter;
+	private Cursor partyCursor;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -112,9 +116,10 @@ public class PartyActivity extends Activity implements DialogButtonClick
     {
     	this.setPartySqliteAdapter(new PartySqliteAdapter(this));
         this.getPartySqliteAdapter().open();
-        this.setParties(this.getPartySqliteAdapter().getAll());
+        //this.setParties(this.getPartySqliteAdapter().getAll());
+        this.partyCursor = this.partySqlAdapter.getAllCursor();
         this.setPartyListView((ListView) this.findViewById(R.id.listView));
-        if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
+        /*if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
     	{
         	this.setPartyListAdapter(new PartyListAdapter(this, 
         			 this.getParties()));
@@ -139,7 +144,25 @@ public class PartyActivity extends Activity implements DialogButtonClick
 	        		        }
 	        		   }
         		});
-    	}
+    	}*/
+        if (this.partyCursor.moveToFirst())
+        {
+        	this.partyCursorAdapter = new PartyCursorAdapter(this, this.partyCursor);
+        	this.listView.setAdapter(this.partyCursorAdapter);
+        	this.getPartyListView().setOnItemClickListener(
+        			new OnItemClickListener() 
+        			{
+	        		   @Override
+	        		   public void onItemClick(AdapterView<?> parent, 
+	        				       View view,int position, long id) 
+	        		   {
+        		        	Intent intent = new Intent(PartyActivity.this, 
+        		        			PartyDetailActivity.class);
+        		        	intent.putExtra("CurrentParty", (Long) view.getTag());
+        		        	startActivity(intent);
+	        		   }
+        		});
+        }
     }
     
     /**

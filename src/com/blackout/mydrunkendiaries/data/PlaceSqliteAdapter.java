@@ -127,7 +127,26 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null);
 		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		return cursorToItem(cursor);
+	}
+	
+	public Cursor getCursor(long id)
+	{
+		
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 
 	/**
@@ -151,12 +170,26 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		{
 			while (!cursor.isAfterLast())
 			{
-				places.add(this.cursorToItem(cursor));
+				places.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
 		
 		return places;
+	}
+	
+	public Cursor getAllCursor() 
+	{
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 
 	/**
@@ -164,8 +197,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	 * @param cursor
 	 * @return a Place.
 	 */
-	@Override
-	public Place cursorToItem(Cursor cursor) 
+	public static Place cursorToItem(Cursor cursor) 
 	{
 		Place place = new Place();
 		place.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));

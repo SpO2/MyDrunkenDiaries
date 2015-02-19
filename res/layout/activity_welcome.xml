@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:descendantFocusability="beforeDescendants"
+  	android:focusableInTouchMode="true">
   <LinearLayout 
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
@@ -118,9 +120,7 @@
 	        android:textColor="@color/list_item_text"
 	        android:background="@color/global_background"
 	        android:text="@string/party_list_btn"
-	        ><requestFocus />
-	        
-	        </Button>
+	        />
 	    
     </LinearLayout>
 

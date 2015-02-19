@@ -78,12 +78,12 @@ public class PartyListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) 
 	{
-		if (inflater == null)
-            inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = convertView;
 		if (v == null)
 		{
+			if (inflater == null)
+	            inflater = (LayoutInflater) activity
+	                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = inflater.inflate(R.layout.party_list_row,null);	
 		}
 		

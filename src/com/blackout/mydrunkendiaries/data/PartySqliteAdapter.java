@@ -127,6 +127,24 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		return this.cursorToItem(cursor);
 	}
 	
+	public Cursor getCursor(long id)
+	{
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
+	}
+	
 	/**
 	 * Fetch all the parties from the database.
 	 * @return Array of party.
@@ -156,13 +174,27 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	    return parties;
 	}
 	
+	public Cursor getAllCursor()
+	{		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+	
+	    cursor.moveToFirst();
+	    
+	    return cursor;
+	}
+	
 	/**
 	 * Convert a record into a Party object.
 	 * @param cursor
 	 * @return a Party.
 	 */
-    @Override
-	public Party cursorToItem(Cursor cursor)
+	public static Party cursorToItem(Cursor cursor)
 	{
 		Party party = new Party();
 		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));

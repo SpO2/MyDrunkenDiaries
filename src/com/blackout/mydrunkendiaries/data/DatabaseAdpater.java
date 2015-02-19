@@ -26,5 +26,4 @@ public interface DatabaseAdpater<T> extends Parcelable
 	public int delete(T entity);
 	public T get(long id);
 	public ArrayList<T> getAll();
-	public T cursorToItem(Cursor cursor);
 }

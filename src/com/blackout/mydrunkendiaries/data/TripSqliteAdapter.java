@@ -192,12 +192,30 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		
 		if(cursor.moveToFirst())
 		{
-			return this.cursorToItem(cursor);
+			return cursorToItem(cursor);
 		}
 		else
 		{
 			return null;
 		}
+	}
+	
+	public Cursor getCursor(long id) 
+	{
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIP,
+				COLUM_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		
+		cursor.moveToFirst();
+		return cursor;
 	}
 	
 	/**
@@ -212,7 +230,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		Cursor cursor =  this.getDb().rawQuery(QUERYWITHPLACE, selectionArgs);
 		if(cursor.moveToFirst())
 		{
-			return this.cursorToItemWithPlace(cursor);
+			return cursorToItemWithPlace(cursor);
 		}		
 		else
 		{
@@ -243,12 +261,29 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		{
 			while (!cursor.isAfterLast())
 			{
-				trips.add(this.cursorToItem(cursor));
+				trips.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
 		
 		return trips;
+	}
+	
+	public Cursor getByPartyCursor(Party party)
+	{
+		String selection = COLUMN_PARTY + " = ?";
+		String selectionArgs[] = {String.valueOf(party.getId())};
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIP,
+				COLUM_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 	
 	/**
@@ -267,7 +302,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		{
 			while(!cursor.isAfterLast())
 			{
-				trips.add(this.cursorToItemWithPlace(cursor));
+				trips.add(cursorToItemWithPlace(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -294,12 +329,22 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		{
 			while(!cursor.isAfterLast())
 			{
-				trips.add(this.cursorToItemWithPlace(cursor));
+				trips.add(cursorToItemWithPlace(cursor));
 				cursor.moveToNext();
 			}
 		}	
 		
 		return trips;
+	}
+	
+	public Cursor getByPartyEndedDataNotNullCursor(long party)
+	{
+
+		String selectionArgs[] = {String.valueOf(party)};
+		Cursor cursor = this.getDb().rawQuery(QUERYWITHPLACEBYPARTYENDEDDATENOTNULL,
+				selectionArgs);
+		
+		return cursor;
 	}
 	
 	/**
@@ -315,7 +360,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 				selectionArgs);
 		if (cursor.moveToFirst())
 		{
-			return this.cursorToItemWithPlace(cursor);
+			return cursorToItemWithPlace(cursor);
 		}
 		else
 		{
@@ -344,12 +389,25 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		{
 			while (!cursor.isAfterLast())
 			{
-				trips.add(this.cursorToItem(cursor));
+				trips.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
 		
 		return trips;
+	}
+	
+	public Cursor getAllCursor() 
+	{
+		Cursor cursor = this.getDb().query(TABLE_TRIP,
+				COLUM_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+		
+		return cursor;
 	}
 
 	/**
@@ -357,8 +415,7 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 	 * @param cursor
 	 * @return a Trip
 	 */
-	@Override
-	public Trip cursorToItem(Cursor cursor) 
+	public static Trip cursorToItem(Cursor cursor) 
 	{
 		Trip trip = new Trip();
 		
@@ -377,9 +434,9 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 	 * @param cursor
 	 * @return a Trip with its Place.
 	 */
-	public Trip cursorToItemWithPlace(Cursor cursor)
+	public static Trip cursorToItemWithPlace(Cursor cursor)
 	{
-		Trip trip = this.cursorToItem(cursor);
+		Trip trip = cursorToItem(cursor);
 		
 		if (trip != null)
 		{

@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
+import com.blackout.mydrunkendiaries.adapter.TripCursorAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
@@ -45,7 +47,9 @@ public class PartyDetailActivity extends Activity
 	private ArrayList<Trip> trips;
 	private Long currentPartyId;
 	private Party currentParty;
-	private Trip tripInProgress;	
+	private Trip tripInProgress;
+	private Cursor cursorTripByParty;
+	private TripCursorAdapter tripCursorAdapter;
 	
 	private ListView lv;
 	private TextView lastActivity;
@@ -163,14 +167,21 @@ public class PartyDetailActivity extends Activity
        	}
        	this.tripSqliteAdapter.close();
        	this.tripSqliteAdapter.open();
-       	this.trips = this.tripSqliteAdapter
-        		.getByPartyWithPlaceEndedDataNotNull(this.currentPartyId);
-        if (!this.trips.isEmpty() && (this.lv != null))
-        {
-        	this.placesListAdapater = new PlacesListAdapter(this, this.trips);
-           	this.lv.setAdapter(this.placesListAdapater);
-           	this.placesListAdapater.notifyDataSetChanged();
-        }   			
+       	this.cursorTripByParty = this.tripSqliteAdapter
+       			.getByPartyEndedDataNotNullCursor(this.currentPartyId);
+       	if(this.cursorTripByParty.moveToFirst())
+       	{
+       		this.tripCursorAdapter = new TripCursorAdapter(this, this.cursorTripByParty);
+       		this.lv.setAdapter(this.tripCursorAdapter);
+       	}
+//       	this.trips = this.tripSqliteAdapter
+//        		.getByPartyWithPlaceEndedDataNotNull(this.currentPartyId);
+//        if (!this.trips.isEmpty() && (this.lv != null))
+//        {
+//        	this.placesListAdapater = new PlacesListAdapter(this, this.trips);
+//           	this.lv.setAdapter(this.placesListAdapater);
+//           	this.placesListAdapater.notifyDataSetChanged();
+//        }   			
 	}
 	
 	private void showNewPlaceDialog()
