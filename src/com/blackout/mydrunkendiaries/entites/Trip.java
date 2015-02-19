@@ -11,13 +11,15 @@
 
 package com.blackout.mydrunkendiaries.entites;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * @author spo2
  *
  */
-public class Trip 
-{
+public class Trip implements Parcelable {
+	public static final int PARCELABLE_CODE = 2;
 	private long id;
 	private Place place;
 	private Party party;
@@ -25,118 +27,159 @@ public class Trip
 	private String endedAt;
 	private Integer placeScore;
 	private Integer depravity;
-	
+
 	/**
 	 * @return the id
 	 */
-	public long getId() 
-	{
+	public long getId() {
 		return id;
 	}
-	
+
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setId(long id) 
-	{
+	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * @return the place
 	 */
-	public Place getPlace() 
-	{
+	public Place getPlace() {
 		return place;
 	}
 
 	/**
-	 * @param place the place to set
+	 * @param place
+	 *            the place to set
 	 */
-	public void setPlace(Place place) 
-	{
+	public void setPlace(Place place) {
 		this.place = place;
 	}
 
 	/**
 	 * @return the party
 	 */
-	public Party getParty() 
-	{
+	public Party getParty() {
 		return party;
 	}
 
 	/**
-	 * @param party the party to set
+	 * @param party
+	 *            the party to set
 	 */
-	public void setParty(Party party) 
-	{
+	public void setParty(Party party) {
 		this.party = party;
 	}
 
 	/**
 	 * @return the createdAt
 	 */
-	public String getCreatedAt() 
-	{
+	public String getCreatedAt() {
 		return createdAt;
 	}
 
 	/**
-	 * @param createdAt the createdAt to set
+	 * @param createdAt
+	 *            the createdAt to set
 	 */
-	public void setCreatedAt(String createdAt) 
-	{
+	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	/**
 	 * @return the endedAt
 	 */
-	public String getEndedAt() 
-	{
+	public String getEndedAt() {
 		return endedAt;
 	}
 
 	/**
-	 * @param endedAt the endedAt to set
+	 * @param endedAt
+	 *            the endedAt to set
 	 */
-	public void setEndedAt(String endedAt) 
-	{
+	public void setEndedAt(String endedAt) {
 		this.endedAt = endedAt;
 	}
 
 	/**
 	 * @return the placeScore
 	 */
-	public Integer getPlaceScore() 
-	{
+	public Integer getPlaceScore() {
 		return placeScore;
 	}
-	
+
 	/**
-	 * @param placeScore the placeScore to set
+	 * @param placeScore
+	 *            the placeScore to set
 	 */
-	public void setPlaceScore(Integer placeScore) 
-	{
+	public void setPlaceScore(Integer placeScore) {
 		this.placeScore = placeScore;
 	}
-	
+
 	/**
 	 * @return the depravity
 	 */
-	public Integer getDepravity() 
-	{
+	public Integer getDepravity() {
 		return depravity;
 	}
-	
+
 	/**
-	 * @param depravity the depravity to set
+	 * @param depravity
+	 *            the depravity to set
 	 */
-	public void setDepravity(Integer depravity) 
-	{
+	public void setDepravity(Integer depravity) {
 		this.depravity = depravity;
 	}
-	
-	
+
+	/*
+	 * Trip Consturctor
+	 */
+	public Trip() {
+	}
+
+	/*
+	 * Trip parcel Constructor
+	 */
+	public Trip(Parcel in) {
+		this.id = in.readLong();
+		this.party = in.readParcelable(this.party.getClass().getClassLoader());
+		this.place = in.readParcelable(this.place.getClass().getClassLoader());
+		this.createdAt = in.readString();
+		this.endedAt = in.readString();
+		this.placeScore = in.readInt();
+		this.depravity = in.readInt();
+
+	}
+
+	@Override
+	public int describeContents() {
+		return PARCELABLE_CODE;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(this.id);
+		dest.writeValue(this.party);
+		dest.writeValue(this.place);
+		dest.writeString(this.createdAt);
+		dest.writeString(this.endedAt);
+		dest.writeInt(this.placeScore);
+		dest.writeInt(this.depravity);
+
+	}
+
+	public static final Parcelable.Creator<Trip> CREATOR = new Parcelable.Creator<Trip>() {
+		@Override
+		public Trip createFromParcel(Parcel source) {
+			return new Trip(source);
+		}
+
+		@Override
+		public Trip[] newArray(int size) {
+			return new Trip[size];
+		}
+	};
+
 }

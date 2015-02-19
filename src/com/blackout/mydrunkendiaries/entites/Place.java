@@ -11,79 +11,117 @@
 
 package com.blackout.mydrunkendiaries.entites;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author spo2
  *
  */
-public class Place 
-{
+public class Place implements Parcelable {
+	public static final int PARCELABLE_CODE = 1;
 	private long id;
 	private String name;
 	private double longitude;
 	private double latitude;
-	
+
 	/**
 	 * @return the id
 	 */
-	public long getId() 
-	{
+	public long getId() {
 		return id;
 	}
-	
+
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setId(long id) 
-	{
+	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * @return the name
 	 */
-	public String getName() 
-	{
+	public String getName() {
 		return name;
 	}
-	
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
-	public void setName(String name) 
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
 	 * @return the longitude
 	 */
-	public double getLongitude() 
-	{
+	public double getLongitude() {
 		return longitude;
 	}
-	
+
 	/**
-	 * @param longitude the longitude to set
+	 * @param longitude
+	 *            the longitude to set
 	 */
-	public void setLongitude(double longitude) 
-	{
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	
+
 	/**
 	 * @return the latitude
 	 */
-	public double getLatitude() 
-	{
+	public double getLatitude() {
 		return latitude;
 	}
-	
+
 	/**
-	 * @param latitude the latitude to set
+	 * @param latitude
+	 *            the latitude to set
 	 */
-	public void setLatitude(double latitude) 
-	{
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	
+
+	public Place() {
+	}
+
+	/*
+	 * Place parcel Constructor
+	 */
+	public Place(Parcel in) {
+		this.id = in.readLong();
+		this.name = in.readString();
+		this.longitude = in.readDouble();
+		this.latitude = in.readDouble();
+
+	}
+
+	@Override
+	public int describeContents() {
+		return PARCELABLE_CODE;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(this.id);
+		dest.writeString(this.name);
+		dest.writeDouble(this.longitude);
+		dest.writeDouble(this.latitude);
+	}
+
+	public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
+		@Override
+		public Place createFromParcel(Parcel source) {
+			return new Place(source);
+		}
+
+		@Override
+		public Place[] newArray(int size) {
+			return new Place[size];
+		}
+	};
+
 }
