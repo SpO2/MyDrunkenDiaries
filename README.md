@@ -28,5 +28,7 @@ Pour ajouter une soirée, cliquer sur [Nouvelle soirée] dans la barre d'action 
 Pour ajouter une activité, cliquer sur [Nouveau lieu] dans la barre d'action de l'écran Liste des lieux.
 Pour terminer une activité, cliquer sur le bouton [Fin d'activité] dans la partie haute de l'écran Liste des lieux.
 Pour terminer une soirée, cliquer sur le bouton [Terminer la soirée] dans la barre d'action de l'écran Liste des lieux.
+Pour prendre des photos, dans l'écran Liste des lieux, cliquer sur l'icone appareil photo.
+Pour prendre des vidéos, dans l'écran Liste des lieux, cliquer sur l'icone vidéo.
 
 Pour supprimer une/des soirées ou un/des lieux, faites un appui long sur l'un des lieux/soirée dans la liste.
