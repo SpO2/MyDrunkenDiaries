@@ -312,6 +312,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 
 	}
 
+	/**
+	 * Set the action bar.
+	 */
 	private void setActionBar() {
 		final ActionBar actionBar = this.getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -497,7 +500,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		return this.currentParty;
 	}
 
-	/*
+	/**
 	 * take a photo for current trip.
 	 */
 	private void takePhoto() {
@@ -520,7 +523,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		}
 	}
 
-	/*
+	/**
 	 * take a video for current trip.
 	 */
 	private void takeVideo() {

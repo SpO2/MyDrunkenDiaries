@@ -100,7 +100,7 @@ public class TripCursorAdapter extends CursorAdapter {
 			time.setText(createdAt);
 		}
 	}
-	/*
+	/**
 	 * @param long tripId Id of the selected trip
 	 * Open new gallery by id
 	 */
