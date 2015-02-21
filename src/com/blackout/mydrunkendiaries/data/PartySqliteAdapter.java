@@ -164,7 +164,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				selectionArgs,
 				null,
 				null,
-				null);
+				COLUMN_ID + " DESC");
 		cursor.moveToFirst();
 		
 		return cursor;
