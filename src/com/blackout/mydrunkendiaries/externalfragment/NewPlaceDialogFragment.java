@@ -25,14 +25,20 @@ import android.widget.EditText;
 import com.blackout.mydrunkendiaries.R;
 
 /**
- * @author spo2
+ * Dialog for the new place to add.
+ * @author romain
  *
  */
 @SuppressLint("InflateParams")
 public class NewPlaceDialogFragment extends DialogFragment 
 {
-
+	/**
+	 * Listener for dialog button click.
+	 */
 	private DialogButtonClick mListener;
+	/**
+	 * Hold the new place name.
+	 */
 	private EditText placeName;
 	
 	@Override
@@ -76,7 +82,7 @@ public class NewPlaceDialogFragment extends DialogFragment
 	}
 	
 	/**
-	 * 
+	 * Get the new place name.
 	 * @return the new place name.
 	 */
 	public EditText getPlaceName()

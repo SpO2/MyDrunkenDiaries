@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Class for the city webservice.
+ * @author romain
+ *
+ */
 public class City 
 {
 	/**

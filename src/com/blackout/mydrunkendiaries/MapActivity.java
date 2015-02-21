@@ -11,11 +11,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * @author spo2
+ * Activity that hold map itinerary of the party.
+ * @author romain
  *
  */
 public class MapActivity extends Activity implements ActionBar.TabListener
 {
+	/**
+	 * The current party Id.
+	 */
 	private Long currentPartyId;
 	
 	@Override

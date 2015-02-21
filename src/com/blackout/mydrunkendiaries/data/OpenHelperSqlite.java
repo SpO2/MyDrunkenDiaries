@@ -18,16 +18,27 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * @author spo2
+ * Sqlite helper - tools to connect to sqlite database.
+ * @author romain
  *
  */
 public class OpenHelperSqlite extends SQLiteOpenHelper 
 {
+	/**
+	 * Name of the database.
+	 */
 	public final static String DBNAME = "Database.sqlite";
+	/**
+	 * Current database version.
+	 */
 	public final static int VERSION = 1;
+	/**
+	 * Sqlite database.
+	 */
 	public SQLiteDatabase db;
 	
 	/**
+	 * Constructor.
 	 * @param context
 	 * @param name
 	 * @param factory
@@ -41,6 +52,7 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	}
 
 	/**
+	 * Constructor.
 	 * @param context
 	 * @param name
 	 * @param factory
@@ -56,6 +68,7 @@ public class OpenHelperSqlite extends SQLiteOpenHelper
 	}
 	
 	/**
+	 * Constructor.
 	 * @param context
 	 */
 	public OpenHelperSqlite(Context context)

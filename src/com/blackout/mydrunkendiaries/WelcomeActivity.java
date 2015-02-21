@@ -36,25 +36,64 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
- * Welcome activity
- * @author spo2
+ * Welcome activity - Show on application startup.
+ * @author romain
  *
  */
 public class WelcomeActivity extends Activity implements OnClickListener,
 							OnItemClickListener
 {
+	/**
+	 * Degrees unit. (Weather Webservice)
+	 */
 	private final static String DEG_UNITS = "°C";
+	/**
+	 * Pressure unit. (Weather Webservice)
+	 */
 	private final static String PRESS_UNITS = " hPa";
+	/**
+	 * Humidity unit. (Weather Webservice)
+	 */
 	private final static String HUMID_UNITS = "%";
+	/**
+	 * Name of the pref file to store the last city for the weather webservice.
+	 */
 	private final static String PREF_FILE= "MyDrunkenPrefs";
+	/**
+	 * Key to store the last city for the weather webservice.
+	 */
 	private final static String KEY_CITY = "CITY";
+	/**
+	 * City Name. (Weather Webservice)
+	 */
 	private String city;
+	/**
+	 * List of the city. (Weather Webservice)
+	 */
 	private List<Weather> resultSearch;
+	/**
+	 * Hold information of the current weather.
+	 */
 	private TextView cityName, desc, pressure, temp, humidity;
+	/**
+	 * Image of the current weather.
+	 */
 	private ImageView icon;
+	/**
+	 * Search city.
+	 */
 	private EditText citySearch;
+	/**
+	 * Hold city search results.
+	 */
 	private ListView cityResult;
+	/**
+	 * Layout to show/hide on city search.
+	 */
 	private LinearLayout listLayout;
+	/**
+	 * Button search.
+	 */
 	private ImageButton searchCity;
 	
 	@Override
@@ -81,6 +120,9 @@ public class WelcomeActivity extends Activity implements OnClickListener,
         refreshWeather();
     }
 	
+	/**
+	 * Refresh the current weather.
+	 */
 	public void refreshWeather()
 	{
 		collapse(listLayout);

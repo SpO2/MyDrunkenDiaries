@@ -25,15 +25,28 @@ import android.widget.TextView;
 import com.blackout.mydrunkendiaries.R;
 
 /**
- * @author spo2
+ * Dialog for confirmation.
+ * @author romain
  *
  */
 @SuppressLint("InflateParams")
 public class ConfirmDialog extends DialogFragment 
 {
+	/**
+	 * Listener for the dialog button click.
+	 */
 	private DialogButtonClick mListener;
+	/**
+	 * Message of the dialog.
+	 */
 	private String message;
+	/**
+	 * Indicate if dialog should show or hide a rating.
+	 */
 	private Boolean withRating = false;
+	/**
+	 * RatingBar of the dialog.
+	 */
 	private RatingBar beerBar;
 	
 	/**

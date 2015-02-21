@@ -21,13 +21,22 @@ import com.blackout.mydrunkendiaries.entites.Trip;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
- * @author spo2
+ * Adapter for the trip list (party detail)
+ * @author romain
  *
  */
 public class TripCursorAdapter extends CursorAdapter {
 
+	/**
+	 * The count of selected items.
+	 */
 	private Integer selectedCount;
 	
+	/**
+	 * Constructor of the trip adapter.
+	 * @param context (activity)
+	 * @param c the cursor 
+	 */
 	public TripCursorAdapter(Context context, Cursor c) 
 	{
 		super(context, c, 0);

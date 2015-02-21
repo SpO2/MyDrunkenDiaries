@@ -45,23 +45,63 @@ import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
 import com.blackout.mydrunkendiaries.externalfragment.NewPlaceDialogFragment;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
+/**
+ * Activity that hold the trip for the party selected.
+ * @author romain
+ *
+ */
 public class PartyDetailActivity extends Activity 
 								 implements DialogButtonClick, ActionBar.TabListener{
 	
+	/**
+	 * Sqlite adapter for the Trip.
+	 */
 	private TripSqliteAdapter tripSqliteAdapter;
-	private ArrayList<Trip> trips;
+	/**
+	 * Current party Id.
+	 */
 	private Long currentPartyId;
+	/**
+	 * Current party object.
+	 */
 	private Party currentParty;
+	/**
+	 * Trip currently in progress (Object).
+	 */
 	private Trip tripInProgress;
+	/**
+	 * A cursor to the Trip (request by party).
+	 */
 	private Cursor cursorTripByParty;
+	/**
+	 * The cursor adapter for the trip listview.
+	 */
 	private TripCursorAdapter tripCursorAdapter;
 	
+	/**
+	 * Listview that hold the ended trips.
+	 */
 	private ListView lv;
+	/**
+	 * Hold the name of the trip in progress.
+	 */
 	private TextView lastActivity;
+	/**
+	 * The hour of creation of the trip in prgress.
+	 */
 	private TextView partyBegin;
+	/**
+	 * The rating bar of the trip in progress.
+	 */
 	private RatingBar beerBar;
 	
+	/**
+	 * Current action mode  (used for the multiple delete).
+	 */
 	private ActionMode mActionMode;
+	/**
+	 * Callback for the actionMode.
+	 */
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
 	    // Called when the action mode is created; startActionMode() was called

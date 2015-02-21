@@ -23,7 +23,8 @@ import com.blackout.mydrunkendiaries.R;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 
 /**
- * @author spo2
+ * Cursor Adapter for the Party list.
+ * @author romain
  *
  */
 public class PartyCursorAdapter extends CursorAdapter 
@@ -33,6 +34,11 @@ public class PartyCursorAdapter extends CursorAdapter
 	 */
 	private Integer selectedCount;
 	
+	/**
+	 * Constructor.
+	 * @param context
+	 * @param c (Cursor)
+	 */
 	public PartyCursorAdapter(Context context, Cursor c) 
 	{
 		super(context, c, 0);

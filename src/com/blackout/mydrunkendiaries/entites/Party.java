@@ -13,14 +13,27 @@ package com.blackout.mydrunkendiaries.entites;
 
 
 /**
- * @author spo2
+ * Class for the party entity.
+ * @author romain
  *
  */
 public class Party 
 {
+	/**
+	 * Id of the party.
+	 */
 	private long id;
+	/**
+	 * Name of the party.
+	 */
 	private String name;
+	/**
+	 * Creation date of the party.
+	 */
 	private String createdAt;
+	/**
+	 * Ended date of the party.
+	 */
 	private String endedAt;
 	
 	/**

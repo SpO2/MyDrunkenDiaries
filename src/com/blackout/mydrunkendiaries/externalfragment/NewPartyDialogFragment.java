@@ -25,13 +25,19 @@ import android.widget.EditText;
 import com.blackout.mydrunkendiaries.R;
 
 /**
- * @author spo2
+ * Dialog for adding a new party.
+ * @author romain
  *
  */
 public class NewPartyDialogFragment extends DialogFragment 
 {
-	
+	/**
+	 * Hold the name of the new party.
+	 */
 	private EditText activityName;
+	/**
+	 * Listener for the dialog button click.
+	 */
 	private DialogButtonClick mListener;
 	
 	@Override
@@ -77,7 +83,7 @@ public class NewPartyDialogFragment extends DialogFragment
     }
 	
 	/**
-	 * 
+	 * Give the new party name.
 	 * @return the EditText that contains the new activity name
 	 */
 	public EditText getActivityName()

@@ -24,22 +24,52 @@ import com.blackout.mydrunkendiaries.entites.Trip;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
- * @author spo2
+ * Sqlite adapter for Trip entity.
+ * @author romain
  *
  */
 public class TripSqliteAdapter extends BaseSqliteAdapter 
 							   implements DatabaseAdpater<Trip>
 {
-
+	/**
+	 * Name of the table.
+	 */
 	public final static String TABLE_TRIP = "Trip";
+	/**
+	 * Name of the id column.
+	 */
 	public final static String COLUMN_ID = "_id";
+	/**
+	 * Name of the place column.
+	 */
 	public final static String COLUMN_PLACE = "place";
+	/**
+	 * Name of the party column.
+	 */
 	public final static String COLUMN_PARTY = "party";
+	/**
+	 * Name of the placeScore column.
+	 */
 	public final static String COLUMN_PLACESCORE = "placescore";
+	/**
+	 * Name of the depravity column.
+	 */
 	public final static String COLUMN_DEPRAVITY = "depravity";
+	/**
+	 * Name of the begin date column.
+	 */
 	public final static String COLUMN_CREATEDAT = "createdat";
+	/**
+	 * Name of the ended date column.
+	 */
 	public final static String COLUMN_ENDEDAT = "endedat";
+	/**
+	 * Name of the place id column.
+	 */
 	public final static String COLUMN_PLACE_ID = "pid";
+	/**
+	 * List of the column.
+	 */
 	public final static String[] COLUM_LIST = {COLUMN_ID,
 								 COLUMN_PLACE,
 								 COLUMN_PARTY,
@@ -48,6 +78,9 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 								 COLUMN_CREATEDAT,
 								 COLUMN_ENDEDAT};
 	
+	/**
+	 * Schema of the table.
+	 */
 	public final static String SCHEMA = "CREATE TABLE " +
 								TripSqliteAdapter.TABLE_TRIP + " ( " +
 								TripSqliteAdapter.COLUMN_ID + 
@@ -65,6 +98,9 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 								") REFERENCES " + PlaceSqliteAdapter.TABLE_PLACE +
 								"(" + PlaceSqliteAdapter.COLUMN_ID + "));";
 	
+	/**
+	 * Query to get trip with place.
+	 */
 	private final static String QUERYWITHPLACE = "SELECT t._id, t.placescore, t.place " +
 						  "t.depravity, t.createdat, t.endedat, p._id pid, " + 
 						  "p.name, p.longitude, p.latitude " +
@@ -72,18 +108,27 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 						  "LEFT JOIN Place p ON p._id = t.place " +
 						  "WHERE t._id = ?";
 	
+	/**
+	 * Query to get trip with the place by party.
+	 */
 	public final static String QUERYWITHPLACEBYPARTY = "SELECT t._id, t.placescore, " +
 	                      "t.depravity, t.createdat, t.endedat, p._id pid, " +
 			              "p.name, p.longitude, p.latitude " + 
 	                      "FROM TRIP t " +
 			              "LEFT JOIN Place p ON p._id = t.place " + 
 	                      "WHERE t.party = ?";
+	/**
+	 * Query to get trip, which ended date is not null, with the place by party.
+	 */
 	public final static String QUERYWITHPLACEBYPARTYENDEDDATENOTNULL = "SELECT t._id, t.placescore, " +
             			  "t.depravity, t.createdat, t.endedat, p._id pid, " +
             			  "p.name, p.longitude, p.latitude " + 
             			  "FROM TRIP t " +
             			  "LEFT JOIN Place p ON p._id = t.place " + 
             			  "WHERE t.party = ? AND t.endedat IS NOT NULL";
+	/**
+	 * Query to get trip, which ended date is null, with the place by party.
+	 */
 	public final static String QUERYWITHPLACEBYPARTYENDEDDATENULL = "SELECT t._id, t.placescore, " +
 			  			  "t.depravity, t.createdat, t.endedat, p._id pid, " +
 			  			  "p.name, p.longitude, p.latitude " + 
@@ -200,6 +245,11 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		}
 	}
 	
+	/**
+	 * Get a cursor to the trip.
+	 * @param id
+	 * @return Cursor
+	 */
 	public Cursor getCursor(long id) 
 	{
 		String[] selectionArgs = {String.valueOf(id)};
@@ -269,6 +319,11 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		return trips;
 	}
 	
+	/**
+	 * Get a cursor to the trips.
+	 * @param party
+	 * @return Cursor
+	 */
 	public Cursor getByPartyCursor(Party party)
 	{
 		String selection = COLUMN_PARTY + " = ?";
@@ -337,6 +392,11 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		return trips;
 	}
 	
+	/**
+	 * Get a cursor to the trips which ended date is null.
+	 * @param party
+	 * @return cursor
+	 */
 	public Cursor getByPartyEndedDataNotNullCursor(long party)
 	{
 
@@ -397,6 +457,10 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		return trips;
 	}
 	
+	/**
+	 * Get cursor for the trips.
+	 * @return cursor
+	 */
 	public Cursor getAllCursor() 
 	{
 		Cursor cursor = this.getDb().query(TABLE_TRIP,
@@ -454,6 +518,9 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
 		return trip;
 	}
 
+	/**
+	 * Fixtures - for test only.
+	 */
 	public void tripFixtures()
 	{
 		Integer k = 0;

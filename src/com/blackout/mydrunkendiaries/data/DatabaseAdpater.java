@@ -16,7 +16,8 @@ import android.database.Cursor;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Interface - contains common methods for entities.
+ * @author romain
  *
  */
 public interface DatabaseAdpater<T> extends Parcelable 

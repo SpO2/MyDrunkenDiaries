@@ -22,6 +22,11 @@ import android.net.NetworkInfo;
  */
 public abstract class NetworkTools 
 {
+	/**
+	 * Check network availibility.
+	 * @param context
+	 * @return Newtwork status
+	 */
 	public static boolean isNetworkAvailable(Context context) 
 	{
 	    ConnectivityManager connectivityManager 

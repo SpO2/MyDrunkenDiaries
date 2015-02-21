@@ -13,7 +13,8 @@ package com.blackout.mydrunkendiaries.externalfragment;
 import android.app.DialogFragment;
 
 /**
- * @author spo2
+ * Interface for the clic event listener.
+ * @author romain
  *
  */
 public interface DialogButtonClick 

@@ -37,20 +37,36 @@ import com.blackout.mydrunkendiaries.externalfragment.NewPartyDialogFragment;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
- * 
- * @author spo2
+ * Activity that hold the parties.
+ * @author romain
  *
  */
 public class PartyActivity extends Activity implements DialogButtonClick
 {
-
+	/**
+	 * Hold the party list.
+	 */
 	private ListView listView;
-	private List<Party> parties;
+	/**
+	 * Sqlite adapter for the parties.
+	 */
 	private PartySqliteAdapter partySqlAdapter;
+	/**
+	 * Cursor adapter for the party listview.
+	 */
 	private PartyCursorAdapter partyCursorAdapter;
+	/**
+	 * A cursor.
+	 */
 	private Cursor partyCursor;
+	/**
+	 * Current actionMode (use for multiple delete in listview).
+	 */
 	private ActionMode mActionMode;
 	
+	/**
+	 * Callback for the actionMode.
+	 */
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
 	    // Called when the action mode is created; startActionMode() was called

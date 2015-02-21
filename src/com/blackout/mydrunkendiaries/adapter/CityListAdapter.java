@@ -19,17 +19,30 @@ import com.blackout.mydrunkendiaries.services.Weather;
 
 /**
  * Adapter for the city list
- * @author spo2
+ * @author romain
  *
  */
 @SuppressLint("InflateParams")
 public class CityListAdapter extends BaseAdapter 
 {
-
+	/**
+	 * Current activity context.
+	 */
 	private Activity activity;
+	/**
+	 * Inflater for the view.
+	 */
 	private LayoutInflater inflater;
+	/**
+	 * List of cities returned by the webservice.
+	 */
 	private List<Weather> weathers;
 	
+	/**
+	 * Constructor.
+	 * @param activity Context.
+	 * @param weathers List of the cities returned by the web service.
+	 */
 	public CityListAdapter(Activity activity, List<Weather> weathers)
 	{
 		this.activity = activity;
