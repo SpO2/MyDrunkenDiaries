@@ -17,15 +17,19 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.blackout.mydrunkendiaries.adapter.PartyCursorAdapter;
-import com.blackout.mydrunkendiaries.adapter.PartyListAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.externalfragment.DialogButtonClick;
@@ -42,10 +46,52 @@ public class PartyActivity extends Activity implements DialogButtonClick
 
 	private ListView listView;
 	private List<Party> parties;
-	private PartyListAdapter adapter;
 	private PartySqliteAdapter partySqlAdapter;
 	private PartyCursorAdapter partyCursorAdapter;
 	private Cursor partyCursor;
+	private ActionMode mActionMode;
+	
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+	    // Called when the action mode is created; startActionMode() was called
+	    @Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        // Inflate a menu resource providing context menu items
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.action_mode_list, menu);
+	        return true;
+	    }
+
+	    // Called each time the action mode is shown. Always called after onCreateActionMode, but
+	    // may be called multiple times if the mode is invalidated.
+	    @Override
+	    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	    	showListViewCheckBox();
+	        return true; // Return false if nothing is done
+	    }
+
+	    // Called when the user selects a contextual menu item
+	    @Override
+	    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+	        switch (item.getItemId()) {
+	            case R.id.delete_select:
+	                multipleItemDelete();
+	                refreshEnv();
+	                mode.finish(); // Action picked, so close the CAB
+	                return true;
+	            default:
+	                return false;
+	        }
+	    }
+
+	    // Called when the user exits the action mode
+	    @Override
+	    public void onDestroyActionMode(ActionMode mode) {
+	    	hideListViewCheckBox();
+	    	unSelectAllItems();
+	        mActionMode = null;
+	    }
+	};
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -114,42 +160,16 @@ public class PartyActivity extends Activity implements DialogButtonClick
     
     public void refreshEnv()
     {
-    	this.setPartySqliteAdapter(new PartySqliteAdapter(this));
-        this.getPartySqliteAdapter().open();
-        //this.setParties(this.getPartySqliteAdapter().getAll());
+    	this.partySqlAdapter = new PartySqliteAdapter(this);
+    	this.partySqlAdapter.open();
         this.partyCursor = this.partySqlAdapter.getAllCursor();
-        this.setPartyListView((ListView) this.findViewById(R.id.listView));
-        /*if ((!this.getParties().isEmpty()) && (this.getPartyListView() != null))
-    	{
-        	this.setPartyListAdapter(new PartyListAdapter(this, 
-        			 this.getParties()));
-        	this.getPartyListView()
-        	         .setAdapter(this.getPartyListAdapter());
-        	this.getPartyListAdapter().notifyDataSetChanged();
-        	this.getPartyListView().setOnItemClickListener(
-        			new OnItemClickListener() 
-        			{
-	        		   @Override
-	        		   public void onItemClick(AdapterView<?> parent, 
-	        				       View view,int position, long id) 
-	        		   {
-	        		        Party party = (Party) PartyActivity.this
-	        		        		.getPartyListAdapter().getItem(position);
-	        		        if (party != null)
-	        		        {
-	        		        	Intent intent = new Intent(PartyActivity.this, 
-	        		        			PartyDetailActivity.class);
-	        		        	intent.putExtra("CurrentParty", party.getId());
-	        		        	startActivity(intent);
-	        		        }
-	        		   }
-        		});
-    	}*/
+        this.listView = (ListView) this.findViewById(R.id.listView);
+        this.listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         if (this.partyCursor.moveToFirst())
         {
         	this.partyCursorAdapter = new PartyCursorAdapter(this, this.partyCursor);
         	this.listView.setAdapter(this.partyCursorAdapter);
-        	this.getPartyListView().setOnItemClickListener(
+        	this.listView.setOnItemClickListener(
         			new OnItemClickListener() 
         			{
 	        		   @Override
@@ -162,78 +182,100 @@ public class PartyActivity extends Activity implements DialogButtonClick
         		        	startActivity(intent);
 	        		   }
         		});
+        	this.listView.setOnItemLongClickListener(new OnItemLongClickListener() 
+        	{
+        		public boolean onItemLongClick(AdapterView<?> parent, View view,
+        				int position, long id) 
+        		{
+        			if (mActionMode != null) 
+        			{
+        	            return false;
+        	        }
+        			mActionMode = startActionMode(mActionModeCallback);
+        			CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_multiple);
+        			checkBox.setChecked(true);
+        			return true;
+        		}
+			});
+        	this.listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+				
+				@Override
+				public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+				
+				@Override
+				public void onDestroyActionMode(ActionMode mode) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+				
+				@Override
+				public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+					// TODO Auto-generated method stub
+					return false;
+				}
+				
+				@Override
+				public void onItemCheckedStateChanged(ActionMode mode, int position,
+						long id, boolean checked) {
+					mode.setTitle(R.string.item_selected + 
+							partyCursorAdapter.getSelectedCount().toString());
+					
+				}
+			});
         }
     }
     
     /**
-     * 
-     * @return the Sqlite adapter for the parties
+     * Change the visibility of the checkbox to VISIBLE.
      */
-    public PartySqliteAdapter getPartySqliteAdapter()
-    {
-    	return this.partySqlAdapter;
+    public void showListViewCheckBox(){
+    	for (int i=0;i<this.listView.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.listView.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setVisibility(View.VISIBLE);
+    	}
     }
     
     /**
-     * 
-     * @return the list adapter for the parties
+     * Change the visibility of the checkbox to GONE.
      */
-    public PartyListAdapter getPartyListAdapter()
-    {
-    	return this.adapter;
+    public void hideListViewCheckBox(){
+    	for (int i=0;i<this.listView.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.listView.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setVisibility(View.INVISIBLE);
+    	}
     }
     
     /**
-     * Set the Sqlite Adapter for the parties
-     * @param partySqliteAdapter
+     * Reset checkbox states in ListView
      */
-    public void setPartySqliteAdapter(PartySqliteAdapter partySqliteAdapter)
-    {
-    	this.partySqlAdapter = partySqliteAdapter;
+    public void unSelectAllItems(){
+    	for (int i=0;i<this.listView.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.listView.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setChecked(false);
+    	}
     }
     
-    /**
-     * Set the list adapter for the parties
-     * @param adapter 
-     */
-    public void setPartyListAdapter(PartyListAdapter adapter)
-    {
-    	this.adapter = adapter;
+    public void multipleItemDelete(){
+    	for (int i=0;i<this.listView.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.listView.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		if (checkBox.isChecked()){
+    			Party party = partySqlAdapter.get((Long)listView.getChildAt(i).getTag());
+    			partySqlAdapter.delete(party);
+    		}
+    	}
     }
     
-    /**
-     * 
-     * @return List of the parties
-     */
-    public List<Party> getParties()
-    {
-    	return this.parties;
-    }
-    
-    /**
-     * Set the list of the parties
-     * @param parties
-     */
-    public void setParties(List<Party> parties)
-    {
-    	this.parties = parties;
-    }
-    
-    /**
-     * 
-     * @return the listView that contains the parties
-     */
-    public ListView getPartyListView()
-    {
-    	return this.listView;
-    }
-    
-    /**
-     * Set the listView for the parties
-     * @param partyListView
-     */
-    public void setPartyListView(ListView partyListView)
-    {
-    	this.listView = partyListView;
-    }
 }

@@ -8,5 +8,12 @@
         android:icon="@drawable/nouveau"
         android:showAsAction="ifRoom|withText"
         android:title="@string/new_party"/>
+    <item
+        android:id="@+id/delete"
+        android:orderInCategory="2"
+        android:icon="@drawable/content_discard"
+        android:title="@string/delete"
+        android:showAsAction="never"
+        />
 
 </menu>

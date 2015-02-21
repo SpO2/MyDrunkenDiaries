@@ -20,13 +20,19 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.blackout.mydrunkendiaries.adapter.PlacesListAdapter;
 import com.blackout.mydrunkendiaries.adapter.TripCursorAdapter;
 import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
 import com.blackout.mydrunkendiaries.data.PlaceSqliteAdapter;
@@ -42,7 +48,6 @@ import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 public class PartyDetailActivity extends Activity 
 								 implements DialogButtonClick, ActionBar.TabListener{
 	
-	private PlacesListAdapter placesListAdapater;
 	private TripSqliteAdapter tripSqliteAdapter;
 	private ArrayList<Trip> trips;
 	private Long currentPartyId;
@@ -55,6 +60,49 @@ public class PartyDetailActivity extends Activity
 	private TextView lastActivity;
 	private TextView partyBegin;
 	private RatingBar beerBar;
+	
+	private ActionMode mActionMode;
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+	    // Called when the action mode is created; startActionMode() was called
+	    @Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        // Inflate a menu resource providing context menu items
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.action_mode_list, menu);
+	        return true;
+	    }
+
+	    // Called each time the action mode is shown. Always called after onCreateActionMode, but
+	    // may be called multiple times if the mode is invalidated.
+	    @Override
+	    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	    	showListViewCheckBox();
+	        return true; // Return false if nothing is done
+	    }
+
+	    // Called when the user selects a contextual menu item
+	    @Override
+	    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+	        switch (item.getItemId()) {
+	            case R.id.delete_select:
+	                multipleItemDelete();
+	                refreshEnv();
+	                mode.finish(); // Action picked, so close the CAB
+	                return true;
+	            default:
+	                return false;
+	        }
+	    }
+
+	    // Called when the user exits the action mode
+	    @Override
+	    public void onDestroyActionMode(ActionMode mode) {
+	    	hideListViewCheckBox();
+	    	unSelectAllItems();
+	        mActionMode = null;
+	    }
+	};
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -169,19 +217,60 @@ public class PartyDetailActivity extends Activity
        	this.tripSqliteAdapter.open();
        	this.cursorTripByParty = this.tripSqliteAdapter
        			.getByPartyEndedDataNotNullCursor(this.currentPartyId);
+       	this.lv.setOnItemLongClickListener(new OnItemLongClickListener() 
+       	{
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (mActionMode != null) 
+    			{
+    	            return false;
+    	        }
+				mActionMode = startActionMode(mActionModeCallback);
+				CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_multiple);
+    			checkBox.setChecked(true);
+				return true;
+			}
+		});
+       	this.lv.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position,
+					long id, boolean checked) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
        	if(this.cursorTripByParty.moveToFirst())
        	{
        		this.tripCursorAdapter = new TripCursorAdapter(this, this.cursorTripByParty);
        		this.lv.setAdapter(this.tripCursorAdapter);
-       	}
-//       	this.trips = this.tripSqliteAdapter
-//        		.getByPartyWithPlaceEndedDataNotNull(this.currentPartyId);
-//        if (!this.trips.isEmpty() && (this.lv != null))
-//        {
-//        	this.placesListAdapater = new PlacesListAdapter(this, this.trips);
-//           	this.lv.setAdapter(this.placesListAdapater);
-//           	this.placesListAdapater.notifyDataSetChanged();
-//        }   			
+       	}   			
 	}
 	
 	private void showNewPlaceDialog()
@@ -281,57 +370,48 @@ public class PartyDetailActivity extends Activity
 	{
 		return this.currentParty;
 	}
-
-///*	public static class TabListener<T extends Fragment> implements ActionBar.TabListener 
-//	{
-//	    private Fragment mFragment;
-//	    private final Activity mActivity;
-//	    private final String mTag;
-//	    private final Class<T> mClass;
-//
-//	    /** Constructor used each time a new tab is created.
-//	      * @param activity  The host Activity, used to instantiate the fragment
-//	      * @param tag  The identifier tag for the fragment
-//	      * @param clz  The fragment's Class, used to instantiate the fragment
-//	      */
-//	    public TabListener(Activity activity, String tag, Class<T> clz) 
-//	    {
-//	        mActivity = activity;
-//	        mTag = tag;
-//	        mClass = clz;
-//	    }
-//
-//	    /* The following are each of the ActionBar.TabListener callbacks */
-//
-//	    public void onTabSelected(Tab tab, FragmentTransaction ft) 
-//	    {
-//	        // Check if the fragment is already initialized
-//	        if (mFragment == null) 
-//	        {
-//	            // If not, instantiate and add it to the activity
-//	            mFragment = Fragment.instantiate(mActivity, mClass.getName());
-//	            ft.add(android.R.id.content, mFragment, mTag);
-//	        } 
-//	        else 
-//	        {
-//	            // If it exists, simply attach it in order to show it
-//	            ft.attach(mFragment);
-//	        }
-//	    }
-//
-//	    public void onTabUnselected(Tab tab, FragmentTransaction ft) 
-//	    {
-//	        if (mFragment != null) 
-//	        {
-//	            // Detach the fragment, because another one is being attached
-//	            ft.detach(mFragment);
-//	        }
-//	    }
-//
-//	    public void onTabReselected(Tab tab, FragmentTransaction ft) 
-//	    {
-//	        // User selected the already selected tab. Usually do nothing.
-//	    }
-//	}
-
+	
+	/**
+	 * Change the visibility of the checkbox to VISIBLE.
+	 */
+	public void showListViewCheckBox(){
+		for (int i=0;i<this.lv.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.lv.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setVisibility(View.VISIBLE);
+    	}
+	}
+	
+	/**
+     * Change the visibility of the checkbox to GONE.
+     */
+    public void hideListViewCheckBox(){
+    	for (int i=0;i<this.lv.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.lv.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setVisibility(View.INVISIBLE);
+    	}
+    }
+    
+    /**
+     * Reset checkbox states in ListView
+     */
+    public void unSelectAllItems(){
+    	for (int i=0;i<this.lv.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.lv.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		checkBox.setChecked(false);
+    	}
+    }
+    
+    public void multipleItemDelete(){
+    	for (int i=0;i<this.lv.getChildCount();i++){
+    		CheckBox checkBox = (CheckBox) this.lv.getChildAt(i)
+    				.findViewById(R.id.check_multiple);
+    		if (checkBox.isChecked()){
+    			Trip trip = tripSqliteAdapter.get((Long)lv.getChildAt(i).getTag());
+    			tripSqliteAdapter.delete(trip);
+    		}
+    	}
+    }
 }
