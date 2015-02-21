@@ -508,6 +508,25 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		
 		}
 	}
+	private void takeVideo() {
+		if(this.tripInProgress != null)
+		{
+		String name = this.tripInProgress.getPlace().getName()
+				+ SimpleMediaUtils.getPhotoDefaultName();
+		String party = this.getCurrentParty().getName();
+		String path = SimpleMediaUtils.getPhotoPath(name, party);
+		SimpleMediaUtils.setLastMediaTakenPath(path);
+
+		this.lastMedia = new TripMedia();
+		this.lastMedia.setName(name);
+		this.lastMedia.setPath(path);
+		this.lastMedia.setTrip(this.tripInProgress);
+
+		String fullName = SimpleMediaUtils.getMediaName(name, party);
+		startActivityForResult(SimpleMediaUtils.getVideoIntent(fullName), SimpleMediaUtils.CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+		
+		}
+	}
 
 	private void saveTripMedia(String path, String name, Trip trip) {
 		TripMedia tripMedia = new TripMedia();
@@ -515,7 +534,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		tripMedia.setName(name);
 		tripMedia.setTrip(trip);
 		TripMediaSqliteAdapter adapter = new TripMediaSqliteAdapter(this);
+		adapter.open();
 		adapter.create(tripMedia);
+		adapter.close();
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -527,7 +548,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 				MediaScannerConnection.scanFile(this, new String[] { path },
 						null, null);
 				TripMediaSqliteAdapter adapter = new TripMediaSqliteAdapter(this);
+				adapter.open();
 				adapter.create(this.lastMedia);
+				adapter.close();
 			}
 			else
 			{
