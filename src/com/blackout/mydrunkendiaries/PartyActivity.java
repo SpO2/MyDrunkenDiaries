@@ -10,8 +10,6 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;

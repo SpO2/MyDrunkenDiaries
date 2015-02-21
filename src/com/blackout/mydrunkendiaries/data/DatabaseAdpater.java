@@ -12,9 +12,6 @@ package com.blackout.mydrunkendiaries.data;
 
 import java.util.ArrayList;
 
-import android.database.Cursor;
-import android.os.Parcelable;
-
 /**
  * Interface - contains common methods for entities.
  * @author romain
