@@ -141,6 +141,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 			case R.id.delete_select:
 				multipleItemDelete();
 				refreshEnv();
+				recreate();
 				mode.finish(); // Action picked, so close the CAB
 				return true;
 			default:
