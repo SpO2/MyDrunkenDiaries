@@ -1,6 +1,5 @@
 package com.blackout.mydrunkendiaries.adapter;
 
-import com.blackout.mydrunkendiaries.R;
 import com.blackout.mydrunkendiaries.data.TripMediaSqliteAdapter;
 import com.blackout.mydrunkendiaries.tools.SimpleMediaUtils;
 
@@ -8,27 +7,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
 public class TripMediaCursorAdapter extends CursorAdapter {
-	private Cursor cursor;
-	private int[] viewsId;
-	private String[] columnsName; 
-	private int[] columnsId;
+	private Cursor cursor;	
 	private LayoutInflater mInflater;
-	private int itemLayoutId;
 	public TripMediaCursorAdapter(Context context, Cursor cur,int flags) {
 		super(context, cur, flags);
-		cursor = cur;
-		mInflater  = (LayoutInflater)context.getSystemService(
+		this.cursor = cur;
+		this.mInflater  = (LayoutInflater)context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 		// TODO Auto-generated constructor stub
 		 

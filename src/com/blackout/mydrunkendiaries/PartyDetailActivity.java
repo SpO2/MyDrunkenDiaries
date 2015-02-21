@@ -110,7 +110,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 	 * Current action mode (used for the multiple delete).
 	 */
 	private ActionMode mActionMode;
-	
+
 	/**
 	 * Callback for the actionMode.
 	 */
@@ -163,8 +163,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 
 		setContentView(R.layout.activity_party_detail);
 		setTitle(R.string.title_activity_party_detail);
-		
-		
+
 		if (savedInstanceState != null) {
 			// Restore value of members from saved state
 			this.lastMedia = savedInstanceState.getParcelable("lastMedia");
@@ -497,54 +496,49 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		return this.currentParty;
 	}
 
+	/*
+	 * take a photo for current trip.
+	 */
 	private void takePhoto() {
-		if(this.tripInProgress != null)
-		{
-		String name = this.tripInProgress.getPlace().getName()
-				+ SimpleMediaUtils.getPhotoDefaultName();
-		String party = this.getCurrentParty().getName();
-		String path = SimpleMediaUtils.setPhotoPath(name, party);
-		SimpleMediaUtils.setLastMediaTakenPath(path);
+		if (this.tripInProgress != null) {
+			String name = this.tripInProgress.getPlace().getName()
+					+ SimpleMediaUtils.getPhotoDefaultName();
+			String party = this.getCurrentParty().getName();
+			String path = SimpleMediaUtils.setPhotoPath(name, party);
+			SimpleMediaUtils.setLastMediaTakenPath(path);
 
-		this.lastMedia = new TripMedia();
-		this.lastMedia.setName(name);
-		this.lastMedia.setPath(path);
-		this.lastMedia.setTrip(this.tripInProgress);
+			this.lastMedia = new TripMedia();
+			this.lastMedia.setName(name);
+			this.lastMedia.setPath(path);
+			this.lastMedia.setTrip(this.tripInProgress);
 
-		String fullName = SimpleMediaUtils.getMediaName(name, party);
-		startActivityForResult(SimpleMediaUtils.getImageIntent(fullName), SimpleMediaUtils.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-		
+			String fullName = SimpleMediaUtils.getMediaName(name, party);
+			startActivityForResult(SimpleMediaUtils.getImageIntent(fullName),
+					SimpleMediaUtils.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
 		}
 	}
+
+	/*
+	 * take a video for current trip.
+	 */
 	private void takeVideo() {
-		if(this.tripInProgress != null)
-		{
-		String name = this.tripInProgress.getPlace().getName()
-				+ SimpleMediaUtils.getVideoDefaultName();
-		String party = this.getCurrentParty().getName();
-		String path = SimpleMediaUtils.setVideoPath(name, party);
-		SimpleMediaUtils.setLastMediaTakenPath(path);
+		if (this.tripInProgress != null) {
+			String name = this.tripInProgress.getPlace().getName()
+					+ SimpleMediaUtils.getVideoDefaultName();
+			String party = this.getCurrentParty().getName();
+			String path = SimpleMediaUtils.setVideoPath(name, party);
 
-		this.lastMedia = new TripMedia();
-		this.lastMedia.setName(name);
-		this.lastMedia.setPath(path);
-		this.lastMedia.setTrip(this.tripInProgress);
+			this.lastMedia = new TripMedia();
+			this.lastMedia.setName(name);
+			this.lastMedia.setPath(path);
+			this.lastMedia.setTrip(this.tripInProgress);
 
-		String fullName = SimpleMediaUtils.getMediaName(name, party);
-		startActivityForResult(SimpleMediaUtils.getVideoIntent(fullName), SimpleMediaUtils.CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-		
+			String fullName = SimpleMediaUtils.getMediaName(name, party);
+			startActivityForResult(SimpleMediaUtils.getVideoIntent(fullName),
+					SimpleMediaUtils.CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+
 		}
-	}
-
-	private void saveTripMedia(String path, String name, Trip trip) {
-		TripMedia tripMedia = new TripMedia();
-		tripMedia.setPath(path);
-		tripMedia.setName(name);
-		tripMedia.setTrip(trip);
-		TripMediaSqliteAdapter adapter = new TripMediaSqliteAdapter(this);
-		adapter.open();
-		adapter.create(tripMedia);
-		adapter.close();
 	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -552,28 +546,23 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		if (requestCode == SimpleMediaUtils.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
 				|| requestCode == SimpleMediaUtils.CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				String path = this.lastMedia.getPath();				
+				String path = this.lastMedia.getPath();
 				MediaScannerConnection.scanFile(this, new String[] { path },
 						null, null);
-				TripMediaSqliteAdapter adapter = new TripMediaSqliteAdapter(this);
+				TripMediaSqliteAdapter adapter = new TripMediaSqliteAdapter(
+						this);
 				adapter.open();
 				adapter.create(this.lastMedia);
 				adapter.close();
-			}
-			else
-			{
+			} else {
 				this.lastMedia = null;
 			}
 
-			/*
-			 * Intent intent = new Intent();
-			 * intent.setAction(android.content.Intent.ACTION_VIEW); File file =
-			 * new File(path); intent.setDataAndType(Uri.fromFile(file),
-			 * "image/*"); startActivity(intent);
-			 */
+
 
 		}
 	}
+
 	/**
 	 * Change the visibility of the checkbox to VISIBLE.
 	 */
