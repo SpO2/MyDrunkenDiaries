@@ -22,19 +22,19 @@ import android.util.Log;
  * standard features.
  */
 public class SimpleMediaUtils {
-	/*
+	/**
 	 * code for video intent request.
 	 */
 	public static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
-	/*
+	/**
 	 * code for image intent request.
 	 */
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	/*
+	/**
 	 * Code used for media type image.
 	 */
 	public static final int MEDIA_TYPE_IMAGE = 1;
-	/*
+	/**
 	 * Code used for media type video.
 	 */
 	public static final int MEDIA_TYPE_VIDEO = 2;
@@ -47,20 +47,20 @@ public class SimpleMediaUtils {
 
 	// getters setters
 	
-	/*
+	/**
 	 * get Static temporary variable to stock last media path. 
 	 */
 	public static String getLastMediaTakenPath() {
 		return lastMediaTakenPath;
 	}
-	/*
+	/**
 	 * set  Static temporary variable to stock last media path.
 	 * @param path 
 	 */
 	public static void setLastMediaTakenPath(String path) {
 		lastMediaTakenPath = path;
 	}
-	/*
+	/**
 	 * get the photo default name, based on datetime format "yyyyMMdd_HHmmss".
 	 * @return IMG_"datetimeformat".jpg
 	 */
@@ -68,7 +68,7 @@ public class SimpleMediaUtils {
 		return String.format("IMG_%s.jpg", new SimpleDateFormat(
 				"yyyyMMdd_HHmmss").format(new Date()));
 	}
-	/*
+	/**
 	 * get the video default name, based on datetime format "yyyyMMdd_HHmmss".
 	 * @return VID_"datetimeformat".mp4
 	 */
@@ -77,7 +77,7 @@ public class SimpleMediaUtils {
 				"yyyyMMdd_HHmmss").format(new Date()));
 	}
 	
-	/*
+	/**
 	 * get the video path.
 	 * @param name of the video.	 
 	 */
@@ -85,7 +85,7 @@ public class SimpleMediaUtils {
 		return getMediaPath(MEDIA_TYPE_VIDEO, name);
 	}
 
-	/*
+	/**
 	 * set the video path. If folder doesn't exist, it'll be created.
 	 *  @param name the name of the video.
 	 *  @param folder the folder of the media.
@@ -108,7 +108,7 @@ public class SimpleMediaUtils {
 		name = folder + File.separator + name;
 		return getMediaPath(MEDIA_TYPE_VIDEO, name);
 	}
-	/*
+	/**
 	 * get the photo path.
 	 * @param name of the photo	.  
 	 */
@@ -116,7 +116,7 @@ public class SimpleMediaUtils {
 		return getMediaPath(MEDIA_TYPE_IMAGE, name);
 	}
 	
-	/*
+	/**
 	 * set the photo path. If folder doesn't exist, it'll be created.
 	 *  @param name the name of the photo.
 	 *  @param folder the folder of the media.
@@ -140,7 +140,7 @@ public class SimpleMediaUtils {
 		return getMediaPath(MEDIA_TYPE_IMAGE, name);
 	}
 
-	/*
+	/**
 	 * get the media name based on folder.
 	 * @param name name of the media.
 	 * @param folder folder of the media.
@@ -149,7 +149,7 @@ public class SimpleMediaUtils {
 		return folder + File.separator + name;
 	}
 	
-	/*
+	/**
 	 * get the intent for the camera, for image capture.
 	 * @param name name of the photo. 
 	 * If the image is in a sub folder, the whole name is required (sub_folder/myPhoto.jpg).
@@ -170,7 +170,7 @@ public class SimpleMediaUtils {
 		return intent;
 
 	}
-	/*
+	/**
 	 * get the intent for the camera, for video capture.
 	 * @param name name of the video. 
 	 * If the video is in a sub folder, the whole name is required (sub_folder/myPhoto.jpg).
@@ -186,7 +186,7 @@ public class SimpleMediaUtils {
 		return intent;
 	}
 	
-	/*
+	/**
 	 * extract a thumbnail for an image.
 	 * @param imagePath the path of the image.	 
 	 * @param width width for the thumbnail.
@@ -198,7 +198,7 @@ public class SimpleMediaUtils {
 				BitmapFactory.decodeFile(imagePath.toString()), width, height);
 		return ThumbImage;
 	}
-	/*
+	/**
 	 * extract a thumbnail for an image.
 	 * @param imagePath the path of the image.	 
 	 * @param width width for the thumbnail.
@@ -212,7 +212,7 @@ public class SimpleMediaUtils {
 	}
 
 
-	/*
+	/**
 	 * get the image list from the MediaStore by album name.
 	 * @param album the name of the album, usually the folder.
 	 */
@@ -236,7 +236,7 @@ public class SimpleMediaUtils {
 		return getMediaBasePath(type) + name;
 	}
 
-	/*
+	/**
 	 * Get the Media file base path.
 	 * 
 	 * @param type : the type of the media.
@@ -258,7 +258,7 @@ public class SimpleMediaUtils {
 		return mediaStorageDir.getPath() + File.separator;
 	}
 	
-	/*
+	/**
 	 * get the file Uri for a media type.
 	 * @param type type of the media (referenced by constant values).
 	 * @param name name of the media.
@@ -271,7 +271,7 @@ public class SimpleMediaUtils {
 		return Uri.fromFile(file);
 	}
 
-	/*
+	/**
 	 * get the file for a media type.
 	 * @param type type of the media.
 	 * @param name name of tthe media.

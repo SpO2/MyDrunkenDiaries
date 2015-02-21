@@ -57,6 +57,11 @@ public class TripMediaCursorAdapter extends CursorAdapter {
 		// TODO Auto-generated method stub
 		
 	}
+	/**
+	 * Bind imageView with thumbnail bitmap from imageFile.
+	 * @param uri Uri of the image to bind.
+	 * @param imageView the imageView to bind.
+	 */
 	private void bindImage(String uri, ImageView imageView)
 	{
 		BitmapFactory.Options op = new BitmapFactory.Options();
