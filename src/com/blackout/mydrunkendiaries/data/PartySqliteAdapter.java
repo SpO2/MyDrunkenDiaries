@@ -211,7 +211,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null,
 				null,
 				null,
-				null);
+				COLUMN_ID + " DESC");
 	
 	    cursor.moveToFirst();
 	    
