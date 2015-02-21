@@ -148,10 +148,10 @@ public class SimpleMediaUtils {
 		return Uri.fromFile(file);
 	}
 	private static File getOutputMediaFile(int type, String name) {
-		if(Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
+		/*if(Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
 		{
 			return null;
-		}
+		}*/
 		String mediaDirectory = Environment.DIRECTORY_DCIM;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaDirectory = Environment.DIRECTORY_PICTURES;

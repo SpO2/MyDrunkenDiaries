@@ -42,16 +42,28 @@
 	            android:layout_marginRight="5dip"
 	            android:contentDescription="@string/contentdesc_camera"
 	            android:src="@drawable/device_camera" />
+	        
+	        <ImageView
+	            android:id="@+id/photo"
+	            android:layout_width="40dip"
+	            android:layout_height="40dip"
+	            android:layout_centerVertical="true"
+	            android:layout_toEndOf="@+id/camera"
+	            android:layout_toRightOf="@+id/camera"
+	            android:contentDescription="@string/contentdesc_camera"
+	            android:src="@drawable/device_camera" />
 	
 	        <ImageView
 	            android:id="@+id/gallery"
 	            android:layout_width="40dip"
 	            android:layout_height="40dip"
 	            android:layout_centerVertical="true"
-	            android:layout_toEndOf="@+id/camera"
-	            android:layout_toRightOf="@+id/camera"
+	            android:layout_toEndOf="@+id/photo"
+	            android:layout_toRightOf="@+id/photo"
 	            android:contentDescription="@string/contentdesc_gallery"
 	            android:src="@drawable/content_picture" />
+	       
+	        
 	        <RatingBar
 			    android:id="@+id/beerbar_current"
 			    style="@style/beerRatingBar"
@@ -63,6 +75,8 @@
 			    android:stepSize="1.0"
 			    android:layout_alignParentRight="true"
 			    android:layout_alignParentEnd="true"/>
+
+	       
 	    </RelativeLayout>
 	
 	    <RelativeLayout
