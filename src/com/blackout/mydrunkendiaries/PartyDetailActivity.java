@@ -250,6 +250,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 							PartyDetailActivity.this);
 				}
 				tripSqliteAdapter.open();
+				tripInProgress.setDepravity(Math.round(beerBar.getRating()));
 				tripInProgress.setEndedAt(DateTimeTools.getDateTime());
 				tripSqliteAdapter.update(tripInProgress);
 				tripSqliteAdapter.close();
@@ -264,6 +265,8 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 				partySqliteAdapter.update(currentParty);
 				partySqliteAdapter.close();
 			}
+			refreshEnv();
+			this.finish();
 			break;
 		}
 		}
