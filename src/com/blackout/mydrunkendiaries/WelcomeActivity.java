@@ -101,7 +101,7 @@ public class WelcomeActivity extends Activity implements OnClickListener,
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        
+        setTitle(R.string.app_name);
         cityName = (TextView) findViewById(R.id.city_name);
         desc = (TextView) findViewById(R.id.desc);
         desc.requestFocus();

@@ -20,7 +20,8 @@
     <string name="hint_search_city">Ville</string>
     <string name="places_list_header">Lieux</string>
     <string name="title_activity_party_detail">PartyDetailActivity</string>
-    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_map">Itinéraire</string>
+    <string name="title_activity_party">Soirées</string>
 	<string name="tab_party_detail_places">Lieux</string>
 	<string name="tab_party_detail_maps">Carte</string>
 	<string name="add_new">Ajouter</string>

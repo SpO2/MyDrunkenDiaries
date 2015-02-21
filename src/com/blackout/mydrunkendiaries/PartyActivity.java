@@ -111,7 +111,8 @@ public class PartyActivity extends Activity implements DialogButtonClick
     protected void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_party);        
+        setContentView(R.layout.activity_party);  
+        setTitle(R.string.title_activity_party);
     }
 
     @Override
