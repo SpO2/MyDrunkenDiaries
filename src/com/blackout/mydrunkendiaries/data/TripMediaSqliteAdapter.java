@@ -188,6 +188,11 @@ implements DatabaseAdpater<TripMedia>
 		
 		return tripMedias;
 	}
+	/**
+	 * Get cursor for all TripMedia by trip .
+	 * @param tripId id of the trip
+	 * @return Cursor of Trip media
+	 */
 	public Cursor getCursorByTrip(long tripId)
 	{
 		String selection = COLUMN_TRIP + " = ?";
@@ -202,6 +207,10 @@ implements DatabaseAdpater<TripMedia>
 				null);
 		return cursor;
 	}
+	/**
+	 * Fetch all the tripmedias by trip.
+	 * @return Array of TripMedia.
+	 */
 	public ArrayList<TripMedia> getByTrip(long tripId)
 	{
 		String selection = COLUMN_TRIP + " = ?";
