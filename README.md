@@ -9,8 +9,15 @@ beuverie.
 Libraries
 ================
 gson-2.3.1 (jar file)
+Installation (Eclipse) : Project > Properties > Java Build Path > Libraries : Ajouter le jar puis
+Project > Properties > Java Build Path > Order And Export : Cocher la librairie.
+
 universal-image-loader-1.9.3 (jar)
+Installation (Eclipse) : Project > Properties > Java Build Path > Libraries : Ajouter le jar puis
+Project > Properties > Java Build Path > Order And Export : Cocher la librairie.
+
 google-play-services_lib
+Installation (Eclipse) : Récupérer la librairie dans le SDK Android, Importer la librairie dans eclipse.
 
 Fonctionnalités
 ================
