@@ -10,20 +10,16 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries;
 
-import java.io.File;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,10 +110,10 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 	 * Current action mode (used for the multiple delete).
 	 */
 	private ActionMode mActionMode;
+	
 	/**
 	 * Callback for the actionMode.
 	 */
-
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
 		// Called when the action mode is created; startActionMode() was called
@@ -406,6 +402,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		}
 	}
 
+	/**
+	 * Show the dialog for the new place.
+	 */
 	private void showNewPlaceDialog() {
 		NewPlaceDialogFragment newPlaceDialogFragment = new NewPlaceDialogFragment();
 		newPlaceDialogFragment.show(getFragmentManager(),
@@ -573,16 +572,6 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 
 		}
 	}
-
-	/**
-	 * ///* public static class TabListener<T extends Fragment> implements
-	 * ActionBar.TabListener // { // private Fragment mFragment; // private
-	 * final Activity mActivity; // private final String mTag; // private final
-	 * Class<T> mClass; // // /** Constructor used each time a new tab is
-	 * created. // * @param activity The host Activity, used to instantiate the
-	 * fragment // * @param tag The identifier tag for the fragment // * @param
-	 * clz The fragment's Class, used to instantiate the fragment //
-	 */
 	/**
 	 * Change the visibility of the checkbox to VISIBLE.
 	 */
@@ -606,7 +595,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 	}
 
 	/**
-	 * Reset checkbox states in ListView
+	 * Reset checkbox states in ListView.
 	 */
 	public void unSelectAllItems() {
 		for (int i = 0; i < this.lv.getChildCount(); i++) {
@@ -616,6 +605,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		}
 	}
 
+	/**
+	 * Delete items in the listview.
+	 */
 	public void multipleItemDelete() {
 		for (int i = 0; i < this.lv.getChildCount(); i++) {
 			CheckBox checkBox = (CheckBox) this.lv.getChildAt(i).findViewById(
