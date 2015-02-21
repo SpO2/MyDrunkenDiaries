@@ -495,10 +495,10 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		String path = SimpleMediaUtils.getPhotoPath(name, party);
 		SimpleMediaUtils.setLastMediaTakenPath(path);
 
-		TripMedia lastMedia = new TripMedia();
-		lastMedia.setName(name);
-		lastMedia.setPath(path);
-		lastMedia.setTrip(this.tripInProgress);
+		this.lastMedia = new TripMedia();
+		this.lastMedia.setName(name);
+		this.lastMedia.setPath(path);
+		this.lastMedia.setTrip(this.tripInProgress);
 
 		String fullName = SimpleMediaUtils.getMediaName(name, party);
 		startActivityForResult(SimpleMediaUtils.getImageIntent(fullName), SimpleMediaUtils.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
