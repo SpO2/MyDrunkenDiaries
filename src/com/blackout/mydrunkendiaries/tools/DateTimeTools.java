@@ -20,7 +20,8 @@ import java.util.Locale;
 import android.annotation.SuppressLint;
 
 /**
- * @author spo2
+ * Contains utils to generate/format datetime values.
+ * @author romain
  *
  */
 public abstract class DateTimeTools 

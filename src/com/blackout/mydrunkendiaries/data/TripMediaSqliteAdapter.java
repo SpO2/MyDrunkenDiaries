@@ -22,24 +22,43 @@ import com.blackout.mydrunkendiaries.entites.Trip;
 import com.blackout.mydrunkendiaries.entites.TripMedia;
 
 /**
- * @author spo2
+ * Sqlite adapter for TripMedia entity.
+ * @author romain
  *
  */
 public class TripMediaSqliteAdapter extends BaseSqliteAdapter 
 implements DatabaseAdpater<TripMedia>
 {
-
+	/**
+	 * Name of the table.
+	 */
 	public final static String TABLE_TRIPMEDIA = "tripmedia";
+	/**
+	 * Name of the id column.
+	 */
 	public final static String COLUMN_ID = "_id";
+	/**
+	 * Name of the path column.
+	 */
 	public final static String COLUMN_PATH = "path";
+	/***
+	 * Name of the name column.
+	 */
 	public final static String COLUMN_NAME = "name";
+	/**
+	 * Name of the trip column.
+	 */
 	public final static String COLUMN_TRIP = "trip";
-	
+	/**
+	 * List of the column.
+	 */
 	public final static String[] COLUMN_LIST = {COLUMN_ID,
 								 COLUMN_PATH,
 								 COLUMN_NAME,
 								 COLUMN_TRIP};
-	
+	/**
+	 * Schema of the table.
+	 */
 	public final static String SCHEMA = "CREATE TABLE " +
 	                             TripMediaSqliteAdapter.TABLE_TRIPMEDIA + 
 	                             " ( " +
@@ -136,7 +155,7 @@ implements DatabaseAdpater<TripMedia>
 				null);
 		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		return cursorToItem(cursor);
 	}
 
 	/**
@@ -162,7 +181,7 @@ implements DatabaseAdpater<TripMedia>
 		{
 			while (!cursor.isAfterLast())
 			{
-				tripMedias.add(this.cursorToItem(cursor));
+				tripMedias.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -190,7 +209,7 @@ implements DatabaseAdpater<TripMedia>
 		{
 			while (!cursor.isAfterLast())
 			{
-				tripMedias.add(this.cursorToItem(cursor));
+				tripMedias.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
@@ -203,8 +222,7 @@ implements DatabaseAdpater<TripMedia>
 	 * @param cursor
 	 * @return TripMedia
 	 */
-	@Override
-	public TripMedia cursorToItem(Cursor cursor) 
+	public static TripMedia cursorToItem(Cursor cursor) 
 	{
 		TripMedia tripMedia = new TripMedia();
 		tripMedia.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));

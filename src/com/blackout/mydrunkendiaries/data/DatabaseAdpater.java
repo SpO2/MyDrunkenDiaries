@@ -16,7 +16,8 @@ import android.database.Cursor;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Interface - contains common methods for entities.
+ * @author romain
  *
  */
 public interface DatabaseAdpater<T>
@@ -26,5 +27,4 @@ public interface DatabaseAdpater<T>
 	public int delete(T entity);
 	public T get(long id);
 	public ArrayList<T> getAll();
-	public T cursorToItem(Cursor cursor);
 }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:descendantFocusability="beforeDescendants"
+  	android:focusableInTouchMode="true">
   <LinearLayout 
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
@@ -104,5 +106,22 @@
             android:textColor="@color/list_item_text"/>
               	
     </RelativeLayout>
+    <LinearLayout 
+        android:layout_below="@+id/weather_layout"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <Button 
+
+	        android:id="@+id/go_to_parties"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="30sp"
+	        android:textColor="@color/list_item_text"
+	        android:background="@color/global_background"
+	        android:text="@string/party_list_btn"
+	        />
+	    
+    </LinearLayout>
 
 </RelativeLayout>

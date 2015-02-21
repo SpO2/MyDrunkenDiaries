@@ -15,14 +15,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Class of the place entity.
+ * @author romain
  *
  */
 public class Place implements Parcelable {
 	public static final int PARCELABLE_CODE = 1;
+	/**
+	 * Id of the place.
+	 */
 	private long id;
+	/**
+	 * Name of the place.
+	 */
 	private String name;
+	/**
+	 * Longitude of the place.
+	 */
 	private double longitude;
+	/**
+	 * Latitude of the place.
+	 */
 	private double latitude;
 
 	/**

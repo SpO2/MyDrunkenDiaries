@@ -15,14 +15,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Class for the party entity.
+ * @author romain
  *
  */
 public class Party implements Parcelable {
 	public static final int PARCELABLE_CODE = 0;
+	/**
+	 * Id of the party.
+	 */
 	private long id;
+	/**
+	 * Name of the party.
+	 */
 	private String name;
+	/**
+	 * Creation date of the party.
+	 */
 	private String createdAt;
+	/**
+	 * Ended date of the party.
+	 */
 	private String endedAt;
 
 	/**

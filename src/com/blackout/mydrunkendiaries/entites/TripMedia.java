@@ -14,14 +14,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Class for the TripMedia entity.
+ * @author romain
  *
  */
 public class TripMedia implements Parcelable {
 	public static final int PARCELABLE_CODE = 3;
+	/**
+	 * Id of the tripmedia.
+	 */
 	private long id;
+	/**
+	 * Mapped trip of the tripMedia.
+	 */
 	private Trip trip;
+	/**
+	 * Name of the TripMedia.
+	 */
 	private String name;
+	/**
+	 * Path for the TripMedia album.
+	 */
 	private String path;
 
 	/**

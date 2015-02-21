@@ -22,22 +22,43 @@ import com.blackout.mydrunkendiaries.entites.Party;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
 
 /**
- * @author spo2
+ * Sqlite adapter for Party entity.
+ * @author romain
  *
  */
 public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpater<Party> 
 {
 
+	/**
+	 * Name of the table.
+	 */
 	public final static String TABLE_PARTY = "Party";
+	/**
+	 * Name of the id column.
+	 */
 	public final static String COLUMN_ID = "_id";
+	/**
+	 * Name of the name column.
+	 */
 	public final static String COLUMN_NAME = "name";
+	/**
+	 * Name of the begin date column.
+	 */
 	public final static String COLUMN_CREATEDAT = "createdAt";
+	/**
+	 * Name of the end date column.
+	 */
 	public final static String COLUMN_ENDEDAT = "endedAt";
+	/**
+	 * List the column of the table.
+	 */
 	public final static String[] COLUMN_LIST = {COLUMN_ID,
 								 COLUMN_NAME,
 								 COLUMN_CREATEDAT,
 								 COLUMN_ENDEDAT};
-	
+	/**
+	 * Schema of the table.
+	 */
 	public final static String SCHEMA = "CREATE TABLE " + 
 										PartySqliteAdapter.TABLE_PARTY +
 										" ( " + PartySqliteAdapter.COLUMN_ID +
@@ -68,7 +89,6 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME, party.getName());
 		values.put(COLUMN_CREATEDAT, party.getCreatedAt().toString());
-		values.put(COLUMN_ENDEDAT, party.getCreatedAt().toString());
 		
 		return this.getDb().insert(TABLE_PARTY, null, values);
 	}
@@ -124,7 +144,30 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null);
 		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		return cursorToItem(cursor);
+	}
+	
+	/**
+	 * Return a cursor to the party.
+	 * @param id
+	 * @return the cursor.
+	 */
+	public Cursor getCursor(long id)
+	{
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 	
 	/**
@@ -148,7 +191,7 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	    {
 	    	while (!cursor.isAfterLast())
 	    	{
-	    		parties.add(this.cursorToItem(cursor));
+	    		parties.add(cursorToItem(cursor));
 	    		cursor.moveToNext();
 	    	}
 	    }
@@ -157,12 +200,30 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	}
 	
 	/**
+	 * Get a cursor to all parties.
+	 * @return Cursor for the parties.
+	 */
+	public Cursor getAllCursor()
+	{		
+		Cursor cursor = this.getDb().query(TABLE_PARTY,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+	
+	    cursor.moveToFirst();
+	    
+	    return cursor;
+	}
+	
+	/**
 	 * Convert a record into a Party object.
 	 * @param cursor
 	 * @return a Party.
 	 */
-    @Override
-	public Party cursorToItem(Cursor cursor)
+	public static Party cursorToItem(Cursor cursor)
 	{
 		Party party = new Party();
 		party.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
@@ -174,6 +235,9 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		return party;
 	}
 
+	/**
+	 * Fixtures - Use for test only.
+	 */
 	public void partyFixtures()
 	{
 		Party party = new Party();

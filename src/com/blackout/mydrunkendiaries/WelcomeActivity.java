@@ -6,6 +6,7 @@ package com.blackout.mydrunkendiaries;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,25 +36,64 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
- * Welcome activity
- * @author spo2
+ * Welcome activity - Show on application startup.
+ * @author romain
  *
  */
 public class WelcomeActivity extends Activity implements OnClickListener,
 							OnItemClickListener
 {
+	/**
+	 * Degrees unit. (Weather Webservice)
+	 */
 	private final static String DEG_UNITS = "°C";
+	/**
+	 * Pressure unit. (Weather Webservice)
+	 */
 	private final static String PRESS_UNITS = " hPa";
+	/**
+	 * Humidity unit. (Weather Webservice)
+	 */
 	private final static String HUMID_UNITS = "%";
+	/**
+	 * Name of the pref file to store the last city for the weather webservice.
+	 */
 	private final static String PREF_FILE= "MyDrunkenPrefs";
+	/**
+	 * Key to store the last city for the weather webservice.
+	 */
 	private final static String KEY_CITY = "CITY";
+	/**
+	 * City Name. (Weather Webservice)
+	 */
 	private String city;
+	/**
+	 * List of the city. (Weather Webservice)
+	 */
 	private List<Weather> resultSearch;
+	/**
+	 * Hold information of the current weather.
+	 */
 	private TextView cityName, desc, pressure, temp, humidity;
+	/**
+	 * Image of the current weather.
+	 */
 	private ImageView icon;
-	private EditText citysearch;
+	/**
+	 * Search city.
+	 */
+	private EditText citySearch;
+	/**
+	 * Hold city search results.
+	 */
 	private ListView cityResult;
+	/**
+	 * Layout to show/hide on city search.
+	 */
 	private LinearLayout listLayout;
+	/**
+	 * Button search.
+	 */
 	private ImageButton searchCity;
 	
 	@Override
@@ -61,11 +102,9 @@ public class WelcomeActivity extends Activity implements OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
-        city = sharedPreferences.getString(KEY_CITY, "Paris");
-        
         cityName = (TextView) findViewById(R.id.city_name);
         desc = (TextView) findViewById(R.id.desc);
+        desc.requestFocus();
         pressure = (TextView) findViewById(R.id.pressure);
         temp = (TextView) findViewById(R.id.temp);
         humidity = (TextView) findViewById(R.id.humidity);
@@ -74,15 +113,29 @@ public class WelcomeActivity extends Activity implements OnClickListener,
         searchCity.setOnClickListener(this);
         cityResult = (ListView) findViewById(R.id.city_list);
         cityResult.setOnItemClickListener(this);
-        citysearch = (EditText) findViewById(R.id.city_search);
+        citySearch = (EditText) findViewById(R.id.city_search);
         listLayout = (LinearLayout) findViewById(R.id.list_layout);
-        WeatherTask weatherTask = new WeatherTask(this);
+        Button btn = (Button) findViewById(R.id.go_to_parties);
+        btn.setOnClickListener(this);
+        refreshWeather();
+    }
+	
+	/**
+	 * Refresh the current weather.
+	 */
+	public void refreshWeather()
+	{
+		collapse(listLayout);
+		citySearch.setText("");
+		SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
+        city = sharedPreferences.getString(KEY_CITY, "Paris");
+		WeatherTask weatherTask = new WeatherTask(this);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
         		.Builder(this).build();
         ImageLoader.getInstance().init(config);
         collapse(listLayout);
         weatherTask.execute(new String[]{city});
-    }
+	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) 
@@ -129,16 +182,19 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 				
 				@Override
 				public void run() {
-					cityName.setText(weather.getName());
-					desc.setText(weather.getWeatherDatas().get(0).getDescription());
-					pressure.setText(weather.getMainData().getPressure().toString()
-							+ PRESS_UNITS);
-					temp.setText(weather.getMainData().getTemp().toString() + DEG_UNITS);
-					humidity.setText(weather.getMainData().getHumidity().toString()
-							+ HUMID_UNITS);
-					String imgURI = WeatherHttpClient.getImageURI(weather
-							.getWeatherDatas().get(0).getIcon());	
-					ImageLoader.getInstance().displayImage(imgURI + ".png", icon);
+					if (weather != null)
+					{
+						cityName.setText(weather.getName());
+						desc.setText(weather.getWeatherDatas().get(0).getDescription());
+						pressure.setText(weather.getMainData().getPressure().toString()
+								+ PRESS_UNITS);
+						temp.setText(weather.getMainData().getTemp().toString() + DEG_UNITS);
+						humidity.setText(weather.getMainData().getHumidity().toString()
+								+ HUMID_UNITS);
+						String imgURI = WeatherHttpClient.getImageURI(weather
+								.getWeatherDatas().get(0).getIcon());	
+						ImageLoader.getInstance().displayImage(imgURI + ".png", icon);
+					}
 				}
 			});
 		}
@@ -277,16 +333,22 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 			case R.id.action_search:
 			{
 				collapse(listLayout);
-				if ((citysearch.getText() != null))
+				if ((citySearch.getText() != null))
 				{
-					String searchQuery = citysearch.getText().toString();
+					String searchQuery = citySearch.getText().toString();
 					if ((searchQuery != "") && (searchQuery.length() > 2))
 					{
 						CityTask  cityTask = new CityTask(WelcomeActivity.this);
-						cityTask.execute(new String[]{citysearch.getText().toString()});
+						cityTask.execute(new String[]{citySearch.getText().toString()});
 					}
 				}
-				
+				break;
+			}
+			case R.id.go_to_parties:
+			{
+				Intent intent = new Intent(WelcomeActivity.this, PartyActivity.class);
+				startActivity(intent);
+				break;
 			}
 			default:
 				break;
@@ -298,6 +360,12 @@ public class WelcomeActivity extends Activity implements OnClickListener,
 			int position, long id) 
 	{
 		Weather weather = getResultSearch().get(position);
+		SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.remove(KEY_CITY);
+		editor.putString(KEY_CITY, weather.getName());
+		editor.commit();
+		refreshWeather();
 	}
 	
 	public ListView getCityResult()

@@ -15,17 +15,39 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @author spo2
+ * Class of the Trip entity.
+ * @author romain
  *
  */
 public class Trip implements Parcelable {
 	public static final int PARCELABLE_CODE = 2;
+	/**
+	 * Id of trip.
+	 */
 	private long id;
+	/**
+	 * Mapped place of the trip.
+	 */
 	private Place place;
+	/**
+	 * Mapped party of the place.
+	 */
 	private Party party;
+	/**
+	 * Date of creation of the trip.
+	 */
 	private String createdAt;
+	/**
+	 * End date of the trip.
+	 */
 	private String endedAt;
+	/**
+	 * Score for the place.
+	 */
 	private Integer placeScore;
+	/**
+	 * Depravity of the trip.
+	 */
 	private Integer depravity;
 
 	/**

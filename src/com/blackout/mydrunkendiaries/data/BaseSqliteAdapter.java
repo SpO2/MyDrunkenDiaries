@@ -15,12 +15,19 @@ import android.database.sqlite.SQLiteDatabase;
 
 
 /**
- * @author spo2
+ * Contains tools for entities to work with the sqlite database
+ * @author romain
  *
  */
 public abstract class BaseSqliteAdapter 
 {
+	/**
+	 * Helper to connect to the database.
+	 */
 	private OpenHelperSqlite helper;
+	/**
+	 * Sqlite database.
+	 */
 	private SQLiteDatabase db;
 	
 	/**

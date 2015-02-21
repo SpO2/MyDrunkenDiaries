@@ -21,22 +21,43 @@ import android.os.Parcel;
 import com.blackout.mydrunkendiaries.entites.Place;
 
 /**
- * @author spo2
+ * Sqlite adapter for places entity.
+ * @author romain
  *
  */
 public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdpater<Place>
 {
 
+	/**
+	 * Name of the table.
+	 */
 	public final static String TABLE_PLACE = "Place";
+	/**
+	 * Name of the id column.
+	 */
 	public final static String COLUMN_ID = "_id";
+	/**
+	 * Name of the name column.
+	 */
 	public final static String COLUMN_NAME = "name";
+	/**
+	 * Name of the longitude column.
+	 */
 	public final static String COLUMN_LONGITUDE = "longitude";
+	/**
+	 * Name of the latitude column.
+	 */
 	public final static String COLUMN_LATITUDE = "latitude";
+	/**
+	 * List of the column.
+	 */
 	public final static String[] COLUMN_LIST={COLUMN_ID,
 								 COLUMN_NAME,
 								 COLUMN_LONGITUDE,
 								 COLUMN_LATITUDE};
-	
+	/**
+	 * Schema of the table.
+	 */
 	public final static String SCHEMA = "CREATE TABLE " + 
 								PlaceSqliteAdapter.TABLE_PLACE + " ( " +
 								PlaceSqliteAdapter.COLUMN_ID +
@@ -127,7 +148,31 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 				null);
 		cursor.moveToFirst();
 		
-		return this.cursorToItem(cursor);
+		return cursorToItem(cursor);
+	}
+	
+	/**
+	 * Get a cursor for a place.
+	 * @param id
+	 * @return cursor of the place.
+	 */
+	public Cursor getCursor(long id)
+	{
+		
+		String[] selectionArgs = {String.valueOf(id)};
+		
+		String selection = COLUMN_ID + " = ?";
+		
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 
 	/**
@@ -151,12 +196,30 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		{
 			while (!cursor.isAfterLast())
 			{
-				places.add(this.cursorToItem(cursor));
+				places.add(cursorToItem(cursor));
 				cursor.moveToNext();
 			}
 		}
 		
 		return places;
+	}
+	
+	/**
+	 * Get a cursor for places.
+	 * @return cursor for the places.
+	 */
+	public Cursor getAllCursor() 
+	{
+		Cursor cursor = this.getDb().query(TABLE_PLACE,
+				COLUMN_LIST,
+				null,
+				null,
+				null,
+				null,
+				null);
+		cursor.moveToFirst();
+		
+		return cursor;
 	}
 
 	/**
@@ -164,8 +227,7 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	 * @param cursor
 	 * @return a Place.
 	 */
-	@Override
-	public Place cursorToItem(Cursor cursor) 
+	public static Place cursorToItem(Cursor cursor) 
 	{
 		Place place = new Place();
 		place.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
@@ -178,6 +240,9 @@ public class PlaceSqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 	
 
 	
+	/**
+	 * Fixtures - use for test only.
+	 */
 	public void placeFixtures()
 	{
 		Place place = new Place();
