@@ -192,6 +192,21 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 				takeVideo();
 			}
 		});
+		ImageView btnGallery = (ImageView) this.findViewById(R.id.gallery);
+		btnGallery.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (PartyDetailActivity.this.tripInProgress != null) {
+					Intent intent = new Intent(v.getContext(),
+							TripGalleryActivity.class);
+					intent.putExtra("tripId",
+							PartyDetailActivity.this.tripInProgress.getId());
+					PartyDetailActivity.this.startActivity(intent);
+				}
+			}
+		});
+
 		endTrip = (Button) this.findViewById(R.id.end_activity);
 		endTrip.setOnClickListener(new OnClickListener() {
 
@@ -561,8 +576,6 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 			} else {
 				this.lastMedia = null;
 			}
-
-
 
 		}
 	}

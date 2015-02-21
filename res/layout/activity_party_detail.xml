@@ -7,126 +7,125 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.blackout.mydrunkendiaries.PartyDetailActivity$PlacesFragment" >
-	<RelativeLayout 
-	    android:id="@+id/current_trip_layout"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:background="@color/global_background"
-	    android:padding="10dp">
 
-	    <TextView
-	        android:id="@+id/last_activity"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentEnd="true"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_alignParentStart="true"
-	        android:layout_alignParentTop="true" 
-	        android:textSize="30sp"
-	        android:textColor="@color/list_item_text"/>
-	
-	    <RelativeLayout
-	        android:id="@+id/medialayout"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/last_activity"
-	        android:layout_margin="3dip" >
-	
-	        <ImageView
-	            android:id="@+id/camera"
-	            android:layout_width="40dip"
-	            android:layout_height="40dip"
-	            android:layout_centerVertical="true"
-	            android:layout_marginEnd="5dip"
-	            android:layout_marginRight="5dip"
-	            android:contentDescription="@string/contentdesc_camera"
-	            android:src="@drawable/device_camera" />
-	        
-	        <ImageView
-	            android:id="@+id/photo"
-	            android:layout_width="40dip"
-	            android:layout_height="40dip"
-	            android:layout_centerVertical="true"
-	            android:layout_toEndOf="@+id/camera"
-	            android:layout_toRightOf="@+id/camera"
-	            android:contentDescription="@string/contentdesc_camera"
-	            android:src="@drawable/device_camera" />
-	
-	        <ImageView
-	            android:id="@+id/gallery"
-	            android:layout_width="40dip"
-	            android:layout_height="40dip"
-	            android:layout_centerVertical="true"
-	            android:layout_toEndOf="@+id/photo"
-	            android:layout_toRightOf="@+id/photo"
-	            android:contentDescription="@string/contentdesc_gallery"
-	            android:src="@drawable/content_picture" />
-	       
-	        
-	        <RatingBar
-			    android:id="@+id/beerbar_current"
-			    style="@style/beerRatingBar"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_margin="3dp"
-			    android:layout_centerVertical="true"
-			    android:numStars="5"
-			    android:stepSize="1.0"
-			    android:layout_alignParentRight="true"
-			    android:layout_alignParentEnd="true"/>
+    <RelativeLayout
+        android:id="@+id/current_trip_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/global_background"
+        android:padding="10dp" >
 
-	       
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:id="@+id/layouttime"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignLeft="@+id/medialayout"
-	        android:layout_alignStart="@+id/medialayout"
-	        android:layout_below="@+id/medialayout"
-	        android:layout_margin="3dp" >
-	
-	        <ImageView
-	            android:id="@+id/clock"
-	            android:layout_width="32dip"
-	            android:layout_height="32dip"
-	            android:contentDescription="@string/party_begin"
-	            android:src="@drawable/device_access_time" />
-	
-	        <TextView
-	            android:id="@+id/party_begin"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="20dp"
-	            android:layout_marginStart="20dp"
-	            android:layout_toEndOf="@+id/clock"
-	            android:layout_toRightOf="@+id/clock"
-	            android:textAppearance="?android:attr/textAppearanceLarge" 
-	            android:textColor="@color/list_item_text"/>        
-	    </RelativeLayout>
-		<Button
-		    android:id="@+id/end_activity"
-		    android:layout_width="wrap_content"
-		    android:layout_marginLeft="20dp"
-		    android:layout_marginStart="20dp"
-		    android:layout_height="40dp"
-		    android:layout_below="@+id/medialayout"
-		    android:layout_alignParentRight="true"
-		    android:layout_alignParentEnd="true"
-		    android:text="@string/btn_party_end" 
-		    style="@drawable/delete_image_button_states"/>
-	</RelativeLayout>
+        <TextView
+            android:id="@+id/last_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/list_item_text"
+            android:textSize="30sp" />
 
-	<ListView
-	    android:id="@+id/placeslistview"
-	    android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/medialayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/last_activity"
+            android:layout_margin="3dip" >
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dip"
+                android:layout_marginRight="5dip"               
+                android:contentDescription="@string/contentdesc_camera"
+                android:src="@drawable/device_camera" />
+
+            <ImageView
+                android:id="@+id/camera"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/photo"
+                android:layout_toRightOf="@+id/photo"
+                android:contentDescription="@string/contentdesc_camera"
+                android:src="@drawable/images_slideshow" />
+
+            <ImageView
+                android:id="@+id/gallery"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/camera"
+                android:layout_toRightOf="@+id/camera"
+                android:contentDescription="@string/contentdesc_gallery"
+                android:src="@drawable/content_picture" />
+
+            <RatingBar
+                android:id="@+id/beerbar_current"
+                style="@style/beerRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="3dp"
+                android:numStars="5"
+                android:stepSize="1.0" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layouttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/medialayout"
+            android:layout_alignStart="@+id/medialayout"
+            android:layout_below="@+id/medialayout"
+            android:layout_margin="3dp" >
+
+            <ImageView
+                android:id="@+id/clock"
+                android:layout_width="32dip"
+                android:layout_height="32dip"
+                android:contentDescription="@string/party_begin"
+                android:src="@drawable/device_access_time" />
+
+            <TextView
+                android:id="@+id/party_begin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/clock"
+                android:layout_toRightOf="@+id/clock"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/list_item_text" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/end_activity"
+            style="@drawable/delete_image_button_states"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/medialayout"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/btn_party_end" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/placeslistview"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-	    android:layout_below="@+id/current_trip_layout"
-	    android:divider="@color/list_divider"
-        android:dividerHeight="1dp"
-	    android:layout_centerHorizontal="true" >
-	</ListView>
+        android:layout_below="@+id/current_trip_layout"
+        android:layout_centerHorizontal="true"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp" >
+    </ListView>
 
 </RelativeLayout>
