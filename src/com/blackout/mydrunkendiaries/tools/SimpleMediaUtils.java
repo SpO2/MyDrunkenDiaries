@@ -1,6 +1,5 @@
 package com.blackout.mydrunkendiaries.tools;
 
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,51 +23,78 @@ public class SimpleMediaUtils {
 	public static final int MEDIA_TYPE_VIDEO = 2;
 
 	// Static default application values.
-	private static final String BASE_MEDIA_URL = "MyDrunkenMedia";	
+	private static final String BASE_MEDIA_URL = "MyDrunkenMedia";
 	private static String lastMediaTakenPath;
 
 	private static Uri fileUri;
 
 	// getters setters
-	public static String getLastMediaTakenPath()
-	{
+	public static String getLastMediaTakenPath() {
 		return lastMediaTakenPath;
 	}
-	public static void setLastMediaTakenPath(String path)
-	{
+
+	public static void setLastMediaTakenPath(String path) {
 		lastMediaTakenPath = path;
 	}
-	
+
 	public static String getPhotoDefaultName() {
-		return String.format("IMG_%s.jpg",
-				new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+		return String.format("IMG_%s.jpg", new SimpleDateFormat(
+				"yyyyMMdd_HHmmss").format(new Date()));
 	}
 
 	public static String getVideoDefaultName() {
-		return String.format("VID_%s.mp4",
-				new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+		return String.format("VID_%s.mp4", new SimpleDateFormat(
+				"yyyyMMdd_HHmmss").format(new Date()));
 	}
-	public String getVideoPath(String name) {
+
+	public static String getVideoPath(String name) {
 		return getMediaPath(MEDIA_TYPE_VIDEO, name);
 	}
 
-	public String getVideoPath(String name, String folder) {
+	public static String setVideoPath(String name, String folder) {
+		String mediaDirectory = Environment.DIRECTORY_DCIM;
+		mediaDirectory = Environment.DIRECTORY_MOVIES;
+		File mediaStorageDir = new File(
+				Environment.getExternalStoragePublicDirectory(mediaDirectory),
+				BASE_MEDIA_URL + File.separator + folder);
+
+		// Create the party directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d(BASE_MEDIA_URL, "failed to create directory");
+				return null;
+			}
+		}
 		name = folder + File.separator + name;
 		return getMediaPath(MEDIA_TYPE_VIDEO, name);
 	}
 
-	public String getPhotoPath(String name) {
+	public static String getPhotoPath(String name) {
 		return getMediaPath(MEDIA_TYPE_IMAGE, name);
 	}
 
-	public static String getPhotoPath(String name, String folder) {
+	public static String setPhotoPath(String name, String folder) {
+		String mediaDirectory = Environment.DIRECTORY_DCIM;
+		mediaDirectory = Environment.DIRECTORY_PICTURES;
+		File mediaStorageDir = new File(
+				Environment.getExternalStoragePublicDirectory(mediaDirectory),
+				BASE_MEDIA_URL + File.separator + folder);
+
+		// Create the party directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d(BASE_MEDIA_URL, "failed to create directory");
+				return null;
+			}
+		}
 		name = folder + File.separator + name;
 		return getMediaPath(MEDIA_TYPE_IMAGE, name);
 	}
-	public static String getMediaName(String name, String folder)
-	{
+
+	public static String getMediaName(String name, String folder) {
 		return folder + File.separator + name;
 	}
+
 	public static Intent getImageIntent(String name) {
 
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -78,12 +104,13 @@ public class SimpleMediaUtils {
 		if (fileUri == null) {
 			return null;
 		}
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);		
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 		// intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image
 		// file name
 		return intent;
 
 	}
+
 	public static Intent getVideoIntent(String name) {
 		Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 		fileUri = getFileUri(MEDIA_TYPE_VIDEO, name); // create a file to save
@@ -95,32 +122,30 @@ public class SimpleMediaUtils {
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 		return intent;
 	}
-	public static Cursor getImagesFromAblum(Context context, String album)
-	{
-		String[] projection = new String[]{
-	            MediaStore.Images.Media._ID,
-	            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-	            MediaStore.Images.Media.DATE_TAKEN,
-	            MediaStore.Images.Media.DISPLAY_NAME,
-	            MediaStore.Images.Media.DESCRIPTION,
-	            MediaStore.Images.Media.DATA
-	            
-	    };
-		Cursor cur = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-	            projection, 
-	            MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ? ",
-	            new String[] {album},
-	            null
-	            );
+
+	public static Cursor getImagesFromAblum(Context context, String album) {
+		String[] projection = new String[] { MediaStore.Images.Media._ID,
+				MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+				MediaStore.Images.Media.DATE_TAKEN,
+				MediaStore.Images.Media.DISPLAY_NAME,
+				MediaStore.Images.Media.DESCRIPTION,
+				MediaStore.Images.Media.DATA
+
+		};
+		Cursor cur = context.getContentResolver().query(
+				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+				MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ? ",
+				new String[] { album }, null);
 		return cur;
 	}
-	
-	
+
 	private static String getMediaPath(int type, String name) {
 		return getMediaBasePath(type) + name;
 	}
+
 	/*
 	 * Get the Media file base path.
+	 * 
 	 * @param type : the type of the media.
 	 */
 	private static String getMediaBasePath(int type) {
@@ -130,7 +155,7 @@ public class SimpleMediaUtils {
 					Environment
 							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 					BASE_MEDIA_URL);
-		}		
+		}
 		if (type == MEDIA_TYPE_VIDEO) {
 			mediaStorageDir = new File(
 					Environment
@@ -147,11 +172,12 @@ public class SimpleMediaUtils {
 		}
 		return Uri.fromFile(file);
 	}
+
 	private static File getOutputMediaFile(int type, String name) {
-		/*if(Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED)
-		{
-			return null;
-		}*/
+		/*
+		 * if(Environment.getExternalStorageState() !=
+		 * Environment.MEDIA_MOUNTED) { return null; }
+		 */
 		String mediaDirectory = Environment.DIRECTORY_DCIM;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaDirectory = Environment.DIRECTORY_PICTURES;
@@ -186,7 +212,5 @@ public class SimpleMediaUtils {
 
 		return mediaFile;
 	}
-	
-
 
 }

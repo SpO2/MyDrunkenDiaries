@@ -186,7 +186,14 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 				takePhoto();
 			}
 		});
-		
+		ImageView btnCamera = (ImageView) this.findViewById(R.id.camera);
+		btnCamera.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				takeVideo();
+			}
+		});
 		endTrip = (Button) this.findViewById(R.id.end_activity);
 		endTrip.setOnClickListener(new OnClickListener() {
 
@@ -495,7 +502,7 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		String name = this.tripInProgress.getPlace().getName()
 				+ SimpleMediaUtils.getPhotoDefaultName();
 		String party = this.getCurrentParty().getName();
-		String path = SimpleMediaUtils.getPhotoPath(name, party);
+		String path = SimpleMediaUtils.setPhotoPath(name, party);
 		SimpleMediaUtils.setLastMediaTakenPath(path);
 
 		this.lastMedia = new TripMedia();
@@ -512,9 +519,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		if(this.tripInProgress != null)
 		{
 		String name = this.tripInProgress.getPlace().getName()
-				+ SimpleMediaUtils.getPhotoDefaultName();
+				+ SimpleMediaUtils.getVideoDefaultName();
 		String party = this.getCurrentParty().getName();
-		String path = SimpleMediaUtils.getPhotoPath(name, party);
+		String path = SimpleMediaUtils.setVideoPath(name, party);
 		SimpleMediaUtils.setLastMediaTakenPath(path);
 
 		this.lastMedia = new TripMedia();
