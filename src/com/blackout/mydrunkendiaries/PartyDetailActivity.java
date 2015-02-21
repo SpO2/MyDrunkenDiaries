@@ -162,7 +162,9 @@ public class PartyDetailActivity extends Activity implements DialogButtonClick,
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_party_detail);
-
+		setTitle(R.string.title_activity_party_detail);
+		
+		
 		if (savedInstanceState != null) {
 			// Restore value of members from saved state
 			this.lastMedia = savedInstanceState.getParcelable("lastMedia");
