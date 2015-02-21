@@ -5,8 +5,16 @@
     <item
         android:id="@+id/new_trip"
         android:orderInCategory="1"
-        android:icon="@drawable/nouveau"
+        android:icon="@drawable/content_new"
         android:showAsAction="ifRoom|withText"
         android:title="@string/new_place"/>
+    
+    <item
+        android:id="@+id/end_party"
+        android:orderInCategory="2"
+        android:icon="@drawable/navigation_accept"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/action_end_party"
+        />
 
 </menu>

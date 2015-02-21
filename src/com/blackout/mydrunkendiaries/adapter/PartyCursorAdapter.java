@@ -78,9 +78,13 @@ public class PartyCursorAdapter extends CursorAdapter
 			Date dt = sdf.parse(cursor.getString(cursor
 					.getColumnIndex(PartySqliteAdapter.COLUMN_CREATEDAT)));
 			createdAt.setText(sdf.format(dt));
-			dt = sdf.parse(cursor.getString(cursor
+			String valueEndedAt = cursor.getString(cursor
+					.getColumnIndex(PartySqliteAdapter.COLUMN_ENDEDAT));
+			if ((valueEndedAt != null) && (valueEndedAt != "")){
+				dt = sdf.parse(cursor.getString(cursor
 					.getColumnIndex(PartySqliteAdapter.COLUMN_ENDEDAT)));
-			endedAt.setText(sdf.format(dt));
+				endedAt.setText(sdf.format(dt));
+			}
 		} 
 		catch (ParseException e) 
 		{

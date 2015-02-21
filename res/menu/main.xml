@@ -5,7 +5,7 @@
     <item
         android:id="@+id/new_party"
         android:orderInCategory="1"
-        android:icon="@drawable/nouveau"
+        android:icon="@drawable/content_new"
         android:showAsAction="ifRoom|withText"
         android:title="@string/new_party"/>
 

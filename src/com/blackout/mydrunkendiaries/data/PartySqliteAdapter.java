@@ -89,7 +89,6 @@ public class PartySqliteAdapter extends BaseSqliteAdapter implements DatabaseAdp
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME, party.getName());
 		values.put(COLUMN_CREATEDAT, party.getCreatedAt().toString());
-		values.put(COLUMN_ENDEDAT, party.getCreatedAt().toString());
 		
 		return this.getDb().insert(TABLE_PARTY, null, values);
 	}

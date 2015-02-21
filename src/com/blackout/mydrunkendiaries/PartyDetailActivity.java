@@ -10,8 +10,6 @@
  ********************************************************/
 package com.blackout.mydrunkendiaries;
 
-import java.util.ArrayList;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -25,9 +23,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -94,6 +94,10 @@ public class PartyDetailActivity extends Activity
 	 * The rating bar of the trip in progress.
 	 */
 	private RatingBar beerBar;
+	/**
+	 * End the trip in progress.
+	 */
+	private Button endTrip;
 	
 	/**
 	 * Current action mode  (used for the multiple delete).
@@ -153,6 +157,25 @@ public class PartyDetailActivity extends Activity
 		lastActivity = (TextView) this.findViewById(R.id.last_activity);
 		partyBegin = (TextView) this.findViewById(R.id.party_begin);
 		beerBar = (RatingBar) this.findViewById(R.id.beerbar_current);
+		endTrip = (Button) this.findViewById(R.id.end_activity);
+		endTrip.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (tripInProgress != null){
+					tripInProgress.setDepravity(Math.round(beerBar.getRating()));
+					if (tripSqliteAdapter == null){
+						tripSqliteAdapter = new TripSqliteAdapter(PartyDetailActivity.this);
+					}
+					tripSqliteAdapter.open();
+					tripInProgress.setEndedAt(DateTimeTools.getDateTime());
+					tripSqliteAdapter.update(tripInProgress);
+					tripSqliteAdapter.close();
+					beerBar.setRating(0);
+					PartyDetailActivity.this.recreate();
+				}
+			}
+		});
         final ActionBar actionBar = this.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -192,6 +215,28 @@ public class PartyDetailActivity extends Activity
 	        	{
 	        		showNewPlaceDialog();
 	        	}
+	        	break;
+	        }
+	        case R.id.end_party:
+	        {
+	        	if (this.tripInProgress != null){
+	        		if (tripSqliteAdapter == null){
+						tripSqliteAdapter = new TripSqliteAdapter(PartyDetailActivity.this);
+					}
+					tripSqliteAdapter.open();
+					tripInProgress.setEndedAt(DateTimeTools.getDateTime());
+					tripSqliteAdapter.update(tripInProgress);
+					tripSqliteAdapter.close();
+	        	}
+	        	if ((this.currentParty != null) && ((this.currentParty.getEndedAt() == null)
+	        			|| (this.currentParty.getEndedAt() == ""))){
+	        		this.currentParty.setEndedAt(DateTimeTools.getDateTime());
+	        		PartySqliteAdapter partySqliteAdapter = new PartySqliteAdapter(this);
+	        		partySqliteAdapter.open();
+	        		partySqliteAdapter.update(currentParty);
+	        		partySqliteAdapter.close();
+	        	}
+	        	break;
 	        }
         }
         return super.onOptionsItemSelected(item);

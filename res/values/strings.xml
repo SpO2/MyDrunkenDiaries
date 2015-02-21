@@ -31,5 +31,6 @@
 	<string name="settings">Paramétrage</string>
 	<string name="party_list_btn">Voir les soirées</string>
 	<string name="item_selected">Sélectionnés : </string>
+	<string name="action_end_party">Termier la soirée</string>
 
 </resources>
