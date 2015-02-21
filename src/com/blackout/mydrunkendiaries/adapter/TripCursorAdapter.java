@@ -4,18 +4,22 @@
 package com.blackout.mydrunkendiaries.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.blackout.mydrunkendiaries.R;
+import com.blackout.mydrunkendiaries.TripGalleryActivity;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
 import com.blackout.mydrunkendiaries.entites.Trip;
 import com.blackout.mydrunkendiaries.tools.DateTimeTools;
@@ -31,7 +35,6 @@ public class TripCursorAdapter extends CursorAdapter {
 	 * The count of selected items.
 	 */
 	private Integer selectedCount;
-	
 	/**
 	 * Constructor of the trip adapter.
 	 * @param context (activity)
@@ -53,6 +56,17 @@ public class TripCursorAdapter extends CursorAdapter {
 		RatingBar beerBar = (RatingBar) v.findViewById(R.id.beerbar);
 		Trip trip = TripSqliteAdapter.cursorToItemWithPlace(cursor);
 		CheckBox checkBox = (CheckBox) v.findViewById(R.id.check_multiple);
+		
+		ImageView btnGallery = (ImageView) v.findViewById(R.id.gallery);
+		btnGallery.setTag(Long.valueOf(trip.getId()));
+		btnGallery.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				long tripId = (Long)((ImageView) v).getTag();
+				openGallery(v.getContext(),tripId);
+			}
+		});
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -85,6 +99,16 @@ public class TripCursorAdapter extends CursorAdapter {
 		{
 			time.setText(createdAt);
 		}
+	}
+	/*
+	 * @param long tripId Id of the selected trip
+	 * Open new gallery by id
+	 */
+	private void openGallery(Context context,long tripId)
+	{
+		Intent intent = new Intent(context,TripGalleryActivity.class);
+		intent.putExtra("tripId",tripId);
+		context.startActivity(intent);
 	}
 
 	/* (non-Javadoc)

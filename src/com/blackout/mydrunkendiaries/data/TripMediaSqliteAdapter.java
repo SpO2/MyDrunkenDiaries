@@ -188,7 +188,45 @@ implements DatabaseAdpater<TripMedia>
 		
 		return tripMedias;
 	}
-	
+	public Cursor getCursorByTrip(long tripId)
+	{
+		String selection = COLUMN_TRIP + " = ?";
+		String[] selectionArgs = {String.valueOf(tripId)};
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIPMEDIA,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		return cursor;
+	}
+	public ArrayList<TripMedia> getByTrip(long tripId)
+	{
+		String selection = COLUMN_TRIP + " = ?";
+		String[] selectionArgs = {String.valueOf(tripId)};
+		
+		Cursor cursor = this.getDb().query(TABLE_TRIPMEDIA,
+				COLUMN_LIST,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				null);
+		
+		ArrayList<TripMedia> tripMedias = new ArrayList<TripMedia>();
+		if (cursor.moveToFirst())
+		{
+			while (!cursor.isAfterLast())
+			{
+				tripMedias.add(cursorToItem(cursor));
+				cursor.moveToNext();
+			}
+		}
+		
+		return tripMedias;
+	}
 	/**
 	 * Fetch all the tripmedias from the database.
 	 * @return Array of TripMedia.

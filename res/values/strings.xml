@@ -22,16 +22,18 @@
     <string name="title_activity_party_detail">Liste des lieux</string>
     <string name="title_activity_map">Itinéraire</string>
     <string name="title_activity_party">Soirées</string>
-	<string name="tab_party_detail_places">Lieux</string>
-	<string name="tab_party_detail_maps">Carte</string>
-	<string name="add_new">Ajouter</string>
-	<string name="cancel">Annuler</string>
-	<string name="delete">Supprimer</string>
-	<string name="dialog_confirm_new_trip">L\'ajout d\'un lieu terminera celui en cours</string>
-	<string name="valid">Valider</string>
-	<string name="settings">Paramétrage</string>
-	<string name="party_list_btn">Voir les soirées</string>
-	<string name="item_selected">Sélectionnés : </string>
-	<string name="action_end_party">Terminer la soirée</string>
+    <string name="tab_party_detail_places">Lieux</string>
+    <string name="tab_party_detail_maps">Carte</string>
+    <string name="add_new">Ajouter</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete">Supprimer</string>
+    <string name="dialog_confirm_new_trip">L\'ajout d\'un lieu terminera celui en cours</string>
+    <string name="valid">Valider</string>
+    <string name="settings">Paramétrage</string>
+    <string name="party_list_btn">Voir les soirées</string>
+    <string name="item_selected">Sélectionnés : </string>
+    <string name="action_end_party">Terminer la soirée</string>
+    <string name="title_activity_trip_gallery">TripGalleryActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

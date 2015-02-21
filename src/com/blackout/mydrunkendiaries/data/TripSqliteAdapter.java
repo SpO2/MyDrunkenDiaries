@@ -125,7 +125,8 @@ public class TripSqliteAdapter extends BaseSqliteAdapter
             			  "p.name, p.longitude, p.latitude " + 
             			  "FROM TRIP t " +
             			  "LEFT JOIN Place p ON p._id = t.place " + 
-            			  "WHERE t.party = ? AND t.endedat IS NOT NULL";
+            			  "WHERE t.party = ? AND t.endedat IS NOT NULL " + 
+            			  "ORDER BY t._id DESC";
 	/**
 	 * Query to get trip, which ended date is null, with the place by party.
 	 */

@@ -7,6 +7,9 @@ import java.util.Date;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -122,7 +125,66 @@ public class SimpleMediaUtils {
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 		return intent;
 	}
+	public static Bitmap extractThumbnails(Uri imagePath, int width, int height) {
+		Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+				BitmapFactory.decodeFile(imagePath.toString()), width, height);
+		return ThumbImage;
+	}
+	public static Bitmap extractThumbnails(String imagePath, int width, int height) {
+		Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+				BitmapFactory.decodeFile(imagePath), width, height);
+		return ThumbImage;
+	}
+	public static void getImagesList(Context context, String folder)
+	{
+	    // which image properties are we querying
+	    String[] projection = new String[]{
+	            MediaStore.Images.Media._ID,
+	            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+	            MediaStore.Images.Media.DATE_TAKEN,
+	            MediaStore.Images.Media.DISPLAY_NAME,
+	            MediaStore.Images.Media.DESCRIPTION
+	            
+	    };
 
+	   
+	    // Make the query.
+	    Cursor cur = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+	            projection, 
+	            MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " like ? ",
+	            new String[] {"%party%"},
+	            null
+	            );
+
+	    if (cur.moveToFirst()) {
+	        String bucket;
+	        String date;
+	        String name;
+	        String description;
+	        int bucketColumn = cur.getColumnIndex(
+	            MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+	        int dateColumn = cur.getColumnIndex(
+	            MediaStore.Images.Media.DATE_TAKEN);
+	        int nameColumn = cur.getColumnIndex(
+		            MediaStore.Images.Media.DISPLAY_NAME);
+	        int descriptionColumn =cur.getColumnIndex(
+		            MediaStore.Images.Media.DESCRIPTION);
+
+	        do {
+	            // Get the field values
+	            bucket = cur.getString(bucketColumn);
+	            date = cur.getString(dateColumn);
+	            name = cur.getString(nameColumn);
+	            description = cur.getString(descriptionColumn);
+
+	            // Do something with the values.
+	            Log.i("ListingImages", " bucket=" + bucket 
+	                   + "  date_taken=" + date +" Name="+name+" Description="+description);
+	        } while (cur.moveToNext());
+
+	    }
+	}
 	public static Cursor getImagesFromAblum(Context context, String album) {
 		String[] projection = new String[] { MediaStore.Images.Media._ID,
 				MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
