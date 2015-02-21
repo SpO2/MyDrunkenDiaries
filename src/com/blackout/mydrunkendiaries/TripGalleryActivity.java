@@ -1,24 +1,14 @@
 package com.blackout.mydrunkendiaries;
 
-import java.io.File;
-
-import com.blackout.mydrunkendiaries.data.TripMediaSqliteAdapter;
-import com.blackout.mydrunkendiaries.entites.Trip;
-import com.blackout.mydrunkendiaries.entites.TripMedia;
-import com.blackout.mydrunkendiaries.tools.SimpleMediaUtils;
-import com.blackout.mydrunkendiaries.adapter.TripMediaCursorAdapter;
-
 import android.app.Activity;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import com.blackout.mydrunkendiaries.adapter.TripMediaCursorAdapter;
+import com.blackout.mydrunkendiaries.data.TripMediaSqliteAdapter;
 
 public class TripGalleryActivity extends Activity {
 
