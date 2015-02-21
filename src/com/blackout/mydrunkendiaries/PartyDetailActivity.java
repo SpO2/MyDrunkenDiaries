@@ -108,11 +108,11 @@ public class PartyDetailActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) 
 	{
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.party_detail);
+        setContentView(R.layout.activity_party_detail);
         lv = (ListView) this.findViewById(R.id.placeslistview);
 		lastActivity = (TextView) this.findViewById(R.id.last_activity);
 		partyBegin = (TextView) this.findViewById(R.id.party_begin);
-		beerBar = (RatingBar) this.findViewById(R.id.beerbar);
+		beerBar = (RatingBar) this.findViewById(R.id.beerbar_current);
         final ActionBar actionBar = this.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -170,6 +170,7 @@ public class PartyDetailActivity extends Activity
 				
 				Trip trip = addTrip(place, this.getCurrentParty());
 				PartyDetailActivity.this.tripInProgress = trip;
+				beerBar.setRating(0);
 				this.recreate();
 				dialog.dismiss();
 			}
@@ -177,6 +178,8 @@ public class PartyDetailActivity extends Activity
 		if (dialog instanceof ConfirmDialog)
 		{
 			this.tripInProgress.setEndedAt(DateTimeTools.getDateTime());
+			Float rating = ((ConfirmDialog) dialog).getRating();
+			this.tripInProgress.setDepravity(Math.round(rating));
 			TripSqliteAdapter tripSqliteAdapter = new TripSqliteAdapter(this);
 			tripSqliteAdapter.open();
 			tripSqliteAdapter.update(this.tripInProgress);
@@ -207,7 +210,9 @@ public class PartyDetailActivity extends Activity
        		lastActivity.setText(this.tripInProgress.getPlace().getName());
        	    partyBegin.setText(DateTimeTools.getTimeFromString(this.tripInProgress
        	    		.getCreatedAt()));
-       	    beerBar.setRating(this.tripInProgress.getDepravity());  
+       	    if (this.tripInProgress.getDepravity() != null){
+       	    	beerBar.setRating(this.tripInProgress.getDepravity());
+       	    }
        	    if (this.currentParty != null)
        	    {
        	    	this.tripInProgress.setParty(this.currentParty);

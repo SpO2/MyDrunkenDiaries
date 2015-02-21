@@ -9,7 +9,11 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.blackout.mydrunkendiaries.R;
 import com.blackout.mydrunkendiaries.data.TripSqliteAdapter;
@@ -22,19 +26,42 @@ import com.blackout.mydrunkendiaries.tools.DateTimeTools;
  */
 public class TripCursorAdapter extends CursorAdapter {
 
+	private Integer selectedCount;
+	
 	public TripCursorAdapter(Context context, Cursor c) 
 	{
 		super(context, c, 0);
+		this.selectedCount = 0;
 	}
 
 	/* (non-Javadoc)
 	 * @see android.support.v4.widget.CursorAdapter#bindView(android.view.View, android.content.Context, android.database.Cursor)
 	 */
 	@Override
-	public void bindView(View v, Context context, Cursor cursor) {
+	public void bindView(final View v, Context context, Cursor cursor) {
 		TextView name = (TextView) v.findViewById(R.id.title);
 		TextView time = (TextView) v.findViewById(R.id.hours);
+		RatingBar beerBar = (RatingBar) v.findViewById(R.id.beerbar);
 		Trip trip = TripSqliteAdapter.cursorToItemWithPlace(cursor);
+		CheckBox checkBox = (CheckBox) v.findViewById(R.id.check_multiple);
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				v.setSelected(isChecked);
+				if (isChecked){
+					selectedCount++;
+				}else{
+					if (selectedCount >0){
+						selectedCount--;
+					}
+				}
+			}
+		});
+		if (trip.getDepravity() != null){
+			beerBar.setRating(trip.getDepravity());
+		}
+		beerBar.setIsIndicator(true);
 		name.setText(trip.getPlace().getName());
 		String createdAt = DateTimeTools.getTimeFromString(trip
 				.getCreatedAt());

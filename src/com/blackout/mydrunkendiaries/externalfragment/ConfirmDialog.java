@@ -82,7 +82,13 @@ public class ConfirmDialog extends DialogFragment
 		beerBar = (RatingBar) view.findViewById(R.id.beerbar);
 		if (!this.withRating)
 		{
-			beerBar.setVisibility(8);
+			beerBar.setVisibility(8);			
+		}else{
+			RatingBar currentBeerBar = (RatingBar) getActivity()
+					.findViewById(R.id.beerbar_current);
+			if (currentBeerBar != null){
+				beerBar.setRating(currentBeerBar.getRating());
+			}
 		}
 		tv.setText(this.message);
 		builder.setView(view)
@@ -101,5 +107,13 @@ public class ConfirmDialog extends DialogFragment
 				}	
 			});
 		return builder.create();
+	}
+	
+	/**
+	 * Give the rating set for the trip that just ended.
+	 * @return the rating for the trip
+	 */
+	public Float getRating(){
+		return this.beerBar.getRating();
 	}
 }

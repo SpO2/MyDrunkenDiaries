@@ -28,6 +28,9 @@ import com.blackout.mydrunkendiaries.data.PartySqliteAdapter;
  */
 public class PartyCursorAdapter extends CursorAdapter 
 {
+	/**
+	 * The count of selected items.
+	 */
 	private Integer selectedCount;
 	
 	public PartyCursorAdapter(Context context, Cursor c) 
