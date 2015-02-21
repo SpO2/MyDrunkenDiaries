@@ -1,8 +1,5 @@
 package com.blackout.mydrunkendiaries.adapter;
 
-import com.blackout.mydrunkendiaries.data.TripMediaSqliteAdapter;
-import com.blackout.mydrunkendiaries.tools.SimpleMediaUtils;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.blackout.mydrunkendiaries.data.TripMediaSqliteAdapter;
+import com.blackout.mydrunkendiaries.tools.SimpleMediaUtils;
 
 
 public class TripMediaCursorAdapter extends CursorAdapter {
